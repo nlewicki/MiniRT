@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/03/26 12:55:58 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:06:31 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,15 @@ int init_mlx(t_miniRT *mini)
 int main(int argc, char **argv)
 {
 	t_miniRT	mini;
+	char		*filename = "scene.rt";
 	int return_value = 0;
 
 	(void)argc;
 	(void)argv;
 	return_value = init_mlx(&mini);
+	if (return_value)
+		return (return_value);
+	return_value = parse_rt_file(filename, &mini.scene);
 	draw_smth(&mini);
 	mlx_loop_hook(mini.mlx, loop, &mini);
 	mlx_loop(mini.mlx);

@@ -1,4 +1,5 @@
 CFILES =	src/main.c \
+			src/parse_rt_file.c \
 
 
 NAME = miniRT
