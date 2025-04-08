@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:05:20 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/08 12:17:00 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:31:37 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,31 @@ void parse_ambient(char **tokens, t_scene *scene)
 	printf("Ambient light set: ratio=%.2f, color=(%d, %d, %d)\n",
 		scene->ambient.ratio, scene->ambient.color.r,
 		scene->ambient.color.g, scene->ambient.color.b);
+	write(1, "\n", 2);
+}
+
+void parse_camera(char **tokens, t_scene *scene)
+{
+	int error = 0;
+	if (scene->camera.is_set)
+		exit_error("Camera already defined");
+	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4]) // Expect exactly 4 tokens: "C", position, orientation, fov
+		exit_error("Invalid camera format");
+	scene->camera.position = parse_position(tokens[1], &error);
+	scene->camera.orientation = parse_orientation(tokens[2], &error);
+	scene->camera.fov = ft_atoi(tokens[3]);
+	if (scene->camera.fov < 0 || scene->camera.fov > 180)
+		error = 1;
+	if (error)
+		exit_error("Invalid camera values");
+	scene->camera.is_set = 1;
+	// debug
+	printf("Camera set: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), fov=%d\n",
+		scene->camera.position.x, scene->camera.position.y,
+		scene->camera.position.z, scene->camera.orientation.x,
+		scene->camera.orientation.y, scene->camera.orientation.z,
+		scene->camera.fov);
+	write(1, "\n", 2);
 }
 
 int parse_rt_file(char *filename, t_scene *scene)
@@ -168,10 +193,10 @@ int parse_rt_file(char *filename, t_scene *scene)
 		}
 		if (ft_strcmp(tokens[0], "A") == 0)
 			parse_ambient(tokens, scene);
-		// else if (ft_strcmp(tokens[0], "C") == 0)
-		// 	parse_camera(tokens, scene);
-		// else if (ft_strcmp(tokens[0], "L") == 0)
-		// 	parse_light(tokens, scene);
+		else if (ft_strcmp(tokens[0], "C") == 0)
+			parse_camera(tokens, scene);
+		else if (ft_strcmp(tokens[0], "L") == 0)
+			parse_light(tokens, scene);
 		// else if (ft_strcmp(tokens[0], "sp") == 0)
 		// 	parse_sphere(tokens, scene);
 		// else if (ft_strcmp(tokens[0], "pl") == 0)
