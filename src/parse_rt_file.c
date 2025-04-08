@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:05:20 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/08 12:31:37 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:36:22 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,47 @@ void parse_camera(char **tokens, t_scene *scene)
 		scene->camera.orientation.y, scene->camera.orientation.z,
 		scene->camera.fov);
 	write(1, "\n", 2);
+}
+
+void parse_light(char **tokens, t_scene *scene)
+{
+	int error = 0;
+	t_light *new_lights;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4]) // Expect exactly 4 tokens: "L", position, brightness, color
+		exit_error("Invalid light format");
+
+	// Parse the light fields
+	t_light light;
+	light.position = parse_position(tokens[1], &error);
+	light.brightness = parse_double(tokens[2], 0.0, 1.0, &error);
+	light.color = parse_color(tokens[3], &error);
+	if (error)
+		exit_error("Invalid light values");
+
+	// Reallocate the lights array
+	new_lights = ft_realloc(scene->lights, sizeof(t_light) * (scene->light_count + 1));
+	if (!new_lights)
+		exit_error("Memory allocation failed for lights");
+	scene->lights = new_lights;
+
+	// Add the new light and update count
+	scene->lights[scene->light_count] = light;
+	scene->light_count++;
+
+	// Debug print
+	printf("Light added: position=(%.2f, %.2f, %.2f), brightness=%.2f, color=(%d, %d, %d)\n",
+		light.position.x, light.position.y, light.position.z,
+		light.brightness, light.color.r, light.color.g, light.color.b);
+	write(1, "\n", 2);
+}
+
+void free_scene(t_scene *scene)
+{
+	free(scene->lights);
+	// free(scene->spheres);
+	// free(scene->planes);
+	// free(scene->cylinders);
 }
 
 int parse_rt_file(char *filename, t_scene *scene)
