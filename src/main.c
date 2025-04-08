@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/02 13:06:31 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/07 11:59:54 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,14 @@ int init_mlx(t_miniRT *mini)
 	return (0);
 }
 
+void leaks(void)
+{
+	system("leaks -q miniRT");
+}
+
 int main(int argc, char **argv)
 {
+	atexit(leaks);
 	t_miniRT	mini;
 	char		*filename = "scene.rt";
 	int return_value = 0;
@@ -70,6 +76,7 @@ int main(int argc, char **argv)
 	return_value = init_mlx(&mini);
 	if (return_value)
 		return (return_value);
+	init_scene(&mini.scene);
 	return_value = parse_rt_file(filename, &mini.scene);
 	draw_smth(&mini);
 	mlx_loop_hook(mini.mlx, loop, &mini);

@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 11:39:55 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/02 13:11:11 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/07 11:49:11 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,5 +112,6 @@ typedef struct s_miniRT
 }				t_miniRT;
 
 int parse_rt_file(char *filename, t_scene *scene);
+void	init_scene(t_scene *scene);
 
 #endif

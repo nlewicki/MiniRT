@@ -1,4 +1,5 @@
 CFILES =	src/main.c \
+			src/init_struct.c \
 			src/parse_rt_file.c \
 
 
