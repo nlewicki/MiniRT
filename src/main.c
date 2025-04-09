@@ -6,7 +6,7 @@
 /*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/09 13:23:21 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/04/09 15:52:13 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,12 @@ int main(int argc, char **argv)
 	// draw_smth(&mini);
 	// mlx_loop_hook(mini.mlx, loop, &mini);
 	// mlx_loop(mini.mlx);
+	printf("Cylinder: %i\n", mini.scene.cylinder_count);
+	printf("Cylinder added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), diameter=%.2f, height=%.2f, color=(%d, %d, %d)\n",
+           mini.scene.cylinders->position.x, mini.scene.cylinders->position.y, mini.scene.cylinders->position.z,
+           mini.scene.cylinders->orientation.x, mini.scene.cylinders->orientation.y, mini.scene.cylinders->orientation.z,
+           mini.scene.cylinders->diameter, mini.scene.cylinders->height,
+           mini.scene.cylinders->color.r, mini.scene.cylinders->color.g, mini.scene.cylinders->color.b); // test ob alles in mini struct ist
 	free_scene(&mini.scene);
 	return (return_value);
 }
