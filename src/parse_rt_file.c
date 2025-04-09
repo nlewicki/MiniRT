@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_rt_file.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:05:20 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/08 12:47:55 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:18:51 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ void parse_light(char **tokens, t_scene *scene)
 		exit_error("Invalid light format");
 
 	t_light light;
-	light.position = parse_position(tokens[1], &error);
+	light.position = parse_position(tokens[1], &error); // vllt auch error check nach jedem einbauen?
 	light.brightness = parse_double(tokens[2], 0.0, 1.0, &error);
 	light.color = parse_color(tokens[3], &error);
 	if (error)
@@ -191,12 +191,123 @@ void parse_light(char **tokens, t_scene *scene)
 	write(1, "\n", 2);
 }
 
+void parse_sphere(char **tokens, t_scene *scene)
+{
+    int error = 0;
+    t_sphere *new_sphere;
+
+    if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4]) // Expect exactly 4 tokens: "sp", center, diameter, color
+        exit_error("Invalid sphere format");
+
+    t_sphere sphere;
+    sphere.center = parse_position(tokens[1], &error);
+    if (error)
+        exit_error("Invalid sphere center");
+    sphere.diameter = parse_double(tokens[2], 0.0, INFINITY, &error);
+    if (error)
+        exit_error("Invalid sphere diameter");
+    sphere.color = parse_color(tokens[3], &error);
+    if (error)
+        exit_error("Invalid sphere color");
+
+    new_sphere = ft_realloc(scene->spheres, sizeof(t_sphere) * (scene->sphere_count + 1));
+    if (!new_sphere)
+        exit_error("Memory allocation failed for spheres");
+    scene->spheres = new_sphere;
+    scene->spheres[scene->sphere_count] = sphere;
+    scene->sphere_count++;
+
+    // Debug print
+    printf("Sphere added: center=(%.2f, %.2f, %.2f), diameter=%.2f, color=(%d, %d, %d)\n",
+           sphere.center.x, sphere.center.y, sphere.center.z, sphere.diameter,
+           sphere.color.r, sphere.color.g, sphere.color.b);
+    printf("\n"); // Simpler than write
+}
+
+void parse_plane(char **tokens, t_scene *scene)
+{
+    int error = 0;
+    t_plane *new_planes;
+
+    if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4]) // Expect exactly 4 tokens: "pl", position, orientation, color
+        exit_error("Invalid plane format");
+
+    t_plane plane;
+    plane.position = parse_position(tokens[1], &error);
+    if (error)
+        exit_error("Invalid plane position");
+    plane.orientation = parse_orientation(tokens[2], &error);
+    if (error)
+        exit_error("Invalid plane orientation");
+    plane.color = parse_color(tokens[3], &error);
+    if (error)
+        exit_error("Invalid plane color");
+
+    new_planes = ft_realloc(scene->planes, sizeof(t_plane) * (scene->plane_count + 1));
+    if (!new_planes)
+        exit_error("Memory allocation failed for planes");
+    scene->planes = new_planes;
+    scene->planes[scene->plane_count] = plane;
+    scene->plane_count++;
+
+    // Debug print
+    printf("Plane added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), color=(%d, %d, %d)\n",
+           plane.position.x, plane.position.y, plane.position.z,
+           plane.orientation.x, plane.orientation.y, plane.orientation.z,
+           plane.color.r, plane.color.g, plane.color.b);
+    printf("\n");
+}
+
+void parse_cylinder(char **tokens, t_scene *scene)
+{
+    int error;
+    t_cylinder *new_cylinders;
+	t_cylinder cylinder;
+
+	error = 0;
+    if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5] || tokens[6]) // Expect exactly 6 tokens: "cy", position, orientation, diameter, height, color
+        exit_error("Invalid cylinder format");
+    cylinder.position = parse_position(tokens[1], &error);
+    if (error)
+        exit_error("Invalid cylinder position");
+    cylinder.orientation = parse_orientation(tokens[2], &error);
+    if (error)
+        exit_error("Invalid cylinder orientation");
+    cylinder.diameter = parse_double(tokens[3], 0.0, INFINITY, &error);
+    if (error)
+        exit_error("Invalid cylinder diameter");
+    cylinder.height = parse_double(tokens[4], 0.0, INFINITY, &error);
+    if (error)
+        exit_error("Invalid cylinder height");
+    cylinder.color = parse_color(tokens[5], &error);
+    if (error)
+        exit_error("Invalid cylinder color");
+    new_cylinders = ft_realloc(scene->cylinders, sizeof(t_cylinder) * (scene->cylinder_count + 1));
+    if (!new_cylinders)
+        exit_error("Memory allocation failed for cylinders");
+    scene->cylinders = new_cylinders;
+    scene->cylinders[scene->cylinder_count] = cylinder;
+    scene->cylinder_count++;
+
+    // Debug print
+    printf("Cylinder added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), diameter=%.2f, height=%.2f, color=(%d, %d, %d)\n",
+           cylinder.position.x, cylinder.position.y, cylinder.position.z,
+           cylinder.orientation.x, cylinder.orientation.y, cylinder.orientation.z,
+           cylinder.diameter, cylinder.height,
+           cylinder.color.r, cylinder.color.g, cylinder.color.b);
+    printf("\n");
+}
+
 void free_scene(t_scene *scene)
 {
-	free(scene->lights);
-	// free(scene->spheres);
-	// free(scene->planes);
-	// free(scene->cylinders);
+    if (scene->lights)
+        free(scene->lights);
+    if (scene->spheres)
+        free(scene->spheres);
+    if (scene->planes)
+        free(scene->planes);
+    if (scene->cylinders)
+        free(scene->cylinders);
 }
 
 int parse_rt_file(char *filename, t_scene *scene)
@@ -232,17 +343,18 @@ int parse_rt_file(char *filename, t_scene *scene)
 			parse_camera(tokens, scene);
 		else if (ft_strcmp(tokens[0], "L") == 0)
 			parse_light(tokens, scene);
-		// else if (ft_strcmp(tokens[0], "sp") == 0)
-		// 	parse_sphere(tokens, scene);
-		// else if (ft_strcmp(tokens[0], "pl") == 0)
-		// 	parse_plane(tokens, scene);
-		// else if (ft_strcmp(tokens[0], "cy") == 0)
-		// 	parse_cylinder(tokens, scene);
+		else if (ft_strcmp(tokens[0], "sp") == 0)
+			parse_sphere(tokens, scene);
+		else if (ft_strcmp(tokens[0], "pl") == 0)
+			parse_plane(tokens, scene);
+		else if (ft_strcmp(tokens[0], "cy") == 0)
+			parse_cylinder(tokens, scene);
 		else
 		{
 			free(line);
 			ft_free_split(tokens);
 			close(fd);
+			free_scene(scene);
 			exit_error("Unknown identifier");
 		}
 		free(line);

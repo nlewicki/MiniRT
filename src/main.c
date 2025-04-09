@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/08 11:37:33 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:23:21 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,6 @@ int main(int argc, char **argv)
 	// draw_smth(&mini);
 	// mlx_loop_hook(mini.mlx, loop, &mini);
 	// mlx_loop(mini.mlx);
+	free_scene(&mini.scene);
 	return (return_value);
 }

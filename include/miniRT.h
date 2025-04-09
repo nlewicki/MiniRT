@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 11:39:55 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/08 11:46:04 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:21:06 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,6 @@ typedef struct s_miniRT
 int parse_rt_file(char *filename, t_scene *scene);
 void	init_scene(t_scene *scene);
 void	exit_error(char *msg);
+void free_scene(t_scene *scene);
 
 #endif
