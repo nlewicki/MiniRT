@@ -3,6 +3,7 @@ Aufgaben fuer naechstes mal:
 - atof aus fractol holen
 - Wenn leere zeile in .rt ist, nicht abbrechen
 - parsing tests machen (print_struct funktion oder so)
+value = strtod(str, &endptr); schreiben
 
 
 Step-by-Step Plan for Parsing

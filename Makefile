@@ -1,13 +1,19 @@
 CFILES =	src/main.c \
 			src/init_struct.c \
 			src/parse_rt_file.c \
-
+			src/parse/parse_ambient.c \
+			src/parse/parse_camera.c \
+			src/parse/parse_cylinder.c \
+			src/parse/parse_light.c \
+			src/parse/parse_plane.c \
+			src/parse/parse_sphere.c \
+			src/parse/parse_utils.c \
 
 NAME = miniRT
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I./include -g
 OBJ_DIR = Obj
-OFILES = $(addprefix $(OBJ_DIR)/,$(notdir $(CFILES:.c=.o)))
+OFILES = $(patsubst src/%.c, $(OBJ_DIR)/%.o, $(CFILES))
 
 LIBFT_URL = https://github.com/nlewicki/LIBFT.git
 LIBFT_DIR = lib/libft
@@ -44,6 +50,7 @@ $(NAME): $(MLX42_LIB) $(OFILES) $(LIBFT)
 	clear
 
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	@echo "Compiling $<"
 	@$(CC) -c $(CFLAGS) $(LIBFT_INCLUDES) $(MLX42_INCLUDES) $< -o $@
 

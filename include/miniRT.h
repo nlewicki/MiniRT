@@ -6,7 +6,7 @@
 /*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 11:39:55 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/09 13:21:06 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/04/09 15:32:24 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,5 +116,19 @@ int parse_rt_file(char *filename, t_scene *scene);
 void	init_scene(t_scene *scene);
 void	exit_error(char *msg);
 void free_scene(t_scene *scene);
+
+void 	ft_free_split(char **split);
+double parse_double(char *str, double min, double max, int *error);
+t_color	parse_color(char *str, int *error);
+t_vec3 parse_position(char *str, int *error);
+t_vec3 parse_orientation(char *str, int *error);
+
+void parse_ambient(char **tokens, t_scene *scene);
+void parse_camera(char **tokens, t_scene *scene);
+void parse_cylinder(char **tokens, t_scene *scene);
+void parse_light(char **tokens, t_scene *scene);
+void parse_plane(char **tokens, t_scene *scene);
+void parse_sphere(char **tokens, t_scene *scene);
+
 
 #endif
