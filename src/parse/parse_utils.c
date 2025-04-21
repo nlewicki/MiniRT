@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:39:51 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/09 15:42:12 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/04/21 14:00:21 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,19 @@ t_vec3 parse_orientation(char *str, int *error)
 	if (*error)
 		return ((t_vec3){0, 0, 0});
 	return (vec);
+}
+
+t_vec3 normalize_vector(t_vec3 vec)
+{
+	double	magnitude;
+	t_vec3	normalized;
+
+	magnitude = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+	if (magnitude < 0.0001)
+		return vec;
+	normalized.x = vec.x / magnitude;
+	normalized.y = vec.y / magnitude;
+	normalized.z = vec.z / magnitude;
+
+	return normalized;
 }
