@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/21 14:53:48 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/21 15:03:40 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static t_ray generate_camera_ray(t_camera cam, int x, int y)
 	double py = v * (viewport_height / 2.0);
 
 	// Blickrichtung auf -Z (wenn orientation z.B. (0, 0, -1))
-	t_vec3 ray_dir = vec_normalize((t_vec3){px, py, -1.0});
+	t_vec3 ray_dir = vec_normalize((t_vec3){px, py, 1.0});
 
 	// Optional: in Kamera-Richtung rotieren (wenn orientation ≠ (0, 0, -1)) → später
 	// Aktuell ignorieren wir orientation, um's einfacher zu halten
@@ -79,13 +79,12 @@ void render_scene(mlx_image_t *img, t_scene *scene)
 
 			for (int i = 0; i < scene->sphere_count; i++)
 			{
-				if (hit_sphere(ray, &scene->spheres[0]))
+				if (hit_sphere(ray, &scene->spheres[i]) > 0)
 				{
 					pixel_color = color_to_uint32(scene->spheres[i].color);
-					break; // Nur erste getroffene Sphäre färben
+					break;
 				}
 			}
-
 			mlx_put_pixel(img, x, y, pixel_color);
 		}
 	}

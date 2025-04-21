@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 11:39:55 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/21 14:43:51 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/21 15:04:08 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 
 # define WIDTH 800
-# define HEIGHT 200
+# define HEIGHT 600
 #define DEG2RAD (M_PI / 180.0)
 
 
