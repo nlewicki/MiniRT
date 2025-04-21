@@ -8,6 +8,7 @@ CFILES =	src/main.c \
 			src/parse/parse_plane.c \
 			src/parse/parse_sphere.c \
 			src/parse/parse_utils.c \
+			src/render/render_scene.c \
 
 NAME = miniRT
 CC = cc

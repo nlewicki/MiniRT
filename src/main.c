@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/21 13:49:58 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/21 13:59:03 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,22 +64,21 @@ void leaks(void)
 	system("leaks -q miniRT");
 }
 
-int main(int argc, char **argv)
+int main(void)
 {
 	atexit(leaks);
 	t_miniRT	mini;
-	int return_value = 0;
-
-	if (argc != 2)
-		exit_error("Usage: ./miniRT <filename>\n");
-	 return_value = init_mlx(&mini);
-	 if (return_value)
-	 	return (return_value);
-	init_scene(&mini.scene);
-	return_value = parse_rt_file(argv[1], &mini.scene);
-	 draw_smth(&mini);
-	 mlx_loop_hook(mini.mlx, loop, &mini);
-	 mlx_loop(mini.mlx);
-	free_scene(&mini.scene);
-	return (return_value);
+	mlx_image_t	*img;
+	mlx_t		*mlx;
+	
+	mlx = mlx_init(WIDTH, HEIGHT, "mini_rt", true);
+	if (!mlx)
+		return (EXIT_FAILURE);
+	img = mlx_new_image(mlx, WIDTH, HEIGHT);
+	if (!img || mlx_image_to_window(mlx, img, 0, 0) < 0)
+		return (EXIT_FAILURE);
+	render_scene(img);
+	mlx_loop(mlx);
+	mlx_terminate(mlx);
+	return (EXIT_SUCCESS);
 }
