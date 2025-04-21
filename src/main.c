@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/21 14:36:53 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/21 14:55:56 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,9 @@ int main(int argc, char **argv)
 	return_value = parse_rt_file(argv[1], &mini.scene);
 	if (return_value)
 		return (return_value);
+	printf("----------------------\n");
 	render_scene(mini.img, &mini.scene);
+	printf("----------------------\n");
 	mlx_loop_hook(mini.mlx, loop, &mini); // optional
 	mlx_loop(mini.mlx);
 	free_scene(&mini.scene);

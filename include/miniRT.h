@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 11:39:55 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/21 14:33:36 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/21 14:43:51 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 
 # define WIDTH 800
 # define HEIGHT 200
+#define DEG2RAD (M_PI / 180.0)
+
 
 // For RGB colors
 typedef struct s_color
@@ -139,10 +141,10 @@ void parse_sphere(char **tokens, t_scene *scene);
 //utils
 t_vec3 vec_sub(t_vec3 a, t_vec3 b);
 double vec_skal(t_vec3 a, t_vec3 b);
+t_vec3 vec_normalize(t_vec3 v);
 
 
 //render
-double	hit_sphere(const t_sphere *sphere, const t_ray ray);
 void render_scene(mlx_image_t *img, t_scene *scene);
 
 
