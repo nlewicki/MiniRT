@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 11:39:55 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/21 13:44:22 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/21 13:46:51 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include "../lib/libft/get_next_line.h"
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 
-# define WIDTH 500
-# define HEIGHT 500
+# define WIDTH 800
+# define HEIGHT 200
 
 // For RGB colors
 typedef struct s_color
