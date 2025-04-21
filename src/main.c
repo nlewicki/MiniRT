@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/09 15:52:13 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/04/21 13:16:57 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,20 +72,14 @@ int main(int argc, char **argv)
 
 	if (argc != 2)
 		exit_error("Usage: ./miniRT <filename>\n");
-	// return_value = init_mlx(&mini);
-	// if (return_value)
-	// 	return (return_value);
+	 return_value = init_mlx(&mini);
+	 if (return_value)
+	 	return (return_value);
 	init_scene(&mini.scene);
 	return_value = parse_rt_file(argv[1], &mini.scene);
-	// draw_smth(&mini);
-	// mlx_loop_hook(mini.mlx, loop, &mini);
-	// mlx_loop(mini.mlx);
-	printf("Cylinder: %i\n", mini.scene.cylinder_count);
-	printf("Cylinder added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), diameter=%.2f, height=%.2f, color=(%d, %d, %d)\n",
-           mini.scene.cylinders->position.x, mini.scene.cylinders->position.y, mini.scene.cylinders->position.z,
-           mini.scene.cylinders->orientation.x, mini.scene.cylinders->orientation.y, mini.scene.cylinders->orientation.z,
-           mini.scene.cylinders->diameter, mini.scene.cylinders->height,
-           mini.scene.cylinders->color.r, mini.scene.cylinders->color.g, mini.scene.cylinders->color.b); // test ob alles in mini struct ist
+	 draw_smth(&mini);
+	 mlx_loop_hook(mini.mlx, loop, &mini);
+	 mlx_loop(mini.mlx);
 	free_scene(&mini.scene);
 	return (return_value);
 }
