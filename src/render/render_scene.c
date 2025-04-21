@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/21 15:03:40 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/21 15:28:12 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void render_scene(mlx_image_t *img, t_scene *scene)
 	{
 		for (int x = 0; x < WIDTH; x++)
 		{
-			t_ray ray = generate_camera_ray(scene->camera, x, y); // Noch zu schreiben
+			t_ray ray = generate_camera_ray(scene->camera, x, y);
 
 			u_int32_t pixel_color = color_to_uint32(scene->ambient.color); // Standardfarbe (z.B. Hintergrund)
 
@@ -89,4 +89,3 @@ void render_scene(mlx_image_t *img, t_scene *scene)
 		}
 	}
 }
-

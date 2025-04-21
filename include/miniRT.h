@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 11:39:55 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/21 15:04:08 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/21 15:48:35 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,12 +101,12 @@ typedef struct s_cylinder
 // Main scene struct
 typedef struct s_scene
 {
-    t_ambient ambient;
-    t_camera camera;
-    t_light *lights;  // Array of lights
-    int light_count;
-    t_sphere *spheres; // Array of spheres
-    int sphere_count;
+	t_ambient ambient;
+	t_camera camera;
+	t_light *lights;  // Array of lights
+	int light_count;
+	t_sphere *spheres; // Array of spheres
+	int sphere_count;
 	t_plane *planes; // Array of planes
 	int plane_count;
 	t_cylinder *cylinders; // Array of cylinders
