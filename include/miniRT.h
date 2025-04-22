@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/22 16:06:24 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:08:45 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,16 +170,20 @@ void parse_sphere(char **tokens, t_scene *scene);
 void convert_objects(t_scene *scene);
 double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
 double hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
-double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
+//double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
 
 //utils
 t_vec3 vec_sub(t_vec3 a, t_vec3 b);
+t_vec3 vec_add(t_vec3 a, t_vec3 b);
 double vec_skal(t_vec3 a, t_vec3 b);
 t_vec3 vec_normalize(t_vec3 v);
+t_vec3 vec_mul(t_vec3 v, double scalar);
+
 
 
 //render
 void render_scene(mlx_image_t *img, t_scene *scene);
+
 
 
 #endif

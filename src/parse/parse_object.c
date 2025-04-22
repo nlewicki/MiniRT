@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   parse_object.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:23:41 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/22 14:38:17 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:10:30 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info)
-{
-	(void)obj; (void)ray; (void)hit_info;
-	return (-1.0); // Placeholder: -1 means no hit
-}
+//double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info)
+//{
+//	(void)obj; (void)ray; (void)hit_info;
+//	return (-1.0); // Placeholder: -1 means no hit
+//}
 
-double hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info)
-{
-	(void)obj; (void)ray; (void)hit_info;
-	return (-1.0); // Placeholder
-}
+//double hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info)
+//{
+//	(void)obj; (void)ray; (void)hit_info;
+//	return (-1.0); // Placeholder
+//}
 
 double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info)
 {

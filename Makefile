@@ -10,6 +10,7 @@ CFILES =	src/main.c \
 			src/parse/parse_utils.c \
 			src/parse/parse_object.c \
 			src/render/render_scene.c \
+			src/render/hit_obj.c \
 			src/utils/utils.c \
 
 NAME = miniRT
