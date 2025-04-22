@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/22 17:08:45 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/22 17:20:14 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ t_vec3 vec_add(t_vec3 a, t_vec3 b);
 double vec_skal(t_vec3 a, t_vec3 b);
 t_vec3 vec_normalize(t_vec3 v);
 t_vec3 vec_mul(t_vec3 v, double scalar);
+t_vec3 vec_cross(t_vec3 a, t_vec3 b);
 
 
 
