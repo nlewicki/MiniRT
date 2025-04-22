@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:39:51 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/21 14:00:21 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:59:26 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_color	parse_color(char *str, int *error)
 	color.r = ft_atoi(rgb[0]);
 	color.g = ft_atoi(rgb[1]);
 	color.b = ft_atoi(rgb[2]);
+	color.a = 255;
 	if (color.r < 0 || color.r > 255 || color.g < 0 || color.g > 255
 		|| color.b < 0 || color.b > 255)
 	{
@@ -99,19 +100,4 @@ t_vec3 parse_orientation(char *str, int *error)
 	if (*error)
 		return ((t_vec3){0, 0, 0});
 	return (vec);
-}
-
-t_vec3 normalize_vector(t_vec3 vec)
-{
-	double	magnitude;
-	t_vec3	normalized;
-
-	magnitude = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-	if (magnitude < 0.0001)
-		return vec;
-	normalized.x = vec.x / magnitude;
-	normalized.y = vec.y / magnitude;
-	normalized.z = vec.z / magnitude;
-
-	return normalized;
 }
