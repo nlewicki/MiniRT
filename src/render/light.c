@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/22 17:42:09 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/22 18:55:26 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@ static t_color color_scale(t_color c, double factor)
 	return result;
 }
 
-static t_color color_mult(t_color c1, t_color c2)
-{
-	t_color result = {
-		.r = (c1.r * c2.r) / 255,
-		.g = (c1.g * c2.g) / 255,
-		.b = (c1.b * c2.b) / 255,
-		.a = c1.a
-	};
-	return result;
-}
+//static t_color color_mult(t_color c1, t_color c2)
+//{
+//	t_color result = {
+//		.r = (c1.r * c2.r) / 255,
+//		.g = (c1.g * c2.g) / 255,
+//		.b = (c1.b * c2.b) / 255,
+//		.a = c1.a
+//	};
+//	return result;
+//}
 
 static t_color color_add(t_color c1, t_color c2)
 {
@@ -53,6 +53,15 @@ static t_color color_clamp(t_color c)
 	return c;
 }
 
+t_color color_mix(t_color a, t_color b, double factor)
+{
+	t_color result;
+
+	result.r = a.r * (1 - factor) + b.r * factor;
+	result.g = a.g * (1 - factor) + b.g * factor;
+	result.b = a.b * (1 - factor) + b.b * factor;
+	return result;
+}
 
 t_color compute_lighting(t_scene *scene, t_hit hit)
 {
@@ -75,21 +84,19 @@ t_color compute_lighting(t_scene *scene, t_hit hit)
 		{
 			t_hit shadow_hit;
 			double t = scene->objects[j].hit(&scene->objects[j], shadow_ray, &shadow_hit);
-
 			if (t > 0 && t < light_dist)
 			{
 				in_shadow = true;
 				break;
 			}
 		}
-
 		if (!in_shadow)
 		{
 			double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
-			t_color scaled_light = color_scale(light.color, diffuse * light.brightness);
-			final_color = color_add(final_color, color_mult(hit.color, scaled_light));
+			t_color light_contrib = color_scale(hit.color, diffuse * light.brightness);
+			light_contrib = color_mix(light_contrib, light.color, 0.2);
+			final_color = color_add(final_color, light_contrib);
 		}
 	}
-
 	return color_clamp(final_color);
 }
