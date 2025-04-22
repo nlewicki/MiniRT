@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/22 17:20:14 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/22 17:43:27 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ void convert_objects(t_scene *scene);
 double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
 double hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 //double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
+t_color compute_lighting(t_scene *scene, t_hit hit);
 
 //utils
 t_vec3 vec_sub(t_vec3 a, t_vec3 b);
@@ -179,6 +180,7 @@ double vec_skal(t_vec3 a, t_vec3 b);
 t_vec3 vec_normalize(t_vec3 v);
 t_vec3 vec_mul(t_vec3 v, double scalar);
 t_vec3 vec_cross(t_vec3 a, t_vec3 b);
+double vec_length(t_vec3 v);
 
 
 

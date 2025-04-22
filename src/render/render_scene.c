@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/22 17:21:50 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/22 17:43:01 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void render_scene(mlx_image_t *img, t_scene *scene)
 			}
 
 			if (hit_any)
-				pixel_color = color_to_uint32(closest_hit.color);
+				pixel_color = color_to_uint32(compute_lighting(scene, closest_hit));
 			mlx_put_pixel(img, x, y, pixel_color);
 		}
 	}
