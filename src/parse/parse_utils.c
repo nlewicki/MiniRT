@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 15:39:51 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/22 14:31:41 by nlewicki         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/04/22 16:05:04 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "miniRT.h"
 

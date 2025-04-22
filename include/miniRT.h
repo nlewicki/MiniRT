@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/21 11:39:55 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/22 14:28:41 by nlewicki         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/04/22 16:06:24 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINIRT_H
 # define MINIRT_H
@@ -23,7 +24,9 @@
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 
 # define WIDTH 800
-# define HEIGHT 200
+# define HEIGHT 600
+#define DEG2RAD (M_PI / 180.0)
+
 
 // For RGB colors
 typedef struct s_color
@@ -125,12 +128,12 @@ typedef struct s_cylinder
 // Main scene struct
 typedef struct s_scene
 {
-    t_ambient ambient;
-    t_camera camera;
-    t_light *lights;  // Array of lights
-    int light_count;
-    t_sphere *spheres; // Array of spheres
-    int sphere_count;
+	t_ambient ambient;
+	t_camera camera;
+	t_light *lights;  // Array of lights
+	int light_count;
+	t_sphere *spheres; // Array of spheres
+	int sphere_count;
 	t_plane *planes; // Array of planes
 	int plane_count;
 	t_cylinder *cylinders; // Array of cylinders
@@ -168,6 +171,15 @@ void convert_objects(t_scene *scene);
 double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
 double hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
+
+//utils
+t_vec3 vec_sub(t_vec3 a, t_vec3 b);
+double vec_skal(t_vec3 a, t_vec3 b);
+t_vec3 vec_normalize(t_vec3 v);
+
+
+//render
+void render_scene(mlx_image_t *img, t_scene *scene);
 
 
 #endif

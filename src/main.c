@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/22 14:30:12 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:10:04 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,20 +112,26 @@ int main(int argc, char **argv)
 {
 	atexit(leaks);
 	t_miniRT	mini;
-	int return_value = 0;
+	int			return_value = 0;
 
 	if (argc != 2)
 		exit_error("Usage: ./miniRT <filename>\n");
-	 return_value = init_mlx(&mini);
-	 if (return_value)
-	 	return (return_value);
+	return_value = init_mlx(&mini);
+	if (return_value)
+		return (return_value);
 	init_scene(&mini.scene);
 	return_value = parse_rt_file(argv[1], &mini.scene);
 	convert_objects(&mini.scene);
 	print_objects(&mini.scene);
-	 draw_smth(&mini);
-	 mlx_loop_hook(mini.mlx, loop, &mini);
-	 mlx_loop(mini.mlx);
+	if (return_value)
+		return (return_value);
+	printf("----------------------\n");
+	render_scene(mini.img, &mini.scene);
+	printf("----------------------\n");
+	mlx_loop_hook(mini.mlx, loop, &mini); // optional
+	mlx_loop(mini.mlx);
 	free_scene(&mini.scene);
+	mlx_terminate(mini.mlx);
 	return (return_value);
 }
+
