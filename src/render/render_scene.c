@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_scene.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/21 15:28:12 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/22 15:37:09 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ static t_ray generate_camera_ray(t_camera cam, int x, int y)
 	return ray;
 }
 
-static uint32_t color_to_uint32(t_color c)
+uint32_t color_to_uint32(t_color color)
 {
-	return ((255 << 24) | (c.r << 16) | (c.g << 8) | c.b); // ARGB
+	return ((color.r << 24) | (color.g << 16) | (color.b << 8) | color.a);
 }
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:39:51 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/09 15:42:12 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/04/22 15:38:41 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,17 @@ t_color	parse_color(char *str, int *error)
 	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
 	{
 		*error = 1;
-		return ((t_color){0, 0, 0});
+		return ((t_color){0, 0, 0, 0});
 	}
 	color.r = ft_atoi(rgb[0]);
 	color.g = ft_atoi(rgb[1]);
 	color.b = ft_atoi(rgb[2]);
+	color.a = 255;
 	if (color.r < 0 || color.r > 255 || color.g < 0 || color.g > 255
 		|| color.b < 0 || color.b > 255)
 	{
 		*error = 1;
-		return ((t_color){0, 0, 0});
+		return ((t_color){0, 0, 0, 0});
 	}
 	ft_free_split(rgb);
 	return (color);
