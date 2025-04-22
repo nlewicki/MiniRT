@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/21 13:49:58 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/22 14:30:12 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,50 @@ void leaks(void)
 	system("leaks -q miniRT");
 }
 
+void print_objects(t_scene *scene)
+{
+    int i;
+
+    printf("Total objects: %d\n", scene->object_count);
+    for (i = 0; i < scene->object_count; i++)
+    {
+        t_object *obj = &scene->objects[i];
+        printf("Object #%d:\n", i + 1);
+        printf("  Type: ");
+        if (obj->type == SPHERE)
+        {
+            t_sphere *sphere = (t_sphere *)obj->data;
+            printf("Sphere\n");
+            printf("  Center: (%.2f, %.2f, %.2f)\n", sphere->center.x, sphere->center.y, sphere->center.z);
+            printf("  Diameter: %.2f\n", sphere->diameter);
+            printf("  Color: (%d, %d, %d, %d)\n", sphere->color.r, sphere->color.g, sphere->color.b, sphere->color.a);
+        }
+        else if (obj->type == PLANE)
+        {
+            t_plane *plane = (t_plane *)obj->data;
+            printf("Plane\n");
+            printf("  Position: (%.2f, %.2f, %.2f)\n", plane->position.x, plane->position.y, plane->position.z);
+            printf("  Orientation: (%.2f, %.2f, %.2f)\n", plane->orientation.x, plane->orientation.y, plane->orientation.z);
+            printf("  Color: (%d, %d, %d, %d)\n", plane->color.r, plane->color.g, plane->color.b, plane->color.a);
+        }
+        else if (obj->type == CYLINDER)
+        {
+            t_cylinder *cylinder = (t_cylinder *)obj->data;
+            printf("Cylinder\n");
+            printf("  Position: (%.2f, %.2f, %.2f)\n", cylinder->position.x, cylinder->position.y, cylinder->position.z);
+            printf("  Orientation: (%.2f, %.2f, %.2f)\n", cylinder->orientation.x, cylinder->orientation.y, cylinder->orientation.z);
+            printf("  Diameter: %.2f\n", cylinder->diameter);
+            printf("  Height: %.2f\n", cylinder->height);
+            printf("  Color: (%d, %d, %d, %d)\n", cylinder->color.r, cylinder->color.g, cylinder->color.b, cylinder->color.a);
+        }
+        else
+        {
+            printf("Unknown\n");
+        }
+        printf("\n");
+    }
+}
+
 int main(int argc, char **argv)
 {
 	atexit(leaks);
@@ -77,6 +121,8 @@ int main(int argc, char **argv)
 	 	return (return_value);
 	init_scene(&mini.scene);
 	return_value = parse_rt_file(argv[1], &mini.scene);
+	convert_objects(&mini.scene);
+	print_objects(&mini.scene);
 	 draw_smth(&mini);
 	 mlx_loop_hook(mini.mlx, loop, &mini);
 	 mlx_loop(mini.mlx);

@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 11:46:10 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/08 11:41:34 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:22:02 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@ void	init_scene(t_scene *scene)
 	scene->plane_count = 0;
 	scene->cylinders = NULL;
 	scene->cylinder_count = 0;
-	printf("Scene initialized: lights=%d, spheres=%d\n", scene->light_count, scene->sphere_count);
+	scene->objects = NULL;
+	scene->object_count = 0;
 }

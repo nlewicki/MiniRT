@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_rt_file.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:05:20 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/09 15:41:27 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/04/22 14:33:26 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,22 @@ void	exit_error(char *msg)
 
 void free_scene(t_scene *scene)
 {
-    if (scene->lights)
-        free(scene->lights);
-    if (scene->spheres)
-        free(scene->spheres);
-    if (scene->planes)
-        free(scene->planes);
-    if (scene->cylinders)
-        free(scene->cylinders);
+	int i;
+
+	if (scene->lights)
+		free(scene->lights);
+	if (scene->spheres)
+		free(scene->spheres);
+	if (scene->planes)
+		free(scene->planes);
+	if (scene->cylinders)
+		free(scene->cylinders);
+	if (scene->objects)
+	{
+		for (i = 0; i < scene->object_count; i++)
+			free(scene->objects[i].data); // Free the data for each object
+		free(scene->objects);
+	}
 }
 
 int parse_rt_file(char *filename, t_scene *scene)

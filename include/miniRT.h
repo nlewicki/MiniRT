@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 11:39:55 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/21 14:31:36 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:28:41 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,31 @@ typedef struct s_ray
 	t_vec3 origin;
 	t_vec3 direction;
 }	t_ray;
+
+typedef enum e_object_type
+{
+	SPHERE,
+	PLANE,
+	CYLINDER
+} t_object_type;
+
+typedef struct s_hit
+{
+	double t;        // Distance to hit point
+	t_vec3 point;    // Hit point
+	t_vec3 normal;   // Surface normal at hit point
+	t_color color;   // Color at hit point
+	// Add more fields if needed (e.g., for lighting)
+} t_hit;
+
+typedef struct s_object
+{
+	t_object_type type;
+	void *data;
+	t_color color;
+	double (*hit)(struct s_object *, const t_ray ray, t_hit *hit_info);
+} t_object;
+
 
 // Ambient lighting
 typedef struct s_ambient
@@ -110,6 +135,8 @@ typedef struct s_scene
 	int plane_count;
 	t_cylinder *cylinders; // Array of cylinders
 	int cylinder_count;
+	t_object *objects; // Array of objects (spheres, planes, etc.)
+	int object_count;
 } t_scene;
 
 typedef struct s_miniRT
@@ -136,6 +163,11 @@ void parse_cylinder(char **tokens, t_scene *scene);
 void parse_light(char **tokens, t_scene *scene);
 void parse_plane(char **tokens, t_scene *scene);
 void parse_sphere(char **tokens, t_scene *scene);
+
+void convert_objects(t_scene *scene);
+double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
+double hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
+double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
 
 
 #endif
