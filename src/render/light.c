@@ -6,7 +6,7 @@
 /*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/23 16:22:11 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/04/23 16:33:08 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,36 @@ t_color color_mix(t_color a, t_color b, double factor)
 
 double	compute_shadow(t_scene *scene, t_vec3 point, t_light light)
 {
-	const int	samples;
+	const int	samples = 16;
 	int			unblocked;
 	double		dist;
 	double		t;
 	bool		blocked;
 
-	
+	unblocked = 0;
+	for (int i = 0; i < samples; i ++)
+	{
+		t_vec3 samples_pos = random_point_on_sphere(light.position, 0.2);
+		t_vec3 dir = vec_sub(samples_pos, point);
+		dist = vec_length(dir);
+		dir = vec_normalize(dir);
+		t_ray shadow_ray;
+		shadow_ray.origin = vec_add(point, vec_mul(dir, 1e-4));
+		shadow_ray.direction = dir;
+		for (int j = 0; j < scene->object_count; j++)
+		{
+			t_hit hit;
+			t = scene->objects[j].hit(&scene->objects[j], shadow_ray, &hit);
+			if (t > 0 && t < dist)
+			{
+				blocked = true;
+				break;
+			}
+		}
+		if (!blocked)
+			unblocked ++;
+	}
+	return ((double)unblocked / (double)samples);
 }
 
 t_color compute_lighting(t_scene *scene, t_hit hit)
