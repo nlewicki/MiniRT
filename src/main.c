@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 13:17:23 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/23 13:29:44 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,118 @@ void	exit_mini(t_miniRT *mini)
 	exit(1);
 }
 
+//gecuttete version von key_hook
+
+// static void	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward)
+// {
+// 	t_vec3 up = {0, 1, 0};  // World up vector
+// 	t_vec3 right;
+// 	const double move_speed = 0.5;
+
+// 	right = vec_cross(forward, up);
+// 	right = vec_normalize(right);
+
+// 	if (key == MLX_KEY_W)
+// 		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(forward, move_speed));
+// 	else if (key == MLX_KEY_S)
+// 		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(forward, move_speed));
+// 	else if (key == MLX_KEY_A)
+// 		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(right, move_speed));
+// 	else if (key == MLX_KEY_D)
+// 		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(right, move_speed));
+// }
+
+// static void	handle_horizontal_rotation(t_miniRT *mini, int key, t_vec3 forward)
+// {
+// 	const double rot_speed = 0.1;
+// 	t_vec3 rotated = forward;
+
+// 	if (key == MLX_KEY_RIGHT)
+// 	{
+// 		rotated.x = forward.x * cos(rot_speed) - forward.z * sin(rot_speed);
+// 		rotated.z = forward.x * sin(rot_speed) + forward.z * cos(rot_speed);
+// 	}
+// 	else if (key == MLX_KEY_LEFT)
+// 	{
+// 		rotated.x = forward.x * cos(-rot_speed) - forward.z * sin(-rot_speed);
+// 		rotated.z = forward.x * sin(-rot_speed) + forward.z * cos(-rot_speed);
+// 	}
+// 	mini->scene.camera.orientation = vec_normalize(rotated);
+// }
+
+// static void	handle_vertical_rotation(t_miniRT *mini, int key, t_vec3 forward)
+// {
+// 	const double rot_speed = 0.1;
+// 	t_vec3 rotated = forward;
+
+// 	if (key == MLX_KEY_UP)
+// 	{
+// 		rotated.y = forward.y * cos(-rot_speed) - forward.z * sin(-rot_speed);
+// 		rotated.z = forward.y * sin(-rot_speed) + forward.z * cos(-rot_speed);
+// 	}
+// 	else if (key == MLX_KEY_DOWN)
+// 	{
+// 		rotated.y = forward.y * cos(rot_speed) - forward.z * sin(rot_speed);
+// 		rotated.z = forward.y * sin(rot_speed) + forward.z * cos(rot_speed);
+// 	}
+// 	mini->scene.camera.orientation = vec_normalize(rotated);
+// }
+
+// static void	handle_camera_rotation(t_miniRT *mini, int key, t_vec3 forward)
+// {
+// 	if (key == MLX_KEY_LEFT || key == MLX_KEY_RIGHT)
+// 		handle_horizontal_rotation(mini, key, forward);
+// 	else if (key == MLX_KEY_UP || key == MLX_KEY_DOWN)
+// 		handle_vertical_rotation(mini, key, forward);
+// }
+
+// static void	handle_resolution_mode(t_miniRT *mini)
+// {
+// 	mini->low_res_mode = !mini->low_res_mode;
+// 	render_scene(mini->img, mini);
+// }
+
+// static bool	handle_key_checks(mlx_key_data_t key, t_miniRT *mini)
+// {
+// 	if (key.key == MLX_KEY_ESCAPE)
+// 		exit_mini(mini);
+// 	if (key.action != MLX_PRESS)
+// 		return (false);
+// 	if (key.key == MLX_KEY_F)
+// 	{
+// 		handle_resolution_mode(mini);
+// 		return (false);
+// 	}
+// 	mini->low_res_mode = true;
+// 	return (true);
+// }
+
+// void	key_hook(mlx_key_data_t key, void *param)
+// {
+// 	t_miniRT	*mini;
+// 	t_vec3		forward;
+// 	bool		needs_render;
+
+// 	mini = (t_miniRT *)param;
+// 	if (!handle_key_checks(key, mini))
+// 		return;
+// 	forward = vec_normalize(mini->scene.camera.orientation);
+// 	needs_render = false;
+// 	if (key.key == MLX_KEY_W || key.key == MLX_KEY_A ||
+// 		key.key == MLX_KEY_S || key.key == MLX_KEY_D)
+// 	{
+// 		handle_camera_movement(mini, key.key, forward);
+// 		needs_render = true;
+// 	}
+// 	else if (key.key == MLX_KEY_LEFT || key.key == MLX_KEY_RIGHT ||
+// 		key.key == MLX_KEY_UP || key.key == MLX_KEY_DOWN)
+// 	{
+// 		handle_camera_rotation(mini, key.key, forward);
+// 		needs_render = true;
+// 	}
+// 	if (needs_render)
+// 		render_scene(mini->img, mini);
+// }
 void	key_hook(mlx_key_data_t key, void *param)
 {
 	t_miniRT	*mini;
