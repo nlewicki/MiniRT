@@ -5,18 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/23 10:36:02 by nlewicki         ###   ########.fr       */
+/*   Created: 2025/04/23 12:01:17 by nlewicki          #+#    #+#             */
+/*   Updated: 2025/04/23 12:02:27 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "miniRT.h"
 
-double parse_double(char *str, double min, double max, int *error)
+double	parse_double(char *str, double min, double max, int *error)
 {
-	char *endptr;
-	double value;
+	char	*endptr;
+	double	value;
 
 	errno = 0;
 	value = strtod(str, &endptr);
@@ -56,10 +55,10 @@ t_color	parse_color(char *str, int *error)
 	return (color);
 }
 
-t_vec3 parse_position(char *str, int *error)
+t_vec3	parse_position(char *str, int *error)
 {
-	char **coords;
-	t_vec3 vec;
+	char	**coords;
+	t_vec3	vec;
 
 	coords = ft_split(str, ',');
 	if (!coords || !coords[0] || !coords[1] || !coords[2])
@@ -77,11 +76,11 @@ t_vec3 parse_position(char *str, int *error)
 	return (vec);
 }
 
-t_vec3 parse_orientation(char *str, int *error)
+t_vec3	parse_orientation(char *str, int *error)
 {
-	char **coords;
-	t_vec3 vec;
-	double magnitude;
+	char	**coords;
+	t_vec3	vec;
+	double	magnitude;
 
 	coords = ft_split(str, ',');
 	if (!coords || !coords[0] || !coords[1] || !coords[2])
@@ -98,7 +97,7 @@ t_vec3 parse_orientation(char *str, int *error)
 		return (ft_free_split(coords), (t_vec3){0, 0, 0});
 	}
 	magnitude = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-	if (magnitude > 0.0) // Normalize if magnitude is not zero
+	if (magnitude > 0.0)
 	{
 		vec.x /= magnitude;
 		vec.y /= magnitude;

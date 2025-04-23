@@ -3,21 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   parse_camera.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/09 15:27:39 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/04/23 11:47:29 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-void parse_camera(char **tokens, t_scene *scene)
+void	parse_camera(char **tokens, t_scene *scene)
 {
-	int error = 0;
+	int	error;
+
+	error = 0;
 	if (scene->camera.is_set)
 		exit_error("Camera already defined");
-	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4]) // Expect exactly 4 tokens: "C", position, orientation, fov
+	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		exit_error("Invalid camera format");
 	scene->camera.position = parse_position(tokens[1], &error);
 	scene->camera.orientation = parse_orientation(tokens[2], &error);
