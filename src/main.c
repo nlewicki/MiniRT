@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 10:57:42 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:11:01 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,17 @@ void	key_hook(mlx_key_data_t key, void *param)
 	if (key.action != MLX_PRESS)
 		return;
 
+	// F key toggles between low and high resolution rendering
+	if (key.key == MLX_KEY_F)
+	{
+		mini->low_res_mode = !mini->low_res_mode;
+		render_scene(mini->img, mini);
+		return;
+	}
+
+	// Enable low res mode when starting movement
+	mini->low_res_mode = true;
+
 	// Calculate right vector as cross product of forward and up
 	right = vec_cross(forward, up);
 	right = vec_normalize(right);
@@ -46,12 +57,12 @@ void	key_hook(mlx_key_data_t key, void *param)
 		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(forward, move_speed));
 	else if (key.key == MLX_KEY_S)
 		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(forward, move_speed));
-	else if (key.key == MLX_KEY_D)
-		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(right, move_speed));
 	else if (key.key == MLX_KEY_A)
+		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(right, move_speed));
+	else if (key.key == MLX_KEY_D)
 		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(right, move_speed));
 	// Rotate camera with arrow keys
-	else if (key.key == MLX_KEY_LEFT)
+	else if (key.key == MLX_KEY_RIGHT)
 	{
 		// Rotate around the up vector (left)
 		t_vec3 rotated = forward;
@@ -59,7 +70,7 @@ void	key_hook(mlx_key_data_t key, void *param)
 		rotated.z = forward.x * sin(rot_speed) + forward.z * cos(rot_speed);
 		mini->scene.camera.orientation = vec_normalize(rotated);
 	}
-	else if (key.key == MLX_KEY_RIGHT)
+	else if (key.key == MLX_KEY_LEFT)
 	{
 		// Rotate around the up vector (right)
 		t_vec3 rotated = forward;
@@ -87,7 +98,7 @@ void	key_hook(mlx_key_data_t key, void *param)
 		return;
 
 	// Re-render the scene after camera movement
-	render_scene(mini->img, &mini->scene);
+	render_scene(mini->img, mini);
 }
 
 void draw_smth(t_miniRT *mini)
@@ -113,6 +124,8 @@ int init_mlx(t_miniRT *mini)
 	if (!mini->img
 		|| (mlx_image_to_window(mini->mlx, mini->img, 0, 0) < 0))
 		return (2);
+	mini->low_res_mode = true;  // Start in low res mode
+	mini->res_scale = 4;        // 1/4 resolution while moving
 	return (0);
 }
 
@@ -183,7 +196,7 @@ int main(int argc, char **argv)
 	if (return_value)
 		return (return_value);
 	printf("----------------------\n");
-	render_scene(mini.img, &mini.scene);
+	render_scene(mini.img, &mini);
 	printf("----------------------\n");
 	mlx_loop_hook(mini.mlx, loop, &mini); // optional
 	mlx_loop(mini.mlx);

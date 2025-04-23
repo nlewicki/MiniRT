@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/22 17:43:27 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/23 11:08:43 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,8 @@ typedef struct s_miniRT
 	mlx_t			*mlx;
 	mlx_image_t		*img;
 	t_scene			scene;
+	bool			low_res_mode;
+	int				res_scale;
 }				t_miniRT;
 
 int parse_rt_file(char *filename, t_scene *scene);
@@ -185,7 +187,7 @@ double vec_length(t_vec3 v);
 
 
 //render
-void render_scene(mlx_image_t *img, t_scene *scene);
+void render_scene(mlx_image_t *img, t_miniRT *mini);
 
 
 

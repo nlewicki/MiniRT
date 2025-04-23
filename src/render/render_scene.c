@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/23 11:00:32 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:08:59 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,24 @@ uint32_t color_to_uint32(t_color color)
 }
 
 
-void render_scene(mlx_image_t *img, t_scene *scene)
+void render_scene(mlx_image_t *img, t_miniRT *mini)
 {
 	double	closest;
 	t_hit	closest_hit;
 	bool	hit_any;
+	t_scene *scene = &mini->scene;
+	int scale = mini->low_res_mode ? mini->res_scale : 1;
 
-	for (int y = 0; y < HEIGHT; y++)
+	// Loop through pixels with current resolution scale
+	for (int y = 0; y < HEIGHT; y += scale)
 	{
-		for (int x = 0; x < WIDTH; x++)
+		for (int x = 0; x < WIDTH; x += scale)
 		{
 			closest = 1e30;
 			hit_any = false;
 			t_ray ray = generate_camera_ray(scene->camera, x, y);
 
-			u_int32_t pixel_color = color_to_uint32(scene->ambient.color); // Standardfarbe (z.B. Hintergrund)
+			u_int32_t pixel_color = color_to_uint32(scene->ambient.color);
 
 			for (int i = 0; i < scene->object_count; i++)
 			{
@@ -86,7 +89,15 @@ void render_scene(mlx_image_t *img, t_scene *scene)
 
 			if (hit_any)
 				pixel_color = color_to_uint32(compute_lighting(scene, closest_hit));
-			mlx_put_pixel(img, x, y, pixel_color);
+
+			// Fill block of pixels with the same color
+			for (int dy = 0; dy < scale && y + dy < HEIGHT; dy++)
+			{
+				for (int dx = 0; dx < scale && x + dx < WIDTH; dx++)
+				{
+					mlx_put_pixel(img, x + dx, y + dy, pixel_color);
+				}
+			}
 		}
 	}
 }
