@@ -6,7 +6,7 @@
 /*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/23 16:33:08 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/04/23 16:51:43 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,19 @@ t_color color_mix(t_color a, t_color b, double factor)
 	return result;
 }
 
-double	compute_shadow(t_scene *scene, t_vec3 point, t_light light)
+static t_vec3	random_points(t_vec3 center, double radius)
+{
+	double u = (double)rand() / RAND_MAX;
+	double v = (double)rand() / RAND_MAX;
+	double theta = 2.0 * M_PI * u;
+	double phi = acos(2.0 * v - 1.0);
+	double x = radius * sin(phi) * cos(theta);
+	double y = radius * sin(phi) * sin(theta);
+	double z = radius * cos(phi);
+	return ((t_vec3){center.x + x, center.y + y, center.z + z});
+}
+
+static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 {
 	const int	samples = 16;
 	int			unblocked;
@@ -74,7 +86,8 @@ double	compute_shadow(t_scene *scene, t_vec3 point, t_light light)
 	unblocked = 0;
 	for (int i = 0; i < samples; i ++)
 	{
-		t_vec3 samples_pos = random_point_on_sphere(light.position, 0.2);
+		blocked = false;
+		t_vec3 samples_pos = random_points(light.position, 0.2);
 		t_vec3 dir = vec_sub(samples_pos, point);
 		dist = vec_length(dir);
 		dir = vec_normalize(dir);
@@ -105,7 +118,7 @@ t_color compute_lighting(t_scene *scene, t_hit hit)
 	{
 		t_light light = scene->lights[i];
 		t_vec3 light_dir = vec_sub(light.position, hit.point);
-		double light_dist = vec_length(light_dir);
+		// double light_dist = vec_length(light_dir);
 		light_dir = vec_normalize(light_dir);
 
 		// Schattenstrahl
@@ -113,24 +126,15 @@ t_color compute_lighting(t_scene *scene, t_hit hit)
 		shadow_ray.origin = vec_add(hit.point, vec_mul(light_dir, 1e-4));  // kleine Verschiebung nach außen
 		shadow_ray.direction = light_dir;
 
-		bool in_shadow = false;
-		for (int j = 0; j < scene->object_count; j++)
-		{
-			t_hit shadow_hit;
-			double t = scene->objects[j].hit(&scene->objects[j], shadow_ray, &shadow_hit);
-			if (t > 0 && t < light_dist)
-			{
-				in_shadow = true;
-				break;
-			}
-		}
-		if (!in_shadow)
+		double shadow = compute_shadow_factor(scene, hit.point, light);
+		if (shadow > 0.0)
 		{
 			double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
-			t_color light_contrib = color_scale(hit.color, diffuse * light.brightness);
+			t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
 			light_contrib = color_mix(light_contrib, light.color, 0.2);
 			final_color = color_add(final_color, light_contrib);
 		}
+
 	}
 	return color_clamp(final_color);
 }
