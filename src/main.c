@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 10:44:54 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:57:42 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	key_hook(mlx_key_data_t key, void *param)
 	t_vec3 right;
 	t_vec3 up = {0, 1, 0};  // World up vector
 	const double move_speed = 0.5;
+	const double rot_speed = 0.1;  // Rotation speed in radians
 
 	mini = (t_miniRT *)param;
 	t_vec3 forward = vec_normalize(mini->scene.camera.orientation);
@@ -45,10 +46,43 @@ void	key_hook(mlx_key_data_t key, void *param)
 		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(forward, move_speed));
 	else if (key.key == MLX_KEY_S)
 		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(forward, move_speed));
-	else if (key.key == MLX_KEY_A)
-		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(right, move_speed));
 	else if (key.key == MLX_KEY_D)
+		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(right, move_speed));
+	else if (key.key == MLX_KEY_A)
 		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(right, move_speed));
+	// Rotate camera with arrow keys
+	else if (key.key == MLX_KEY_LEFT)
+	{
+		// Rotate around the up vector (left)
+		t_vec3 rotated = forward;
+		rotated.x = forward.x * cos(rot_speed) - forward.z * sin(rot_speed);
+		rotated.z = forward.x * sin(rot_speed) + forward.z * cos(rot_speed);
+		mini->scene.camera.orientation = vec_normalize(rotated);
+	}
+	else if (key.key == MLX_KEY_RIGHT)
+	{
+		// Rotate around the up vector (right)
+		t_vec3 rotated = forward;
+		rotated.x = forward.x * cos(-rot_speed) - forward.z * sin(-rot_speed);
+		rotated.z = forward.x * sin(-rot_speed) + forward.z * cos(-rot_speed);
+		mini->scene.camera.orientation = vec_normalize(rotated);
+	}
+	else if (key.key == MLX_KEY_UP)
+	{
+		// Rotate around the right vector (up)
+		t_vec3 rotated = forward;
+		rotated.y = forward.y * cos(-rot_speed) - forward.z * sin(-rot_speed);
+		rotated.z = forward.y * sin(-rot_speed) + forward.z * cos(-rot_speed);
+		mini->scene.camera.orientation = vec_normalize(rotated);
+	}
+	else if (key.key == MLX_KEY_DOWN)
+	{
+		// Rotate around the right vector (down)
+		t_vec3 rotated = forward;
+		rotated.y = forward.y * cos(rot_speed) - forward.z * sin(rot_speed);
+		rotated.z = forward.y * sin(rot_speed) + forward.z * cos(rot_speed);
+		mini->scene.camera.orientation = vec_normalize(rotated);
+	}
 	else
 		return;
 
