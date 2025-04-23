@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/23 09:42:59 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:36:02 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,13 @@ t_vec3 parse_orientation(char *str, int *error)
 		return (ft_free_split(coords), (t_vec3){0, 0, 0});
 	}
 	magnitude = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-	if (magnitude < 0.99 || magnitude > 1.01) // Allow small float error
+	if (magnitude > 0.0) // Normalize if magnitude is not zero
+	{
+		vec.x /= magnitude;
+		vec.y /= magnitude;
+		vec.z /= magnitude;
+	}
+	else
 		*error = 1;
 	ft_free_split(coords);
 	if (*error)

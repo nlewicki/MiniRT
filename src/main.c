@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/22 16:10:04 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:44:54 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,35 @@ void	exit_mini(t_miniRT *mini)
 void	key_hook(mlx_key_data_t key, void *param)
 {
 	t_miniRT	*mini;
+	t_vec3 right;
+	t_vec3 up = {0, 1, 0};  // World up vector
+	const double move_speed = 0.5;
 
 	mini = (t_miniRT *)param;
+	t_vec3 forward = vec_normalize(mini->scene.camera.orientation);
 	if (key.key == MLX_KEY_ESCAPE)
 		exit_mini(mini);
+	// Only handle key press events (not release or repeat)
+	if (key.action != MLX_PRESS)
+		return;
+
+	// Calculate right vector as cross product of forward and up
+	right = vec_cross(forward, up);
+	right = vec_normalize(right);
+
+	if (key.key == MLX_KEY_W)
+		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(forward, move_speed));
+	else if (key.key == MLX_KEY_S)
+		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(forward, move_speed));
+	else if (key.key == MLX_KEY_A)
+		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(right, move_speed));
+	else if (key.key == MLX_KEY_D)
+		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(right, move_speed));
 	else
-		return ;
+		return;
+
+	// Re-render the scene after camera movement
+	render_scene(mini->img, &mini->scene);
 }
 
 void draw_smth(t_miniRT *mini)
