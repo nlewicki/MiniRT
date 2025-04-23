@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/22 16:05:04 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:42:59 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ t_color	parse_color(char *str, int *error)
 	rgb = ft_split(str, ',');
 	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
 	{
+		if (rgb)
+			ft_free_split(rgb);
 		*error = 1;
 		return ((t_color){0, 0, 0, 0});
 	}
@@ -46,6 +48,7 @@ t_color	parse_color(char *str, int *error)
 	if (color.r < 0 || color.r > 255 || color.g < 0 || color.g > 255
 		|| color.b < 0 || color.b > 255)
 	{
+		ft_free_split(rgb);
 		*error = 1;
 		return ((t_color){0, 0, 0, 0});
 	}
