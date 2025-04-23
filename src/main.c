@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 11:11:01 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/23 13:17:23 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ void print_objects(t_scene *scene)
     }
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	atexit(leaks);
 	t_miniRT	mini;
