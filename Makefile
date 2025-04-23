@@ -13,6 +13,7 @@ CFILES =	src/main.c \
 			src/render/hit_obj.c \
 			src/render/light.c \
 			src/utils/utils.c \
+			src/utils/parse_rt_utils.c \
 
 NAME = miniRT
 CC = cc
