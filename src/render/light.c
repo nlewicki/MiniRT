@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/22 18:55:26 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/23 16:22:11 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,17 @@ t_color color_mix(t_color a, t_color b, double factor)
 	result.g = a.g * (1 - factor) + b.g * factor;
 	result.b = a.b * (1 - factor) + b.b * factor;
 	return result;
+}
+
+double	compute_shadow(t_scene *scene, t_vec3 point, t_light light)
+{
+	const int	samples;
+	int			unblocked;
+	double		dist;
+	double		t;
+	bool		blocked;
+
+	
 }
 
 t_color compute_lighting(t_scene *scene, t_hit hit)
