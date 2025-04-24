@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/24 13:15:14 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/24 13:27:31 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 		if (!blocked)
 			unblocked ++;
 	}
-	return fmax((double)unblocked / (double)samples, 0.05); // Minimum brightness factor
+	return ((double)unblocked / (double)samples); // Minimum brightness factor
 }
 
 t_color compute_lighting(t_scene *scene, t_hit hit)
