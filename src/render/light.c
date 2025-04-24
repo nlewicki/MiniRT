@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/24 13:35:26 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/24 14:04:05 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,16 +75,15 @@ static t_vec3	random_points(t_vec3 center, double radius)
 	return ((t_vec3){center.x + x, center.y + y, center.z + z});
 }
 
-static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
+static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point, t_light light)
 {
-	const int	samples = 8;
 	int			unblocked;
 	double		dist;
 	double		t;
 	bool		blocked;
 
 	unblocked = 0;
-	for (int i = 0; i < samples; i ++)
+	for (int i = 0; i < mini->samples; i++)
 	{
 		blocked = false;
 		t_vec3 samples_pos = random_points(light.position, 0.2);
@@ -94,10 +93,10 @@ static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 		t_ray shadow_ray;
 		shadow_ray.origin = vec_add(point, vec_mul(dir, 1e-4));
 		shadow_ray.direction = dir;
-		for (int j = 0; j < scene->object_count; j++)
+		for (int j = 0; j < mini->scene.object_count; j++)
 		{
 			t_hit hit;
-			t = scene->objects[j].hit(&scene->objects[j], shadow_ray, &hit);
+			t = mini->scene.objects[j].hit(&mini->scene.objects[j], shadow_ray, &hit);
 			if (t > 0 && t < dist)
 			{
 				blocked = true;
@@ -107,16 +106,16 @@ static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 		if (!blocked)
 			unblocked ++;
 	}
-	return ((double)unblocked / (double)samples); // Minimum brightness factor
+	return ((double)unblocked / (double)mini->samples); // Minimum brightness factor
 }
 
-t_color compute_lighting(t_scene *scene, t_hit hit)
+t_color compute_lighting(t_miniRT *mini, t_hit hit)
 {
-	t_color final_color = color_scale(scene->ambient.color, scene->ambient.ratio);  // Ambient als Grundfarbe
+	t_color final_color = color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);  // Ambient als Grundfarbe
 
-	for (int i = 0; i < scene->light_count; i++)
+	for (int i = 0; i < mini->scene.light_count; i++)
 	{
-		t_light light = scene->lights[i];
+		t_light light = mini->scene.lights[i];
 		t_vec3 light_dir = vec_sub(light.position, hit.point);
 		// double light_dist = vec_length(light_dir);
 		light_dir = vec_normalize(light_dir);
@@ -126,7 +125,7 @@ t_color compute_lighting(t_scene *scene, t_hit hit)
 		shadow_ray.origin = vec_add(hit.point, vec_mul(light_dir, 1e-4));  // kleine Verschiebung nach außen
 		shadow_ray.direction = light_dir;
 
-		double shadow = compute_shadow_factor(scene, hit.point, light);
+		double shadow = compute_shadow_factor(mini, hit.point, light);
 		shadow = pow(shadow, 0.7);
 		if (shadow > 0.0)
 		{

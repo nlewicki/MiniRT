@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/23 13:15:51 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/24 14:13:22 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ typedef struct s_miniRT
 	t_scene			scene;
 	bool			low_res_mode;
 	int				res_scale;
+	int				samples;
 }					t_miniRT;
 
 int					parse_rt_file(char *filename, t_scene *scene);
@@ -170,7 +171,7 @@ void				convert_objects(t_scene *scene);
 double				hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
 double				hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 // double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
-t_color				compute_lighting(t_scene *scene, t_hit hit);
+t_color				compute_lighting(t_miniRT *mini, t_hit hit);
 
 // utils
 t_vec3				vec_sub(t_vec3 a, t_vec3 b);

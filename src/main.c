@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 16:15:22 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/04/24 14:25:20 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,24 @@ void	key_hook(mlx_key_data_t key, void *param)
 		rotated.z = forward.y * sin(rot_speed) + forward.z * cos(rot_speed);
 		mini->scene.camera.orientation = vec_normalize(rotated);
 	}
+	else if (key.key == MLX_KEY_EQUAL)
+	{
+		if (mini->samples == 2)
+		{
+			mini->samples = 128;
+			render_scene(mini->img, mini);
+			return;
+		}
+	}
+	else if (key.key == MLX_KEY_MINUS)
+	{
+		if (mini->samples == 128)
+		{
+			mini->samples = 2;
+			render_scene(mini->img, mini);
+			return;
+		}
+	}
 	else
 		return;
 
@@ -238,6 +256,7 @@ int init_mlx(t_miniRT *mini)
 		return (2);
 	mini->low_res_mode = true;  // Start in low res mode
 	mini->res_scale = 4;        // 1/4 resolution while moving
+	mini->samples = 2;          // Initial sample count
 	return (0);
 }
 

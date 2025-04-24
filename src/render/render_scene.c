@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_scene.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/24 13:19:18 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/24 14:11:00 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void render_scene(mlx_image_t *img, t_miniRT *mini)
 
 			if (hit_any)
 			{
-				t_color lit = compute_lighting(scene, closest_hit);
+				t_color lit = compute_lighting(mini, closest_hit);
 				lit = color_clamp(lit);
 				//lit = apply_gamma(lit, 2.1);
 				pixel_color = color_to_uint32(lit);
