@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_scene.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/23 11:08:59 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:00:21 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,24 @@ uint32_t color_to_uint32(t_color color)
 	return ((color.r << 24) | (color.g << 16) | (color.b << 8) | color.a);
 }
 
+static t_color apply_gamma(t_color c, double gamma)
+{
+	t_color result;
+
+	result.r = pow(fmin(1.0, c.r / 255.0), 1.0 / gamma) * 255.0;
+	result.g = pow(fmin(1.0, c.g / 255.0), 1.0 / gamma) * 255.0;
+	result.b = pow(fmin(1.0, c.b / 255.0), 1.0 / gamma) * 255.0;
+	result.a = c.a;
+	return result;
+}
+
+static t_color color_clamp(t_color c)
+{
+	c.r = fmin(255, fmax(0, c.r));
+	c.g = fmin(255, fmax(0, c.g));
+	c.b = fmin(255, fmax(0, c.b));
+	return c;
+}
 
 void render_scene(mlx_image_t *img, t_miniRT *mini)
 {
@@ -88,7 +106,13 @@ void render_scene(mlx_image_t *img, t_miniRT *mini)
 			}
 
 			if (hit_any)
-				pixel_color = color_to_uint32(compute_lighting(scene, closest_hit));
+			{
+				t_color lit = compute_lighting(scene, closest_hit);
+				lit = color_clamp(lit);
+				lit = apply_gamma(lit, 2.1);
+				pixel_color = color_to_uint32(lit);
+			}
+
 
 			// Fill block of pixels with the same color
 			for (int dy = 0; dy < scale && y + dy < HEIGHT; dy++)
