@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/24 13:27:31 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/24 14:14:13 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,11 @@ static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 	return ((double)unblocked / (double)samples); // Minimum brightness factor
 }
 
+static t_vec3 vec_reflect(t_vec3 v, t_vec3 n)
+{
+	return vec_sub(vec_mul(n, 2 * vec_skal(v, n)), v);
+}
+
 t_color compute_lighting(t_scene *scene, t_hit hit)
 {
 	t_color final_color = color_scale(scene->ambient.color, scene->ambient.ratio);  // Ambient als Grundfarbe
@@ -118,7 +123,6 @@ t_color compute_lighting(t_scene *scene, t_hit hit)
 	{
 		t_light light = scene->lights[i];
 		t_vec3 light_dir = vec_sub(light.position, hit.point);
-		// double light_dist = vec_length(light_dir);
 		light_dir = vec_normalize(light_dir);
 
 		// Schattenstrahl
@@ -130,12 +134,22 @@ t_color compute_lighting(t_scene *scene, t_hit hit)
 		shadow = pow(shadow, 0.7);
 		if (shadow > 0.0)
 		{
+			// ---------- DIFFUSE ----------
 			double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
 			t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
-			light_contrib = color_mix(light_contrib, light.color, 0.2);
+
+			// ---------- SPECULAR ----------
+			t_vec3 view_dir = vec_normalize(vec_sub(scene->camera.position, hit.point));
+			t_vec3 reflect_dir = vec_reflect(vec_neg(light_dir), hit.normal);
+			double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), SHINE);
+			t_color specular_color = color_scale(light.color, KS * spec * light.brightness * shadow);
+
+			// Kombinieren
+			t_color combined = color_add(light_contrib, specular_color);
+			light_contrib = color_mix(combined, light.color, 0.2);  // kleinere Farbmischung für Lichtfarbe
 			final_color = color_add(final_color, light_contrib);
 		}
-
 	}
 	return color_clamp(final_color);
 }
+

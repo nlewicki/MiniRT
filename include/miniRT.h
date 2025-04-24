@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/23 13:15:51 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/24 14:14:07 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define WIDTH 800
 # define HEIGHT 600
 # define DEG2RAD (M_PI / 180.0)
+# define SHINE 32.0
+# define KS 0.5
 
 // For RGB colors
 typedef struct s_color
@@ -104,6 +106,8 @@ typedef struct s_sphere
 	t_vec3			center;
 	double			diameter;
 	t_color			color;
+	double			ks;
+	double			shine;
 }					t_sphere;
 
 typedef struct s_plane
@@ -111,6 +115,8 @@ typedef struct s_plane
 	t_vec3			position;
 	t_vec3			orientation;
 	t_color			color;
+	double			ks;
+	double			shine;
 }					t_plane;
 
 typedef struct s_cylinder
@@ -120,6 +126,8 @@ typedef struct s_cylinder
 	double			diameter;
 	double			height;
 	t_color			color;
+	double			ks;
+	double			shine;
 }					t_cylinder;
 
 // Main scene struct
@@ -181,6 +189,7 @@ t_vec3				vec_normalize(t_vec3 v);
 t_vec3				vec_mul(t_vec3 v, double scalar);
 t_vec3				vec_cross(t_vec3 a, t_vec3 b);
 double				vec_length(t_vec3 v);
+t_vec3 vec_neg(t_vec3 v);
 
 // render
 void				render_scene(mlx_image_t *img, t_miniRT *mini);
