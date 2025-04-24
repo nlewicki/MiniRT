@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/24 13:08:40 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:35:26 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 		if (!blocked)
 			unblocked ++;
 	}
-	return ((double)unblocked / (double)samples);
+	return ((double)unblocked / (double)samples); // Minimum brightness factor
 }
 
 t_color compute_lighting(t_scene *scene, t_hit hit)
@@ -127,6 +127,7 @@ t_color compute_lighting(t_scene *scene, t_hit hit)
 		shadow_ray.direction = light_dir;
 
 		double shadow = compute_shadow_factor(scene, hit.point, light);
+		shadow = pow(shadow, 0.7);
 		if (shadow > 0.0)
 		{
 			double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
