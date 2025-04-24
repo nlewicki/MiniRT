@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/24 13:00:21 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/24 13:19:18 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,16 @@ uint32_t color_to_uint32(t_color color)
 	return ((color.r << 24) | (color.g << 16) | (color.b << 8) | color.a);
 }
 
-static t_color apply_gamma(t_color c, double gamma)
-{
-	t_color result;
+//static t_color apply_gamma(t_color c, double gamma)
+//{
+//	t_color result;
 
-	result.r = pow(fmin(1.0, c.r / 255.0), 1.0 / gamma) * 255.0;
-	result.g = pow(fmin(1.0, c.g / 255.0), 1.0 / gamma) * 255.0;
-	result.b = pow(fmin(1.0, c.b / 255.0), 1.0 / gamma) * 255.0;
-	result.a = c.a;
-	return result;
-}
+//	result.r = pow(fmin(1.0, c.r / 255.0), 1.0 / gamma) * 255.0;
+//	result.g = pow(fmin(1.0, c.g / 255.0), 1.0 / gamma) * 255.0;
+//	result.b = pow(fmin(1.0, c.b / 255.0), 1.0 / gamma) * 255.0;
+//	result.a = c.a;
+//	return result;
+//}
 
 static t_color color_clamp(t_color c)
 {
@@ -109,7 +109,7 @@ void render_scene(mlx_image_t *img, t_miniRT *mini)
 			{
 				t_color lit = compute_lighting(scene, closest_hit);
 				lit = color_clamp(lit);
-				lit = apply_gamma(lit, 2.1);
+				//lit = apply_gamma(lit, 2.1);
 				pixel_color = color_to_uint32(lit);
 			}
 
