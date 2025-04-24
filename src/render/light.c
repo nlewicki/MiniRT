@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/23 16:52:06 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/04/24 11:56:49 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,39 +65,69 @@ t_color color_mix(t_color a, t_color b, double factor)
 
 static t_vec3	random_points(t_vec3 center, double radius)
 {
-	double u = (double)rand() / RAND_MAX;
-	double v = (double)rand() / RAND_MAX;
-	double theta = 2.0 * M_PI * u;
-	double phi = acos(2.0 * v - 1.0);
-	double x = radius * sin(phi) * cos(theta);
-	double y = radius * sin(phi) * sin(theta);
-	double z = radius * cos(phi);
-	return ((t_vec3){center.x + x, center.y + y, center.z + z});
+	double u = (double)rand() / RAND_MAX * 2.0 - 1.0;
+	double v = (double)rand() / RAND_MAX * 2.0 - 1.0;
+	double w = (double)rand() / RAND_MAX * 2.0 - 1.0;
+	t_vec3 offset = {u * radius, v * radius, w * radius};
+	return vec_add(center, offset);
 }
 
 static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 {
-	const int	samples = 16;
-	int			unblocked;
-	double		dist;
-	double		t;
-	bool		blocked;
+	const int base_samples = 8;
+	int samples;
+	double dist_to_light = vec_length(vec_sub(light.position, point));
 
-	unblocked = 0;
-	for (int i = 0; i < samples; i ++)
+	// Adaptive sampling based on distance
+	if (dist_to_light < 5.0)
+		samples = base_samples;
+	else if (dist_to_light < 10.0)
+		samples = base_samples / 2;
+	else
+		samples = base_samples / 4;
+
+	if (samples < 2)
+		samples = 2;
+
+	int unblocked = 0;
+	double radius = 0.2 * (dist_to_light / 10.0); // Adaptive light radius
+
+	// Quick test for full shadow with center ray
+	t_vec3 dir = vec_sub(light.position, point);
+	double dist = vec_length(dir);
+	dir = vec_normalize(dir);
+	t_ray shadow_ray = {vec_add(point, vec_mul(dir, 1e-4)), dir};
+
+	bool fully_shadowed = false;
+	for (int j = 0; j < scene->object_count; j++)
 	{
-		blocked = false;
-		t_vec3 samples_pos = random_points(light.position, 0.2);
-		t_vec3 dir = vec_sub(samples_pos, point);
+		t_hit hit;
+		double t = scene->objects[j].hit(&scene->objects[j], shadow_ray, &hit);
+		if (t > 0 && t < dist)
+		{
+			fully_shadowed = true;
+			break;
+		}
+	}
+
+	if (fully_shadowed)
+		return 0.0;
+
+	// Soft shadow sampling
+	for (int i = 0; i < samples; i++)
+	{
+		t_vec3 samples_pos = random_points(light.position, radius);
+		dir = vec_sub(samples_pos, point);
 		dist = vec_length(dir);
 		dir = vec_normalize(dir);
-		t_ray shadow_ray;
 		shadow_ray.origin = vec_add(point, vec_mul(dir, 1e-4));
 		shadow_ray.direction = dir;
+
+		bool blocked = false;
 		for (int j = 0; j < scene->object_count; j++)
 		{
 			t_hit hit;
-			t = scene->objects[j].hit(&scene->objects[j], shadow_ray, &hit);
+			double t = scene->objects[j].hit(&scene->objects[j], shadow_ray, &hit);
 			if (t > 0 && t < dist)
 			{
 				blocked = true;
@@ -105,7 +135,7 @@ static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 			}
 		}
 		if (!blocked)
-			unblocked ++;
+			unblocked++;
 	}
 	return ((double)unblocked / (double)samples);
 }
