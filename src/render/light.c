@@ -6,13 +6,13 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/25 10:46:26 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/25 11:30:06 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/miniRT.h"
 
-static t_color color_scale(t_color c, double factor)
+t_color color_scale(t_color c, double factor)
 {
 	t_color result = {
 		.r = c.r * factor,
@@ -43,14 +43,6 @@ static t_color color_add(t_color c1, t_color c2)
 		.a = c1.a
 	};
 	return result;
-}
-
-static t_color color_clamp(t_color c)
-{
-	c.r = fmin(255, fmax(0, c.r));
-	c.g = fmin(255, fmax(0, c.g));
-	c.b = fmin(255, fmax(0, c.b));
-	return c;
 }
 
 t_color color_mix(t_color a, t_color b, double factor)
@@ -110,10 +102,7 @@ static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 	return ((double)unblocked / (double)samples); // Minimum brightness factor
 }
 
-static t_vec3 vec_reflect(t_vec3 v, t_vec3 n)
-{
-	return vec_sub(vec_mul(n, 2 * vec_skal(v, n)), v);
-}
+
 
 t_color compute_lighting(t_scene *scene, t_hit hit)
 {
