@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/25 13:18:27 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:21:05 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,15 +139,15 @@ static void adjust_material_property(t_scene *scene, int property_type, double d
 	for (int i = 0; i < scene->object_count; i++)
 	{
 		t_object *obj = &scene->objects[i];
-		t_object *obj_p = &scene->objects[i];
-		if (obj_p->type == PLANE)
-		{
-			t_sphere *plane = (t_sphere *)obj_p->data;
-			printf("OBJECT TYPE: PLANE\n");
-				printf("KS: %f\n", plane->ks);
-				printf("SHINE: %f\n", plane->shine);
-				printf("REFLECTION: %f\n", plane->reflection);
-		}
+		// t_object *obj_p = &scene->objects[i];
+		// if (obj_p->type == PLANE)
+		// {
+		// 	t_sphere *plane = (t_sphere *)obj_p->data;
+		// 	printf("OBJECT TYPE: PLANE\n");
+		// 		printf("KS: %f\n", plane->ks);
+		// 		printf("SHINE: %f\n", plane->shine);
+		// 		printf("REFLECTION: %f\n", plane->reflection);
+		// }
 		if (obj->type == SPHERE)
 		{
 			t_sphere *sphere = (t_sphere *)obj->data;
