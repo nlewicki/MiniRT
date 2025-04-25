@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/24 14:13:22 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 11:44:28 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@
 # define WIDTH 800
 # define HEIGHT 600
 # define DEG2RAD (M_PI / 180.0)
+# define SHINE 32.0
+# define KS 0.2
+# define reflection 0.1
+# define MAX_DEPTH 3
 
 // For RGB colors
 typedef struct s_color
@@ -104,6 +108,8 @@ typedef struct s_sphere
 	t_vec3			center;
 	double			diameter;
 	t_color			color;
+	double			ks;
+	double			shine;
 }					t_sphere;
 
 typedef struct s_plane
@@ -111,6 +117,8 @@ typedef struct s_plane
 	t_vec3			position;
 	t_vec3			orientation;
 	t_color			color;
+	double			ks;
+	double			shine;
 }					t_plane;
 
 typedef struct s_cylinder
@@ -120,6 +128,8 @@ typedef struct s_cylinder
 	double			diameter;
 	double			height;
 	t_color			color;
+	double			ks;
+	double			shine;
 }					t_cylinder;
 
 // Main scene struct
@@ -172,6 +182,7 @@ double				hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
 double				hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 // double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
 t_color				compute_lighting(t_miniRT *mini, t_hit hit);
+t_color trace_ray(t_scene *scene, t_ray ray, int depth);
 
 // utils
 t_vec3				vec_sub(t_vec3 a, t_vec3 b);
@@ -182,6 +193,13 @@ t_vec3				vec_normalize(t_vec3 v);
 t_vec3				vec_mul(t_vec3 v, double scalar);
 t_vec3				vec_cross(t_vec3 a, t_vec3 b);
 double				vec_length(t_vec3 v);
+t_vec3 vec_neg(t_vec3 v);
+t_vec3 vec_reflect(t_vec3 v, t_vec3 n);
+t_color color_mix(t_color a, t_color b, double factor);
+t_color color_scale(t_color c, double factor);
+t_color color_clamp(t_color c);
+
+
 
 // render
 void				render_scene(mlx_image_t *img, t_miniRT *mini);
