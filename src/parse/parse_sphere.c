@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:31 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/23 12:00:26 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:12:46 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ void	parse_sphere(char **tokens, t_scene *scene)
 	scene->spheres = new_sphere;
 	scene->spheres[scene->sphere_count] = sphere;
 	scene->sphere_count++;
+	scene->spheres->reflection = REFLECTION;
+	scene->spheres->shine = SHINE;
+	scene->spheres->ks = KS;
 	// Debug print
 	printf("Sphere added: center=(%.2f, %.2f, %.2f), diameter=%.2f, color=(%d, %d, %d)\n",
 		sphere.center.x, sphere.center.y, sphere.center.z, sphere.diameter,

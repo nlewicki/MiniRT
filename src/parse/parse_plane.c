@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/23 11:58:55 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:12:03 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ void	parse_plane(char **tokens, t_scene *scene)
 	scene->planes = new_planes;
 	scene->planes[scene->plane_count] = plane;
 	scene->plane_count++;
+	scene->planes->reflection = REFLECTION;
+	scene->planes->shine = SHINE;
+	scene->planes->ks = KS;
 	// Debug print
 	printf("Plane added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), color=(%d, %d, %d)\n",
 		plane.position.x, plane.position.y, plane.position.z,

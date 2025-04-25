@@ -6,23 +6,11 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:23:41 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 11:57:13 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:10:59 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-//double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info)
-//{
-//	(void)obj; (void)ray; (void)hit_info;
-//	return (-1.0); // Placeholder: -1 means no hit
-//}
-
-//double hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info)
-//{
-//	(void)obj; (void)ray; (void)hit_info;
-//	return (-1.0); // Placeholder
-//}
 
 double	hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info)
 {

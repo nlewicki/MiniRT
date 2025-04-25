@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/25 11:53:35 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:00:46 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,14 @@
 # define DEG2RAD (M_PI / 180.0)
 # define SHINE 0
 # define KS 0
-# define reflection 0
+# define REFLECTION 0
+
+# define SHINE_MIN 0
+# define SHINE_MAX 100
+# define KS_MIN 0
+# define KS_MAX 1
+# define REFLECTION_MIN 0
+# define REFLECTION_MAX 1
 # define MAX_DEPTH 3
 
 // For RGB colors
@@ -110,6 +117,7 @@ typedef struct s_sphere
 	t_color			color;
 	double			ks;
 	double			shine;
+	double			reflection;
 }					t_sphere;
 
 typedef struct s_plane
@@ -119,6 +127,7 @@ typedef struct s_plane
 	t_color			color;
 	double			ks;
 	double			shine;
+	double			reflection;
 }					t_plane;
 
 typedef struct s_cylinder
@@ -130,6 +139,7 @@ typedef struct s_cylinder
 	t_color			color;
 	double			ks;
 	double			shine;
+	double			reflection;
 }					t_cylinder;
 
 // Main scene struct

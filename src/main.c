@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/24 14:25:20 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:18:27 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,45 @@ void	exit_mini(t_miniRT *mini)
 // 	if (needs_render)
 // 		render_scene(mini->img, mini);
 // }
+static void adjust_material_property(t_scene *scene, int property_type, double delta)
+{
+	for (int i = 0; i < scene->object_count; i++)
+	{
+		t_object *obj = &scene->objects[i];
+		t_object *obj_p = &scene->objects[i];
+		if (obj_p->type == PLANE)
+		{
+			t_sphere *plane = (t_sphere *)obj_p->data;
+			printf("OBJECT TYPE: PLANE\n");
+				printf("KS: %f\n", plane->ks);
+				printf("SHINE: %f\n", plane->shine);
+				printf("REFLECTION: %f\n", plane->reflection);
+		}
+		if (obj->type == SPHERE)
+		{
+			t_sphere *sphere = (t_sphere *)obj->data;
+			if (property_type == 0)  // KS
+			{
+				sphere->ks = fmax(KS_MIN, fmin(KS_MAX, sphere->ks + delta));
+				printf("OBJECT TYPE: SPHERE\n");
+				printf("KS: %f\n", sphere->ks);
+			}
+			else if (property_type == 1)  // SHINE
+			{
+				sphere->shine = fmax(SHINE_MIN, fmin(SHINE_MAX, sphere->shine + delta));
+				printf("OBJECT TYPE: SPHERE\n");
+				printf("SHINE: %f\n", sphere->shine);
+			}
+			else if (property_type == 2)  // REFLECTION
+			{
+				sphere->reflection = fmax(REFLECTION_MIN, fmin(REFLECTION_MAX, sphere->reflection + delta));
+				printf("OBJECT TYPE: SPHERE\n");
+				printf("REFLECTION: %f\n", sphere->reflection);
+			}
+		}
+	}
+}
+
 void	key_hook(mlx_key_data_t key, void *param)
 {
 	t_miniRT	*mini;
@@ -141,6 +180,9 @@ void	key_hook(mlx_key_data_t key, void *param)
 	t_vec3 up = {0, 1, 0};  // World up vector
 	const double move_speed = 0.5;
 	const double rot_speed = 0.1;  // Rotation speed in radians
+	const double ks_step = 0.1;    // Step size for KS
+	const double shine_step = 5.0; // Step size for SHINE
+	const double reflection_step = 0.1; // Step size for REFLECTION
 
 	mini = (t_miniRT *)param;
 	t_vec3 forward = vec_normalize(mini->scene.camera.orientation);
@@ -224,10 +266,23 @@ void	key_hook(mlx_key_data_t key, void *param)
 			return;
 		}
 	}
+	// Handle material property adjustments
+	else if (key.key == MLX_KEY_1)
+		adjust_material_property(&mini->scene, 0, ks_step);  // Increase KS
+	else if (key.key == MLX_KEY_2)
+		adjust_material_property(&mini->scene, 0, -ks_step); // Decrease KS
+	else if (key.key == MLX_KEY_3)
+		adjust_material_property(&mini->scene, 1, shine_step);  // Increase SHINE
+	else if (key.key == MLX_KEY_4)
+		adjust_material_property(&mini->scene, 1, -shine_step); // Decrease SHINE
+	else if (key.key == MLX_KEY_5)
+		adjust_material_property(&mini->scene, 2, reflection_step);  // Increase REFLECTION
+	else if (key.key == MLX_KEY_6)
+		adjust_material_property(&mini->scene, 2, -reflection_step); // Decrease REFLECTION
+
 	else
 		return;
-
-	// Re-render the scene after camera movement
+	// Re-render the scene after camera movement or property changes
 	render_scene(mini->img, mini);
 }
 
