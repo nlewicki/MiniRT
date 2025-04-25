@@ -6,11 +6,19 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/24 13:19:18 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/25 11:29:17 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/miniRT.h"
+
+t_color color_clamp(t_color c)
+{
+	c.r = fmin(255, fmax(0, c.r));
+	c.g = fmin(255, fmax(0, c.g));
+	c.b = fmin(255, fmax(0, c.b));
+	return c;
+}
 
 static t_ray generate_camera_ray(t_camera cam, int x, int y)
 {
@@ -50,6 +58,52 @@ static t_ray generate_camera_ray(t_camera cam, int x, int y)
 	return (ray);
 }
 
+t_color trace_ray(t_scene *scene, t_ray ray, int depth)
+{
+	if (depth <= 0)
+		return color_scale(scene->ambient.color, scene->ambient.ratio);
+
+	double closest = 1e30;
+	t_hit closest_hit;
+	bool hit_any = false;
+
+	for (int i = 0; i < scene->object_count; i++)
+	{
+		t_hit temp_hit;
+		double t = scene->objects[i].hit(&scene->objects[i], ray, &temp_hit);
+		if (t > 0 && t < closest)
+		{
+			closest = t;
+			closest_hit = temp_hit;
+			hit_any = true;
+		}
+	}
+
+	if (hit_any)
+	{
+		t_color local_color = compute_lighting(scene, closest_hit);
+
+		// Spiegelstrahl berechnen
+		t_vec3 reflect_dir = vec_reflect(ray.direction, closest_hit.normal);
+		t_ray reflect_ray = {
+			.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4)),
+			.direction = reflect_dir
+		};
+
+		t_color reflected_color = trace_ray(scene, reflect_ray, depth - 1);
+
+		// Mischung aus lokaler Farbe und Reflexion
+		double reflectivity = 0.4; // kannst du später materialabhängig machen
+		t_color final = color_mix(local_color, reflected_color, reflectivity);
+		return (color_clamp(final));
+	}
+	else
+	{
+		// Kein Objekt getroffen → Hintergrundfarbe
+		return (color_scale(scene->ambient.color, scene->ambient.ratio));
+	}
+}
+
 uint32_t color_to_uint32(t_color color)
 {
 	return ((color.r << 24) | (color.g << 16) | (color.b << 8) | color.a);
@@ -66,13 +120,6 @@ uint32_t color_to_uint32(t_color color)
 //	return result;
 //}
 
-static t_color color_clamp(t_color c)
-{
-	c.r = fmin(255, fmax(0, c.r));
-	c.g = fmin(255, fmax(0, c.g));
-	c.b = fmin(255, fmax(0, c.b));
-	return c;
-}
 
 void render_scene(mlx_image_t *img, t_miniRT *mini)
 {
@@ -107,11 +154,11 @@ void render_scene(mlx_image_t *img, t_miniRT *mini)
 
 			if (hit_any)
 			{
-				t_color lit = compute_lighting(scene, closest_hit);
+				t_color lit = trace_ray(scene, ray, 3);  // Max. Rekursionstiefe = 3
 				lit = color_clamp(lit);
-				//lit = apply_gamma(lit, 2.1);
 				pixel_color = color_to_uint32(lit);
 			}
+
 
 
 			// Fill block of pixels with the same color
