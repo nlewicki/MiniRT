@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/25 11:45:56 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 11:48:35 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 			t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
 
 			// ---------- SPECULAR ----------
-			t_vec3 view_dir = vec_normalize(vec_sub(scene->camera.position, hit.point));
+			t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));
 			t_vec3 reflect_dir = vec_reflect(vec_neg(light_dir), hit.normal);
 			double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), SHINE);
 			t_color specular_color = color_scale(light.color, KS * spec * light.brightness * shadow);

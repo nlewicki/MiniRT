@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/25 11:44:28 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 11:53:35 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@
 # define WIDTH 800
 # define HEIGHT 600
 # define DEG2RAD (M_PI / 180.0)
-# define SHINE 32.0
-# define KS 0.2
-# define reflection 0.1
+# define SHINE 0
+# define KS 0
+# define reflection 0
 # define MAX_DEPTH 3
 
 // For RGB colors
@@ -182,7 +182,7 @@ double				hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
 double				hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 // double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
 t_color				compute_lighting(t_miniRT *mini, t_hit hit);
-t_color trace_ray(t_scene *scene, t_ray ray, int depth);
+t_color trace_ray(t_miniRT *mini, t_ray ray, int depth);
 
 // utils
 t_vec3				vec_sub(t_vec3 a, t_vec3 b);

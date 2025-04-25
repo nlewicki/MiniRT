@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/25 11:46:29 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 11:48:17 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,19 +58,19 @@ static t_ray generate_camera_ray(t_camera cam, int x, int y)
 	return (ray);
 }
 
-t_color trace_ray(t_scene *scene, t_ray ray, int depth)
+t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
 {
 	if (depth <= 0)
-		return color_scale(scene->ambient.color, scene->ambient.ratio);
+		return color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);
 
 	double closest = 1e30;
 	t_hit closest_hit;
 	bool hit_any = false;
 
-	for (int i = 0; i < scene->object_count; i++)
+	for (int i = 0; i < mini->scene.object_count; i++)
 	{
 		t_hit temp_hit;
-		double t = scene->objects[i].hit(&scene->objects[i], ray, &temp_hit);
+		double t = mini->scene.objects[i].hit(&mini->scene.objects[i], ray, &temp_hit);
 		if (t > 0 && t < closest)
 		{
 			closest = t;
@@ -81,7 +81,7 @@ t_color trace_ray(t_scene *scene, t_ray ray, int depth)
 
 	if (hit_any)
 	{
-		t_color local_color = compute_lighting(scene, closest_hit);
+		t_color local_color = compute_lighting(mini, closest_hit);
 
 		// Spiegelstrahl berechnen
 		t_vec3 reflect_dir = vec_reflect(ray.direction, closest_hit.normal);
@@ -90,7 +90,7 @@ t_color trace_ray(t_scene *scene, t_ray ray, int depth)
 			.direction = reflect_dir
 		};
 
-		t_color reflected_color = trace_ray(scene, reflect_ray, depth - 1);
+		t_color reflected_color = trace_ray(mini, reflect_ray, depth - 1);
 
 		// Mischung aus lokaler Farbe und Reflexion
 		double reflectivity = 0.4; // kannst du später materialabhängig machen
@@ -100,7 +100,7 @@ t_color trace_ray(t_scene *scene, t_ray ray, int depth)
 	else
 	{
 		// Kein Objekt getroffen → Hintergrundfarbe
-		return (color_scale(scene->ambient.color, scene->ambient.ratio));
+		return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
 	}
 }
 
@@ -154,7 +154,7 @@ void render_scene(mlx_image_t *img, t_miniRT *mini)
 
 			if (hit_any)
 			{
-				t_color lit = trace_ray(scene, ray, 3);  // Max. Rekursionstiefe = 3
+				t_color lit = trace_ray(mini, ray, 3);  // Max. Rekursionstiefe = 3
 				lit = color_clamp(lit);
 				pixel_color = color_to_uint32(lit);
 			}
