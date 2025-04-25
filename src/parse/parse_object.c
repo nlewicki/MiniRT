@@ -6,19 +6,11 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:23:41 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/25 13:10:59 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:27:41 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-double	hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info)
-{
-	(void)obj;
-	(void)ray;
-	(void)hit_info;
-	return (-1.0);
-}
 
 void	convert_spheres(t_scene *scene, int *index)
 {

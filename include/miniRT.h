@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/25 13:00:46 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:26:58 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ void				parse_sphere(char **tokens, t_scene *scene);
 void				convert_objects(t_scene *scene);
 double				hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
 double				hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
-// double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
+double				hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
 t_color				compute_lighting(t_miniRT *mini, t_hit hit);
 t_color trace_ray(t_miniRT *mini, t_ray ray, int depth);
 
