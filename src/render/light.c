@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/24 14:14:13 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/25 10:46:26 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static t_vec3	random_points(t_vec3 center, double radius)
 
 static double	compute_shadow_factor(t_scene *scene, t_vec3 point, t_light light)
 {
-	const int	samples = 256;
+	const int	samples = 32;
 	int			unblocked;
 	double		dist;
 	double		t;
