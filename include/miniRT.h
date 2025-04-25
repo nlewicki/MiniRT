@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/25 11:29:50 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/25 11:34:48 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 # define HEIGHT 600
 # define DEG2RAD (M_PI / 180.0)
 # define SHINE 32.0
-# define KS 0.5
-# define reflection 0.5
+# define KS 0.2
+# define reflection 0.1
 # define MAX_DEPTH 3
 
 // For RGB colors
