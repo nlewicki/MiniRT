@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_scene.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/25 11:48:17 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:31:07 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,9 @@ t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
 	double closest = 1e30;
 	t_hit closest_hit;
 	bool hit_any = false;
+	t_object *hit_object = NULL;
 
+	// Durch alle Objekte iterieren
 	for (int i = 0; i < mini->scene.object_count; i++)
 	{
 		t_hit temp_hit;
@@ -75,34 +77,54 @@ t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
 		{
 			closest = t;
 			closest_hit = temp_hit;
+			hit_object = &mini->scene.objects[i];
 			hit_any = true;
 		}
 	}
 
 	if (hit_any)
 	{
-		t_color local_color = compute_lighting(mini, closest_hit);
+		t_color local_color = compute_lighting(mini, closest_hit); // Beleuchtung am Punkt berechnen
 
-		// Spiegelstrahl berechnen
-		t_vec3 reflect_dir = vec_reflect(ray.direction, closest_hit.normal);
-		t_ray reflect_ray = {
-			.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4)),
-			.direction = reflect_dir
-		};
+		// Reflexionseigenschaft des getroffenen Objekts holen
+		double reflection = 0;
+		if (hit_object->type == SPHERE)
+			reflection = ((t_sphere *)hit_object->data)->reflection;
+		else if (hit_object->type == PLANE)
+			reflection = ((t_plane *)hit_object->data)->reflection;
+		else if (hit_object->type == CYLINDER)
+			reflection = ((t_cylinder *)hit_object->data)->reflection;
 
-		t_color reflected_color = trace_ray(mini, reflect_ray, depth - 1);
+		// Wenn Reflexion gewünscht ist (reflection > 0)
+		if (reflection > 0)
+		{
+			// Spiegelstrahl berechnen
+			t_vec3 reflect_dir = vec_reflect(ray.direction, closest_hit.normal);
+			t_ray reflect_ray = {
+				.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4)),
+				.direction = reflect_dir
+			};
 
-		// Mischung aus lokaler Farbe und Reflexion
-		double reflectivity = 0.4; // kannst du später materialabhängig machen
-		t_color final = color_mix(local_color, reflected_color, reflectivity);
-		return (color_clamp(final));
+			// Rekursiv den reflektierten Strahl verfolgen
+			t_color reflected_color = trace_ray(mini, reflect_ray, depth - 1);
+
+			// Mischung der lokalen Farbe mit der reflektierten Farbe
+			t_color final_color = color_mix(local_color, reflected_color, reflection);
+			return color_clamp(final_color);
+		}
+		else
+		{
+			// Wenn keine Reflexion, nur matte Farbe
+			return local_color;
+		}
 	}
 	else
 	{
 		// Kein Objekt getroffen → Hintergrundfarbe
-		return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
+		return color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);
 	}
 }
+
 
 uint32_t color_to_uint32(t_color color)
 {
