@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:25:59 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 10:49:28 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:15:28 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,83 +98,86 @@ static bool	handle_key_checks(mlx_key_data_t key, t_miniRT *mini)
 	return (true);
 }
 
-static void adjust_material_property(t_scene *scene, int property_type, double delta)
+static bool adjust_material_property(t_scene *scene, int property_type, double delta)
 {
+	bool changed = false;
 	for (int i = 0; i < scene->object_count; i++)
 	{
 		t_object *obj = &scene->objects[i];
-		// t_object *obj_p = &scene->objects[i];
-		// if (obj->type == PLANE)
-		// {
-		// 	t_plane *plane = (t_plane *)obj_p->data;
-		// 	printf("OBJECT TYPE: PLANE\n");
-		// 	printf("KS: %f\n", plane->ks);
-		// 	printf("SHINE: %f\n", plane->shine);
-		// 	printf("REFLECTION: %f\n", plane->reflection);
-		// }
 		if (obj->type == SPHERE)
 		{
 			t_sphere *sphere = (t_sphere *)obj->data;
+			double new_value;
+
 			if (property_type == 0)  // KS
 			{
-				sphere->ks = fmax(KS_MIN, fmin(KS_MAX, sphere->ks + delta));
-				printf("OBJECT TYPE: SPHERE\n");
-				printf("KS: %f\n", sphere->ks);
+				new_value = fmax(KS_MIN, fmin(KS_MAX, sphere->ks + delta));
+				if (new_value != sphere->ks)
+				{
+					sphere->ks = new_value;
+					changed = true;
+					printf("OBJECT TYPE: SPHERE\nKS: %f\n", sphere->ks);
+				}
 			}
 			else if (property_type == 1)  // SHINE
 			{
-				sphere->shine = fmax(SHINE_MIN, fmin(SHINE_MAX, sphere->shine + delta));
-				printf("OBJECT TYPE: SPHERE\n");
-				printf("SHINE: %f\n", sphere->shine);
+				new_value = fmax(SHINE_MIN, fmin(SHINE_MAX, sphere->shine + delta));
+				if (new_value != sphere->shine)
+				{
+					sphere->shine = new_value;
+					changed = true;
+					printf("OBJECT TYPE: SPHERE\nSHINE: %f\n", sphere->shine);
+				}
 			}
 			else if (property_type == 2)  // REFLECTION
 			{
-				sphere->reflection = fmax(REFLECTION_MIN, fmin(REFLECTION_MAX, sphere->reflection + delta));
-				printf("OBJECT TYPE: SPHERE\n");
-				printf("REFLECTION: %f\n", sphere->reflection);
+				new_value = fmax(REFLECTION_MIN, fmin(REFLECTION_MAX, sphere->reflection + delta));
+				if (new_value != sphere->reflection)
+				{
+					sphere->reflection = new_value;
+					changed = true;
+					printf("OBJECT TYPE: SPHERE\nREFLECTION: %f\n", sphere->reflection);
+				}
 			}
 		}
 	}
+	return changed;
 }
 
-static void	handle_material_property(t_miniRT *mini, int key)
+static bool handle_material_property(t_miniRT *mini, int key)
 {
 	const double ks_step = 0.1;    // Step size for KS
 	const double shine_step = 5.0; // Step size for SHINE
 	const double reflection_step = 0.1; // Step size for REFLECTION
 
 	if (key == MLX_KEY_1)
-		adjust_material_property(&mini->scene, 0, ks_step);  // Increase KS
+		return adjust_material_property(&mini->scene, 0, ks_step);  // Increase KS
 	else if (key == MLX_KEY_2)
-		adjust_material_property(&mini->scene, 0, -ks_step); // Decrease KS
+		return adjust_material_property(&mini->scene, 0, -ks_step); // Decrease KS
 	else if (key == MLX_KEY_3)
-		adjust_material_property(&mini->scene, 1, shine_step);  // Increase SHINE
+		return adjust_material_property(&mini->scene, 1, shine_step);  // Increase SHINE
 	else if (key == MLX_KEY_4)
-		adjust_material_property(&mini->scene, 1, -shine_step); // Decrease SHINE
+		return adjust_material_property(&mini->scene, 1, -shine_step); // Decrease SHINE
 	else if (key == MLX_KEY_5)
-		adjust_material_property(&mini->scene, 2, reflection_step);  // Increase REFLECTION
+		return adjust_material_property(&mini->scene, 2, reflection_step);  // Increase REFLECTION
 	else if (key == MLX_KEY_6)
-		adjust_material_property(&mini->scene, 2, -reflection_step); // Decrease REFLECTION
+		return adjust_material_property(&mini->scene, 2, -reflection_step); // Decrease REFLECTION
+	return false;
 }
 
-static void	handle_samples(t_miniRT *mini, mlx_key_data_t key)
+static bool handle_samples(t_miniRT *mini, mlx_key_data_t key)
 {
-	if (key.key == MLX_KEY_EQUAL)
+	if (key.key == MLX_KEY_EQUAL && mini->samples == 2)
 	{
-		if (mini->samples == 2)
-		{
-			mini->samples = 128;
-			return;
-		}
+		mini->samples = 128;
+		return true;
 	}
-	else if (key.key == MLX_KEY_MINUS)
+	else if (key.key == MLX_KEY_MINUS && mini->samples == 128)
 	{
-		if (mini->samples == 128)
-		{
-			mini->samples = 2;
-			return;
-		}
+		mini->samples = 2;
+		return true;
 	}
+	return false;
 }
 
 void	key_hook(mlx_key_data_t key, void *param)
@@ -204,13 +207,11 @@ void	key_hook(mlx_key_data_t key, void *param)
 		key.key == MLX_KEY_3 || key.key == MLX_KEY_4 ||
 		key.key == MLX_KEY_5 || key.key == MLX_KEY_6)
 	{
-		handle_material_property(mini, key.key);
-		needs_render = true;
+		needs_render = handle_material_property(mini, key.key);
 	}
 	else if (key.key == MLX_KEY_EQUAL || key.key == MLX_KEY_MINUS)
 	{
-		handle_samples(mini, key);
-		needs_render = true;
+		needs_render = handle_samples(mini, key);
 	}
 	if (needs_render)
 		render_scene(mini->img, mini);
