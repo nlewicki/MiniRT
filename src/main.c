@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 12:14:08 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/28 12:36:45 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,9 @@ int	main(int argc, char **argv)
 	return_value = init_mlx(&mini);
 	if (return_value)
 		return (return_value);
-	init_scene(&mini.scene);
+	init_miniRT(&mini);
 	return_value = parse_rt_file(argv[1], &mini.scene);
-	convert_objects(&mini.scene);
+	convert_objects(&mini);
 	print_objects(&mini.scene);
 	if (return_value)
 		return (return_value);

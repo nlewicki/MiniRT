@@ -6,11 +6,11 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 12:50:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/24 12:51:18 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/28 12:30:37 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "miniRT.h"
+#include "../include/miniRT.h"
 
 static double	hit_cylinder_caps(t_cylinder *cyl, const t_ray ray,
 	t_hit *hit_info, t_vec3 cap_center)
@@ -135,6 +135,9 @@ double	hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info)
 				vec_sub(hit_info->point, center_at_height));
 		}
 		hit_info->color = obj->color;
+		hit_info->ks = obj->scene->ks;
+		hit_info->shine = obj->scene->shine;
+		hit_info->reflection = obj->scene->reflection;
 	}
 	return (t);
 }

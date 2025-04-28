@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_obj.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 16:28:26 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/22 17:05:56 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/28 12:31:25 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit)
 	hit->point = vec_add(ray.origin, vec_mul(ray.direction, t));
 	hit->normal = vec_normalize(vec_sub(hit->point, sphere->center));
 	hit->color = obj->color;
+	hit->ks = obj->scene->ks;
+	hit->shine = obj->scene->shine;
+	hit->reflection = obj->scene->reflection;
 	return (t);
 }
 
@@ -61,5 +64,8 @@ double hit_plane(t_object *obj, const t_ray ray, t_hit *hit)
 	hit->point = vec_add(ray.origin, vec_mul(ray.direction, t));
 	hit->normal = vec_normalize(plane->orientation);
 	hit->color = obj->color;
+	hit->ks = obj->scene->ks;             // Use current material properties
+	hit->shine = obj->scene->shine;
+	hit->reflection = obj->scene->reflection;
 	return (t);
 }

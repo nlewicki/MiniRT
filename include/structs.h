@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 11:42:21 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/28 12:29:00 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,12 @@ typedef struct s_hit
 	t_vec3 point;
 	t_vec3 normal;
 	t_color color;
-					// Add more fields if needed (e.g., for lighting)
+	double ks;
+	double shine;
+	double reflection;
 }					t_hit;
+
+typedef struct s_miniRT t_miniRT;  // Forward declaration
 
 typedef struct s_object
 {
@@ -60,6 +64,7 @@ typedef struct s_object
 	void			*data;
 	t_color			color;
 	double			(*hit)(struct s_object *, const t_ray ray, t_hit *hit_info);
+	t_miniRT        *scene;  // Pointer back to the scene
 }					t_object;
 
 // Ambient lighting
@@ -93,9 +98,6 @@ typedef struct s_sphere
 	t_vec3			center;
 	double			diameter;
 	t_color			color;
-	double			ks;
-	double			shine;
-	double			reflection;
 }					t_sphere;
 
 typedef struct s_plane
@@ -103,9 +105,6 @@ typedef struct s_plane
 	t_vec3			position;
 	t_vec3			orientation;
 	t_color			color;
-	double			ks;
-	double			shine;
-	double			reflection;
 }					t_plane;
 
 typedef struct s_cylinder
@@ -115,9 +114,6 @@ typedef struct s_cylinder
 	double			diameter;
 	double			height;
 	t_color			color;
-	double			ks;
-	double			shine;
-	double			reflection;
 }					t_cylinder;
 
 // Main scene struct
@@ -145,6 +141,9 @@ typedef struct s_miniRT
 	bool			low_res_mode;
 	int				res_scale;
 	int				samples;
+	double          shine;      // Current shine value for new intersections
+	double          ks;         // Current specular coefficient for new intersections
+	double          reflection; // Current reflection value for new intersections
 }					t_miniRT;
 
 # endif

@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:06 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/28 11:31:00 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/28 12:23:05 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,6 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 	scene->cylinders = new_cylinders;
 	scene->cylinders[scene->cylinder_count] = cylinder;
 	scene->cylinder_count++;
-	scene->cylinders->reflection = REFLECTION;
-	scene->cylinders->shine = SHINE;
-	scene->cylinders->ks = KS;
 	// Debug print
 	printf("Cylinder added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), diameter=%.2f, height=%.2f, color=(%d, %d, %d)\n",
 		cylinder.position.x, cylinder.position.y, cylinder.position.z,

@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/28 10:53:53 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/28 12:36:32 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,6 @@
 # define WIDTH 800
 # define HEIGHT 600
 # define DEG2RAD (M_PI / 180.0)
-# define SHINE 0
-# define KS 0
-# define REFLECTION 0
 
 # define SHINE_MIN 0
 # define SHINE_MAX 100
@@ -56,7 +53,7 @@ void				parse_light(char **tokens, t_scene *scene);
 void				parse_plane(char **tokens, t_scene *scene);
 void				parse_sphere(char **tokens, t_scene *scene);
 
-void				convert_objects(t_scene *scene);
+void				convert_objects(t_miniRT *mini);
 double				hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
 double				hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 double				hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
@@ -80,6 +77,7 @@ t_color color_clamp(t_color c);
 
 void	key_hook(mlx_key_data_t key, void *param);
 void	exit_mini(t_miniRT *mini);
+void init_miniRT(t_miniRT *mini);
 
 // render
 void				render_scene(mlx_image_t *img, t_miniRT *mini);
