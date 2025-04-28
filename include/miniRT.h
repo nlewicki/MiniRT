@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/25 13:26:58 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:27:56 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,8 @@ t_color color_mix(t_color a, t_color b, double factor);
 t_color color_scale(t_color c, double factor);
 t_color color_clamp(t_color c);
 
-
+void	key_hook(mlx_key_data_t key, void *param);
+void	exit_mini(t_miniRT *mini);
 
 // render
 void				render_scene(mlx_image_t *img, t_miniRT *mini);
