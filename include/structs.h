@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 10:54:14 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:42:21 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ typedef enum e_object_type
 
 typedef struct s_hit
 {
-	double t;      // Distance to hit point
-	t_vec3 point;  // Hit point
-	t_vec3 normal; // Surface normal at hit point
-	t_color color; // Color at hit point
+	double t;
+	t_vec3 point;
+	t_vec3 normal;
+	t_color color;
 					// Add more fields if needed (e.g., for lighting)
 }					t_hit;
 
@@ -67,7 +67,7 @@ typedef struct s_ambient
 {
 	double			ratio;
 	t_color			color;
-	int is_set; // To check if it's already defined (since only one is allowed)
+	int is_set;
 }					t_ambient;
 
 // Camera
@@ -76,7 +76,7 @@ typedef struct s_camera
 	t_vec3			position;
 	t_vec3			orientation;
 	int				fov;
-	int is_set; // To check if it's already defined
+	int is_set;
 }					t_camera;
 
 // Light source

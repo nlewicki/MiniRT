@@ -1,5 +1,5 @@
 Aufgaben fuer naechstes mal:
-- parser functionsfaehig machen
-- parsing tests machen (print_struct funktion oder so)
+- checken ob ks, reflection... in object struct sollte
+- 
 value = strtod(str, &endptr); schreiben
 
