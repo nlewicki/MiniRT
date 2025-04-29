@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/25 13:28:09 by nlewicki         ###   ########.fr       */
+/*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
+/*   Updated: 2025/04/29 11:37:28 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,39 +104,64 @@ static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point, t_light light)
 
 t_color compute_lighting(t_miniRT *mini, t_hit hit)
 {
-	t_color final_color = color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);  // Ambient als Grundfarbe
+	t_color final_color = color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);
 
 	for (int i = 0; i < mini->scene.light_count; i++)
 	{
 		t_light light = mini->scene.lights[i];
-		t_vec3 light_dir = vec_sub(light.position, hit.point);
-		light_dir = vec_normalize(light_dir);
+		t_vec3 light_dir = vec_normalize(vec_sub(light.position, hit.point));
 
-		// Schattenstrahl
+		// Schattenprüfung
 		t_ray shadow_ray;
-		shadow_ray.origin = vec_add(hit.point, vec_mul(light_dir, 1e-4));  // kleine Verschiebung nach außen
+		shadow_ray.origin = vec_add(hit.point, vec_mul(light_dir, 1e-4));
 		shadow_ray.direction = light_dir;
 
 		double shadow = compute_shadow_factor(mini, hit.point, light);
 		shadow = pow(shadow, 0.7);
-		if (shadow > 0.0)
+		if (shadow <= 0.0)
+			continue;
+
+		// Diffuse Beleuchtung
+		double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
+		t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
+
+		// Spekulare Werte abrufen
+		double ks = 0.0;
+		double shine = 0.0;
+		if (hit.object)
 		{
-			// ---------- DIFFUSE ----------
-			double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
-			t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
-
-			// ---------- SPECULAR ----------
-			t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));
-			t_vec3 reflect_dir = vec_reflect(vec_neg(light_dir), hit.normal);
-			double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), SHINE);
-			t_color specular_color = color_scale(light.color, KS * spec * light.brightness * shadow);
-
-			// Kombinieren
-			t_color combined = color_add(light_contrib, specular_color);
-			light_contrib = color_mix(combined, light.color, 0.2);  // kleinere Farbmischung für Lichtfarbe
-			final_color = color_add(final_color, light_contrib);
+			if (hit.object->type == SPHERE)
+			{
+				t_sphere *s = (t_sphere *)hit.object->data;
+				ks = s->ks;
+				shine = s->shine;
+			}
+			else if (hit.object->type == PLANE)
+			{
+				t_plane *p = (t_plane *)hit.object->data;
+				ks = p->ks;
+				shine = p->shine;
+			}
+			else if (hit.object->type == CYLINDER)
+			{
+				t_cylinder *c = (t_cylinder *)hit.object->data;
+				ks = c->ks;
+				shine = c->shine;
+			}
 		}
+
+		// Specular Highlight
+		t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));
+		t_vec3 reflect_dir = vec_reflect(vec_neg(light_dir), hit.normal);
+		double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), shine);
+		t_color specular = color_scale(light.color, ks * spec * light.brightness * shadow);
+
+		// Kombinieren
+		t_color combined = color_add(light_contrib, specular);
+		light_contrib = color_mix(combined, light.color, 0.2);
+		final_color = color_add(final_color, light_contrib);
 	}
+
 	return color_clamp(final_color);
 }
 
