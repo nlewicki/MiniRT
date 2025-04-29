@@ -2,4 +2,3 @@
 .vscode
 *.o
 miniRT
-/lib.*.o

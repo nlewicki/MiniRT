@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/25 11:48:35 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/29 10:53:25 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,39 +103,62 @@ static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point, t_light light)
 
 t_color compute_lighting(t_miniRT *mini, t_hit hit)
 {
-	t_color final_color = color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);  // Ambient als Grundfarbe
+    t_color final_color = color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);  // Ambient als Grundfarbe
 
-	for (int i = 0; i < mini->scene.light_count; i++)
-	{
-		t_light light = mini->scene.lights[i];
-		t_vec3 light_dir = vec_sub(light.position, hit.point);
-		light_dir = vec_normalize(light_dir);
+    for (int i = 0; i < mini->scene.light_count; i++)
+    {
+        t_light light = mini->scene.lights[i];
+        t_vec3 light_dir = vec_sub(light.position, hit.point);
+        light_dir = vec_normalize(light_dir);
 
-		// Schattenstrahl
-		t_ray shadow_ray;
-		shadow_ray.origin = vec_add(hit.point, vec_mul(light_dir, 1e-4));  // kleine Verschiebung nach außen
-		shadow_ray.direction = light_dir;
+        // Schattenstrahl
+        t_ray shadow_ray;
+        shadow_ray.origin = vec_add(hit.point, vec_mul(light_dir, 1e-4));  // kleine Verschiebung nach außen
+        shadow_ray.direction = light_dir;
 
-		double shadow = compute_shadow_factor(mini, hit.point, light);
-		shadow = pow(shadow, 0.7);
-		if (shadow > 0.0)
-		{
-			// ---------- DIFFUSE ----------
-			double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
-			t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
+        double shadow = compute_shadow_factor(mini, hit.point, light);
+        shadow = pow(shadow, 0.7);
+        if (shadow > 0.0)
+        {
+            // ---------- DIFFUSE ----------
+            double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
+            t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
 
-			// ---------- SPECULAR ----------
-			t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));
-			t_vec3 reflect_dir = vec_reflect(vec_neg(light_dir), hit.normal);
-			double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), SHINE);
-			t_color specular_color = color_scale(light.color, KS * spec * light.brightness * shadow);
+            // ---------- SPECULAR ----------
+            t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));
+            t_vec3 reflect_dir = vec_reflect(vec_neg(light_dir), hit.normal);
+            double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), SHINE);  // SHINE ist noch fest, wir ändern das gleich!
 
-			// Kombinieren
-			t_color combined = color_add(light_contrib, specular_color);
-			light_contrib = color_mix(combined, light.color, 0.2);  // kleinere Farbmischung für Lichtfarbe
-			final_color = color_add(final_color, light_contrib);
-		}
-	}
-	return color_clamp(final_color);
+            // Holt ks und shine aus dem Objekt
+            double ks = 0.2;  // Standardwert, falls nicht anders angegeben
+            double shine = 32;  // Standardwert, falls nicht anders angegeben
+
+            // Je nach Objekt die ks und shine Werte übernehmen
+            if (hit.object->type == SPHERE)
+            {
+                ks = ((t_sphere *)hit.object->data)->ks;
+                shine = ((t_sphere *)hit.object->data)->shine;
+            }
+            else if (hit.object->type == PLANE)
+            {
+                ks = ((t_plane *)hit.object->data)->ks;
+                shine = ((t_plane *)hit.object->data)->shine;
+            }
+            else if (hit.object->type == CYLINDER)
+            {
+                ks = ((t_cylinder *)hit.object->data)->ks;
+                shine = ((t_cylinder *)hit.object->data)->shine;
+            }
+
+            // Spekulare Reflexion mit ks und shine berechnen
+            t_color specular_color = color_scale(light.color, ks * spec * light.brightness * shadow);
+
+            // Kombinieren
+            t_color combined = color_add(light_contrib, specular_color);
+            light_contrib = color_mix(combined, light.color, 0.2);  // kleinere Farbmischung für Lichtfarbe
+            final_color = color_add(final_color, light_contrib);
+        }
+    }
+
+    return color_clamp(final_color);
 }
-

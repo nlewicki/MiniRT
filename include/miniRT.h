@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/25 13:00:46 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/29 10:59:58 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ typedef struct s_ray
 	t_vec3			direction;
 }					t_ray;
 
+typedef struct s_object t_object;
+
 typedef enum e_object_type
 {
 	SPHERE,
@@ -73,6 +75,7 @@ typedef struct s_hit
 	t_vec3 point;  // Hit point
 	t_vec3 normal; // Surface normal at hit point
 	t_color color; // Color at hit point
+	t_object	*object;
 					// Add more fields if needed (e.g., for lighting)
 }					t_hit;
 
