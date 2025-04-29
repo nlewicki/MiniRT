@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 11:42:21 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:40:56 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,15 @@ typedef enum e_object_type
 	CYLINDER
 }					t_object_type;
 
+typedef struct s_object t_object;
+
 typedef struct s_hit
 {
 	double t;
 	t_vec3 point;
 	t_vec3 normal;
 	t_color color;
+	t_object	*object;
 					// Add more fields if needed (e.g., for lighting)
 }					t_hit;
 
