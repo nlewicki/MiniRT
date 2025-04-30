@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 12:29:00 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:58:41 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,18 @@ typedef struct s_ray
 	t_vec3			direction;
 }					t_ray;
 
+// Material properties for objects
+typedef struct s_material
+{
+	t_color			color;       // Base color
+	double			ks;          // Specular coefficient (0.0 - 1.0)
+	double			shine;       // Shininess/phong exponent
+	double			reflection;  // Reflection factor (0.0 - 1.0)
+	// Potentiell weitere Materialeigenschaften:
+	// double       transparency;
+	// double       refraction_index;
+}					t_material;
+
 typedef enum e_object_type
 {
 	SPHERE,
@@ -47,13 +59,10 @@ typedef enum e_object_type
 
 typedef struct s_hit
 {
-	double t;
-	t_vec3 point;
-	t_vec3 normal;
-	t_color color;
-	double ks;
-	double shine;
-	double reflection;
+	double          t;           // Distance parameter
+	t_vec3          point;       // Intersection point
+	t_vec3          normal;      // Surface normal at intersection
+	t_material      material;    // Material properties at intersection
 }					t_hit;
 
 typedef struct s_miniRT t_miniRT;  // Forward declaration
@@ -62,9 +71,9 @@ typedef struct s_object
 {
 	t_object_type	type;
 	void			*data;
-	t_color			color;
+	t_material		material;    // Material properties
 	double			(*hit)(struct s_object *, const t_ray ray, t_hit *hit_info);
-	t_miniRT        *scene;  // Pointer back to the scene
+	t_miniRT		*scene;      // Pointer back to the scene
 }					t_object;
 
 // Ambient lighting
@@ -72,7 +81,7 @@ typedef struct s_ambient
 {
 	double			ratio;
 	t_color			color;
-	int is_set;
+	int				is_set;
 }					t_ambient;
 
 // Camera
@@ -81,7 +90,7 @@ typedef struct s_camera
 	t_vec3			position;
 	t_vec3			orientation;
 	int				fov;
-	int is_set;
+	int				is_set;
 }					t_camera;
 
 // Light source
@@ -100,6 +109,7 @@ typedef struct s_sphere
 	t_color			color;
 }					t_sphere;
 
+// Plane
 typedef struct s_plane
 {
 	t_vec3			position;
@@ -107,6 +117,7 @@ typedef struct s_plane
 	t_color			color;
 }					t_plane;
 
+// Cylinder
 typedef struct s_cylinder
 {
 	t_vec3			position;
@@ -121,15 +132,15 @@ typedef struct s_scene
 {
 	t_ambient		ambient;
 	t_camera		camera;
-	t_light *lights; // Array of lights
+	t_light			*lights;     // Array of lights
 	int				light_count;
-	t_sphere *spheres; // Array of spheres
-	int				sphere_count;
-	t_plane *planes; // Array of planes
-	int				plane_count;
-	t_cylinder *cylinders; // Array of cylinders
-	int				cylinder_count;
-	t_object *objects; // Array of objects (spheres, planes, etc.)
+	t_sphere		*spheres; // Array of spheres
+    int				sphere_count;
+    t_plane			*planes; // Array of planes
+    int				plane_count;
+    t_cylinder		*cylinders; // Array of cylinders
+    int				cylinder_count;
+	t_object		*objects;    // Array of objects (spheres, planes, etc.)
 	int				object_count;
 }					t_scene;
 
@@ -141,9 +152,8 @@ typedef struct s_miniRT
 	bool			low_res_mode;
 	int				res_scale;
 	int				samples;
-	double          shine;      // Current shine value for new intersections
-	double          ks;         // Current specular coefficient for new intersections
-	double          reflection; // Current reflection value for new intersections
+	// Default material values for new objects
+	t_material		default_material;
 }					t_miniRT;
 
 # endif

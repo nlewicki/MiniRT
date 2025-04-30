@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/28 12:20:37 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:51:48 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,13 +123,13 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 		{
 			// ---------- DIFFUSE ----------
 			double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
-			t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
+			t_color light_contrib = color_scale(hit.material.color, diffuse * light.brightness * shadow);
 
 			// ---------- SPECULAR ----------
 			t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));
 			t_vec3 reflect_dir = vec_reflect(vec_neg(light_dir), hit.normal);
-			double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), hit.shine);
-			t_color specular_color = color_scale(light.color, hit.ks * spec * light.brightness * shadow);
+			double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), hit.material.shine);
+			t_color specular_color = color_scale(light.color, hit.material.ks * spec * light.brightness * shadow);
 
 			// Kombinieren
 			t_color combined = color_add(light_contrib, specular_color);
