@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/29 11:40:56 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/30 13:22:41 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,22 @@ typedef enum e_object_type
 	CYLINDER
 }					t_object_type;
 
+typedef struct s_material
+{
+	double			ks; // Specular coefficient
+	double			shine; // Shininess factor
+	double			reflection; // Reflection coefficient
+}					t_material;
+
 typedef struct s_object t_object;
 
 typedef struct s_hit
 {
-	double t;
-	t_vec3 point;
-	t_vec3 normal;
-	t_color color;
-	t_object	*object;
+	double			t;
+	t_vec3			point;
+	t_vec3			normal;
+	t_color			color;
+	t_object		*object;
 					// Add more fields if needed (e.g., for lighting)
 }					t_hit;
 
@@ -61,6 +68,7 @@ typedef struct s_object
 {
 	t_object_type	type;
 	void			*data;
+	t_material		material;
 	t_color			color;
 	double			(*hit)(struct s_object *, const t_ray ray, t_hit *hit_info);
 }					t_object;
@@ -128,15 +136,15 @@ typedef struct s_scene
 {
 	t_ambient		ambient;
 	t_camera		camera;
-	t_light *lights; // Array of lights
+	t_light			*lights; // Array of lights
 	int				light_count;
-	t_sphere *spheres; // Array of spheres
+	t_sphere		*spheres; // Array of spheres
 	int				sphere_count;
-	t_plane *planes; // Array of planes
+	t_plane			*planes; // Array of planes
 	int				plane_count;
-	t_cylinder *cylinders; // Array of cylinders
+	t_cylinder		*cylinders; // Array of cylinders
 	int				cylinder_count;
-	t_object *objects; // Array of objects (spheres, planes, etc.)
+	t_object		*objects; // Array of objects (spheres, planes, etc.)
 	int				object_count;
 }					t_scene;
 
