@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/29 11:37:21 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/30 13:34:46 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define KS_MAX 1
 # define REFLECTION_MIN 0
 # define REFLECTION_MAX 1
-# define MAX_DEPTH 3
+# define MAX_DEPTH 4
 
 int					parse_rt_file(char *filename, t_scene *scene);
 void				init_scene(t_scene *scene);

@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/25 13:31:07 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/04/30 13:58:01 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
 			// Spiegelstrahl berechnen
 			t_vec3 reflect_dir = vec_reflect(ray.direction, closest_hit.normal);
 			t_ray reflect_ray = {
-				.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4)),
+				.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4)),  // Add small epsilon
 				.direction = reflect_dir
 			};
 
@@ -120,7 +120,9 @@ t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
 	}
 	else
 	{
-		// Kein Objekt getroffen → Hintergrundfarbe
+		if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0) {
+			return (t_color){30, 30, 30, 255}; // Default dark grey background
+		}
 		return color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);
 	}
 }
