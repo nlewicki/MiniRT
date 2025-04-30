@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 12:50:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 12:30:37 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:43:33 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,10 +134,7 @@ double	hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info)
 			hit_info->normal = vec_normalize(
 				vec_sub(hit_info->point, center_at_height));
 		}
-		hit_info->color = obj->color;
-		hit_info->ks = obj->scene->ks;
-		hit_info->shine = obj->scene->shine;
-		hit_info->reflection = obj->scene->reflection;
+		hit_info->color = obj->material->color;
 	}
 	return (t);
 }

@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 11:46:10 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 12:40:11 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:11:10 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static void init_material_properties(t_miniRT *mini)
 {
-    mini->ks = 0.5;         // Default specular coefficient
-    mini->shine = 50.0;     // Default shininess
-    mini->reflection = 0.4; // Default reflection
+    mini->default_material.ks = 0.5;         // Default specular coefficient
+    mini->default_material.shine = 50.0;     // Default shininess
+    mini->default_material.reflection = 0.4; // Default reflection
 }
 
 void	init_scene(t_scene *scene)

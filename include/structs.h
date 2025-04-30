@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/30 11:58:41 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:40:28 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,6 @@ typedef struct s_material
 	double			ks;          // Specular coefficient (0.0 - 1.0)
 	double			shine;       // Shininess/phong exponent
 	double			reflection;  // Reflection factor (0.0 - 1.0)
-	// Potentiell weitere Materialeigenschaften:
-	// double       transparency;
-	// double       refraction_index;
 }					t_material;
 
 typedef enum e_object_type
@@ -57,13 +54,16 @@ typedef enum e_object_type
 	CYLINDER
 }					t_object_type;
 
+typedef struct s_object t_object;  // Forward declaration
+
 typedef struct s_hit
 {
-	double          t;           // Distance parameter
-	t_vec3          point;       // Intersection point
-	t_vec3          normal;      // Surface normal at intersection
-	t_material      material;    // Material properties at intersection
-}					t_hit;
+	double t;             // Distance parameter
+	t_vec3 point;         // Intersection point
+	t_vec3 normal;        // Surface normal at intersection
+	t_color color;        // Base color at hit point
+	t_object *object;     // Pointer to the hit object (optional)
+}            t_hit;
 
 typedef struct s_miniRT t_miniRT;  // Forward declaration
 
@@ -71,8 +71,8 @@ typedef struct s_object
 {
 	t_object_type	type;
 	void			*data;
-	t_material		material;    // Material properties
 	double			(*hit)(struct s_object *, const t_ray ray, t_hit *hit_info);
+	t_material		*material;  // Material properties at hit point
 	t_miniRT		*scene;      // Pointer back to the scene
 }					t_object;
 

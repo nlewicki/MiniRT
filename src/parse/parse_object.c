@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:23:41 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 12:30:11 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:48:01 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	convert_spheres(t_miniRT *mini, int *index)
         *sphere_data = scene->spheres[i];
         scene->objects[*index].type = SPHERE;
         scene->objects[*index].data = sphere_data;
-        scene->objects[*index].color = sphere_data->color;
+        scene->objects[*index].material->color = sphere_data->color;
         scene->objects[*index].hit = hit_sphere;
         set_object_common(&scene->objects[*index], mini);
         (*index)++;
@@ -55,7 +55,7 @@ void	convert_planes(t_miniRT *mini, int *index)
         *plane_data = scene->planes[i];
         scene->objects[*index].type = PLANE;
         scene->objects[*index].data = plane_data;
-        scene->objects[*index].color = plane_data->color;
+        scene->objects[*index].material->color = plane_data->color;
         scene->objects[*index].hit = hit_plane;
         set_object_common(&scene->objects[*index], mini);
         (*index)++;
@@ -78,7 +78,7 @@ void	convert_cylinders(t_miniRT *mini, int *index)
         *cylinder_data = scene->cylinders[i];
         scene->objects[*index].type = CYLINDER;
         scene->objects[*index].data = cylinder_data;
-        scene->objects[*index].color = cylinder_data->color;
+        scene->objects[*index].material->color = cylinder_data->color;
         scene->objects[*index].hit = hit_cylinder;
         set_object_common(&scene->objects[*index], mini);
         (*index)++;

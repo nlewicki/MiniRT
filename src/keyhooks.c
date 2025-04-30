@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:25:59 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 12:28:03 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:10:39 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,21 +107,21 @@ static bool adjust_material_property(t_miniRT *mini, int property_type, double d
     // Select which property to modify
     if (property_type == 0)
     {
-        value = &mini->ks;
+        value = &mini->default_material.ks;
         min = KS_MIN;
         max = KS_MAX;
         property_name = "KS";
     }
     else if (property_type == 1)
     {
-        value = &mini->shine;
+        value = &mini->default_material.shine;
         min = SHINE_MIN;
         max = SHINE_MAX;
         property_name = "SHINE";
     }
     else
     {
-        value = &mini->reflection;
+        value = &mini->default_material.reflection;
         min = REFLECTION_MIN;
         max = REFLECTION_MAX;
         property_name = "REFLECTION";

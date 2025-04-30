@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/30 11:52:09 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:39:54 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
 		t_color reflected_color = trace_ray(mini, reflect_ray, depth - 1);
 
 		// Mischung aus lokaler Farbe und Reflexion
-		t_color final = color_mix(local_color, reflected_color, closest_hit.material.reflection);
+		t_color final = color_mix(local_color, reflected_color, closest_hit.object->material->reflection);
 		return (color_clamp(final));
 	}
 	else
