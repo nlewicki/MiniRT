@@ -27,6 +27,7 @@ void	convert_spheres(t_scene *scene, int *index)
 		scene->objects[*index].type = SPHERE;
 		scene->objects[*index].data = sphere_data;
 		scene->objects[*index].color = sphere_data->color;
+		scene->objects[*index].material_link = sphere_data->material_link;
 		scene->objects[*index].hit = hit_sphere;
 		(*index)++;
 		i++;
@@ -48,6 +49,7 @@ void	convert_planes(t_scene *scene, int *index)
 		scene->objects[*index].type = PLANE;
 		scene->objects[*index].data = plane_data;
 		scene->objects[*index].color = plane_data->color;
+		scene->objects[*index].material_link = plane_data->material_link;
 		scene->objects[*index].hit = hit_plane;
 		(*index)++;
 		i++;
@@ -69,6 +71,7 @@ void	convert_cylinders(t_scene *scene, int *index)
 		scene->objects[*index].type = CYLINDER;
 		scene->objects[*index].data = cylinder_data;
 		scene->objects[*index].color = cylinder_data->color;
+		scene->objects[*index].material_link = cylinder_data->material_link;
 		scene->objects[*index].hit = hit_cylinder;
 		(*index)++;
 		i++;

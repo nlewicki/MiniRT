@@ -19,7 +19,7 @@ void	parse_sphere(char **tokens, t_scene *scene)
 	t_sphere	sphere;
 
 	error = 0;
-	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
+	if (!tokens[1] || !tokens[2] || !tokens[3])
 		exit_error("Invalid sphere format");
 	sphere.center = parse_position(tokens[1], &error);
 	if (error)
@@ -30,6 +30,9 @@ void	parse_sphere(char **tokens, t_scene *scene)
 	sphere.color = parse_color(tokens[3], &error);
 	if (error)
 		exit_error("Invalid sphere color");
+	sphere.material_link = NULL;
+	if (tokens[4])
+		sphere.material_link = strdup(tokens[4]);
 	new_sphere = ft_realloc(scene->spheres,
 			sizeof(t_sphere) * (scene->sphere_count + 1));
 	if (!new_sphere)
@@ -41,8 +44,8 @@ void	parse_sphere(char **tokens, t_scene *scene)
 	scene->spheres->shine = SHINE;
 	scene->spheres->ks = KS;
 	// Debug print
-	printf("Sphere added: center=(%.2f, %.2f, %.2f), diameter=%.2f, color=(%d, %d, %d)\n",
+	printf("Sphere added: center=(%.2f, %.2f, %.2f), diameter=%.2f, color=(%d, %d, %d), material_link=%s\n",
 		sphere.center.x, sphere.center.y, sphere.center.z, sphere.diameter,
-		sphere.color.r, sphere.color.g, sphere.color.b);
+		sphere.color.r, sphere.color.g, sphere.color.b, sphere.material_link);
 	printf("\n"); // Simpler than write
 }

@@ -78,6 +78,8 @@ void	print_objects(t_scene *scene)
 			printf("  Diameter: %.2f\n", sphere->diameter);
 			printf("  Color: (%d, %d, %d, %d)\n", sphere->color.r,
 				sphere->color.g, sphere->color.b, sphere->color.a);
+			if (obj->material_link && obj->material_link[0])
+				printf("  Material Link: %s\n", obj->material_link);
 		}
 		else if (obj->type == PLANE)
 		{
@@ -89,6 +91,10 @@ void	print_objects(t_scene *scene)
 				plane->orientation.y, plane->orientation.z);
 			printf("  Color: (%d, %d, %d, %d)\n", plane->color.r,
 				plane->color.g, plane->color.b, plane->color.a);
+			if (obj->material_link && obj->material_link[0])
+				printf("  Material Link: %s\n", obj->material_link);
+			if (plane->limit_width > 0 && plane->limit_height > 0)
+				printf("  Limits: width=%.2f, height=%.2f\n", plane->limit_width, plane->limit_height);
 		}
 		else if (obj->type == CYLINDER)
 		{
@@ -103,6 +109,8 @@ void	print_objects(t_scene *scene)
 			printf("  Height: %.2f\n", cylinder->height);
 			printf("  Color: (%d, %d, %d, %d)\n", cylinder->color.r,
 				cylinder->color.g, cylinder->color.b, cylinder->color.a);
+			if (obj->material_link && obj->material_link[0])
+				printf("  Material Link: %s\n", obj->material_link);
 		}
 		else
 		{

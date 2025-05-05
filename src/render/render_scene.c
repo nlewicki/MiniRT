@@ -146,7 +146,7 @@ uint32_t color_to_uint32(t_color color)
 void render_scene(mlx_image_t *img, t_miniRT *mini)
 {
 	double	closest;
-	t_hit	closest_hit;
+	// t_hit	closest_hit;
 	bool	hit_any;
 	t_scene *scene = &mini->scene;
 	int scale = mini->low_res_mode ? mini->res_scale : 1;
@@ -169,7 +169,7 @@ void render_scene(mlx_image_t *img, t_miniRT *mini)
 				if (t > 0 && t < closest)
 				{
 					closest = t;
-					closest_hit = temp_hit;
+					// closest_hit = temp_hit;
 					hit_any = true;
 				}
 			}

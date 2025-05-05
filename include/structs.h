@@ -61,6 +61,7 @@ typedef struct s_object
 {
 	t_object_type	type;
 	void			*data;
+	char			*material_link;
 	t_color			color;
 	double			(*hit)(struct s_object *, const t_ray ray, t_hit *hit_info);
 }					t_object;
@@ -99,6 +100,8 @@ typedef struct s_sphere
 	double			ks;
 	double			shine;
 	double			reflection;
+	char			*material_link;
+
 }					t_sphere;
 
 typedef struct s_plane
@@ -109,6 +112,9 @@ typedef struct s_plane
 	double			ks;
 	double			shine;
 	double			reflection;
+	char			*material_link;
+	double			limit_width;
+	double			limit_height;
 }					t_plane;
 
 typedef struct s_cylinder
@@ -121,6 +127,7 @@ typedef struct s_cylinder
 	double			ks;
 	double			shine;
 	double			reflection;
+	char			*material_link;
 }					t_cylinder;
 
 // Main scene struct

@@ -37,6 +37,9 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 	cylinder.color = parse_color(tokens[5], &error);
 	if (error)
 		exit_error("Invalid cylinder color");
+	cylinder.material_link = NULL;
+	if (tokens[6])
+		cylinder.material_link = strdup(tokens[6]);
 	new_cylinders = ft_realloc(scene->cylinders,
 			sizeof(t_cylinder) * (scene->cylinder_count + 1));
 	if (!new_cylinders)
@@ -48,10 +51,10 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 	scene->cylinders->shine = SHINE;
 	scene->cylinders->ks = KS;
 	// Debug print
-	printf("Cylinder added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), diameter=%.2f, height=%.2f, color=(%d, %d, %d)\n",
+	printf("Cylinder added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), diameter=%.2f, height=%.2f, color=(%d, %d, %d), material_link=%s\n",
 		cylinder.position.x, cylinder.position.y, cylinder.position.z,
 		cylinder.orientation.x, cylinder.orientation.y, cylinder.orientation.z,
 		cylinder.diameter, cylinder.height,
-		cylinder.color.r, cylinder.color.g, cylinder.color.b);
+		cylinder.color.r, cylinder.color.g, cylinder.color.b, cylinder.material_link);
 	printf("\n");
 }
