@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 16:28:26 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/06 11:06:58 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/06 11:24:56 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,17 @@ t_color checkerboard_sphere(t_sphere *sph, t_vec3 point)
 	t_vec3 local = vec_sub(point, sph->center);
 	local = vec_normalize(local);
 	
-	sph->checker_white = (t_color){1.0, 1.0, 1.0, 1.0};  // Reines Weiß
-	sph->checker_black = (t_color){0.0, 0.0, 0.0, 1.0};  // Reines Schwarz
+	// Use proper color ranges (0-255 instead of 0.0-1.0)
+	sph->checker_white = (t_color){255, 255, 255, 255};  // White
+	sph->checker_black = (t_color){0, 0, 0, 255};        // Black
 
+	// Calculate UV coordinates on the sphere
 	double u = 0.5 + atan2(local.z, local.x) / (2 * M_PI);
 	double v = 0.5 - asin(local.y) / M_PI;
 
-	int u_int = (int)(u * 10);
-	int v_int = (int)(v * 10);
+	// Adjust the scale for more visible checkerboard (smaller number = larger squares)
+	int u_int = (int)(u * 8);
+	int v_int = (int)(v * 8);
 
 	if ((u_int + v_int) % 2 == 0)
 		return sph->checker_black;
@@ -60,7 +63,10 @@ double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit)
 	hit->t = t;
 	hit->point = vec_add(ray.origin, vec_mul(ray.direction, t));
 	hit->normal = vec_normalize(vec_sub(hit->point, sphere->center));
-	hit->color = obj->color;
+	if (sphere->checker)
+    	hit->color = checkerboard_sphere(sphere, hit->point);
+	else
+    	hit->color = obj->color;
 	hit->object = obj;
 	return (t);
 }
