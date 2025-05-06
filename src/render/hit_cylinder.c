@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 12:50:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/06 13:07:13 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/06 13:17:37 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,10 @@ double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info) {
                 hit_info->t = t;
                 hit_info->point = p;
                 hit_info->normal = vec_normalize(vec_sub(p, vec_add(cyl->position, vec_mul(cyl->orientation, height))));
-                hit_info->color = obj->color;
+                if (cyl->checker)
+                    hit_info->color = checkerboard_cylinder(cyl, hit_info->point);
+                else
+                    hit_info->color = obj->color;
                 hit_info->object = obj;
             }
         }

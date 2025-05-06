@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:25:59 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/06 12:21:18 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/06 13:23:14 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void	print_keybind_legend(void)
 	printf("  Z - Toggle on spheres\n");
 	printf("  X - Toggle on planes\n");
 	printf("  C - Toggle on cylinders\n");
+	printf("  V - Toggle on all objects\n");
 	printf("\nMaterial Properties:\n");
 	printf("  1/2 - Increase/Decrease KS\n");
 	printf("  3/4 - Increase/Decrease Shine\n");
@@ -155,11 +156,11 @@ static bool adjust_material_property(t_scene *scene, int property_type, double d
 	for (int i = 0; i < scene->object_count; i++)
 	{
 		t_object *obj = &scene->objects[i];
+		double new_value;
+
 		if (obj->type == SPHERE)
 		{
 			t_sphere *sphere = (t_sphere *)obj->data;
-			double new_value;
-
 			if (property_type == 0)  // KS
 			{
 				new_value = fmax(KS_MIN, fmin(KS_MAX, sphere->ks + delta));
@@ -188,6 +189,40 @@ static bool adjust_material_property(t_scene *scene, int property_type, double d
 					sphere->reflection = new_value;
 					changed = true;
 					printf("OBJECT TYPE: SPHERE\nREFLECTION: %f\n", sphere->reflection);
+				}
+			}
+		}
+		if (obj->type == CYLINDER)  // Remove else to handle both types
+		{
+			t_cylinder *cylinder = (t_cylinder *)obj->data;
+			if (property_type == 0)  // KS
+			{
+				new_value = fmax(KS_MIN, fmin(KS_MAX, cylinder->ks + delta));
+				if (new_value != cylinder->ks)
+				{
+					cylinder->ks = new_value;
+					changed = true;
+					printf("OBJECT TYPE: CYLINDER\nKS: %f\n", cylinder->ks);
+				}
+			}
+			else if (property_type == 1)  // SHINE
+			{
+				new_value = fmax(SHINE_MIN, fmin(SHINE_MAX, cylinder->shine + delta));
+				if (new_value != cylinder->shine)
+				{
+					cylinder->shine = new_value;
+					changed = true;
+					printf("OBJECT TYPE: CYLINDER\nSHINE: %f\n", cylinder->shine);
+				}
+			}
+			else if (property_type == 2)  // REFLECTION
+			{
+				new_value = fmax(REFLECTION_MIN, fmin(REFLECTION_MAX, cylinder->reflection + delta));
+				if (new_value != cylinder->reflection)
+				{
+					cylinder->reflection = new_value;
+					changed = true;
+					printf("OBJECT TYPE: CYLINDER\nREFLECTION: %f\n", cylinder->reflection);
 				}
 			}
 		}
@@ -282,6 +317,13 @@ void	key_hook(mlx_key_data_t key, void *param)
 	}
 	else if (key.key == MLX_KEY_C)
 	{
+		toggle_cylinder_checker(&mini->scene);
+		needs_render = true;
+	}
+	else if (key.key == MLX_KEY_V)
+	{
+		toggle_sphere_checker(&mini->scene);
+		toggle_plane_checker(&mini->scene);
 		toggle_cylinder_checker(&mini->scene);
 		needs_render = true;
 	}

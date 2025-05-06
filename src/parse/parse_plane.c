@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/25 13:12:03 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/06 13:24:22 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@ void	parse_plane(char **tokens, t_scene *scene)
 	plane.material_link = NULL;
 	plane.limit_width = 0;
 	plane.limit_height = 0;
+	plane.checker = false;
 	if (tokens[4]) {
-		plane.material_link = strdup(tokens[4]);
+		plane.material_link = ft_strdup(tokens[4]);
 		if (tokens[5]) {
 			char **limits = ft_split(tokens[5], ',');
 			if (limits && limits[0] && limits[1])

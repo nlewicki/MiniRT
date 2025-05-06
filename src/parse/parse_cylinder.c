@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:06 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/28 11:31:00 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/06 13:24:30 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,9 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 	if (error)
 		exit_error("Invalid cylinder color");
 	cylinder.material_link = NULL;
+	cylinder.checker = false;
 	if (tokens[6])
-		cylinder.material_link = strdup(tokens[6]);
+		cylinder.material_link = ft_strdup(tokens[6]);
 	new_cylinders = ft_realloc(scene->cylinders,
 			sizeof(t_cylinder) * (scene->cylinder_count + 1));
 	if (!new_cylinders)

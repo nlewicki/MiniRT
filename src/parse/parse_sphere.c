@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_sphere.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:31 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/06 11:41:48 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/06 13:24:35 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ void	parse_sphere(char **tokens, t_scene *scene)
 	if (error)
 		exit_error("Invalid sphere color");
 	sphere.material_link = NULL;
+	sphere.checker = false;
 	if (tokens[4])
-		sphere.material_link = strdup(tokens[4]);
+		sphere.material_link = ft_strdup(tokens[4]);
 	new_sphere = ft_realloc(scene->spheres,
 			sizeof(t_sphere) * (scene->sphere_count + 1));
 	if (!new_sphere)

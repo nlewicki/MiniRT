@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/05/06 11:41:09 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/06 13:16:27 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ t_vec3 vec_reflect(t_vec3 v, t_vec3 n);
 t_color color_mix(t_color a, t_color b, double factor);
 t_color color_scale(t_color c, double factor);
 t_color color_clamp(t_color c);
+
+t_color checkerboard_cylinder(t_cylinder *cyl, t_vec3 point);
 
 void	key_hook(mlx_key_data_t key, void *param);
 void	exit_mini(t_miniRT *mini);
