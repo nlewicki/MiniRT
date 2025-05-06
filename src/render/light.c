@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/06 11:25:14 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/06 11:40:21 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,14 +140,14 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 				t_sphere *s = (t_sphere *)hit.object->data;
 				// Always enable checkerboard for testing
 				s->checker = true;
-				if (s->checker)
-					hit.color = checkerboard_sphere(s, hit.point);
 				ks = s->ks;
 				shine = s->shine;
 			}
 			else if (hit.object->type == PLANE)
 			{
 				t_plane *p = (t_plane *)hit.object->data;
+				// Always enable checkerboard for testing
+				p->checker = true;
 				ks = p->ks;
 				shine = p->shine;
 			}
@@ -162,34 +162,6 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 		// Diffuse Beleuchtung (after applying checkerboard)
 		double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
 		t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
-
-		// Spekulare Werte abrufen
-		//double ks = 0.0;
-		//double shine = 0.0;
-		//if (hit.object)
-		//{
-		//	if (hit.object->type == SPHERE)
-		//	{
-		//		t_sphere *s = (t_sphere *)hit.object->data;
-		//		s->checker = 1;
-		//		if (s->checker)
-		//			hit.color = checkerboard_sphere(s, hit.point);
-		//		ks = s->ks;
-		//		shine = s->shine;
-		//	}
-		//	else if (hit.object->type == PLANE)
-		//	{
-		//		t_plane *p = (t_plane *)hit.object->data;
-		//		ks = p->ks;
-		//		shine = p->shine;
-		//	}
-		//	else if (hit.object->type == CYLINDER)
-		//	{
-		//		t_cylinder *c = (t_cylinder *)hit.object->data;
-		//		ks = c->ks;
-		//		shine = c->shine;
-		//	}
-		//}
 
 		// Specular Highlight
 		t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));

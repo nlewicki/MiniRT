@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/06 11:14:04 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/06 11:39:15 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,9 @@ typedef struct s_plane
 	double			ks;
 	double			shine;
 	double			reflection;
+	bool			checker;
+	t_color			checker_black;
+	t_color			checker_white;
 }					t_plane;
 
 typedef struct s_cylinder

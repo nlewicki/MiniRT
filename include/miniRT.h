@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/05/06 10:57:23 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/06 11:41:09 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void				parse_sphere(char **tokens, t_scene *scene);
 void				convert_objects(t_scene *scene);
 double				hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
 t_color				checkerboard_sphere(t_sphere *sph, t_vec3 point);
+t_color				checkerboard_plane(t_plane *plane, t_vec3 point);
 double				hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 double				hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
 t_color				compute_lighting(t_miniRT *mini, t_hit hit);
