@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/30 14:00:05 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/06 11:08:31 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,9 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 			if (hit.object->type == SPHERE)
 			{
 				t_sphere *s = (t_sphere *)hit.object->data;
+				s->checker = 1;
+				if (s->checker)
+					hit.color = checkerboard_sphere(s, hit.point);
 				ks = s->ks;
 				shine = s->shine;
 			}
