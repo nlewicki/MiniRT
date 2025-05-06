@@ -6,11 +6,32 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:25:59 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 11:15:28 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:21:18 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/miniRT.h"
+
+static void	print_keybind_legend(void)
+{
+	printf("\n=== MiniRT Keybindings ===\n");
+	printf("Camera Controls:\n");
+	printf("  WASD      - Move camera\n");
+	printf("  Arrow Keys - Rotate camera\n");
+	printf("\nCheckerboard Pattern:\n");
+	printf("  Z - Toggle on spheres\n");
+	printf("  X - Toggle on planes\n");
+	printf("  C - Toggle on cylinders\n");
+	printf("\nMaterial Properties:\n");
+	printf("  1/2 - Increase/Decrease KS\n");
+	printf("  3/4 - Increase/Decrease Shine\n");
+	printf("  5/6 - Increase/Decrease Reflection\n");
+	printf("\nOther Controls:\n");
+	printf("  F     - Toggle resolution mode\n");
+	printf("  +/-   - Toggle sample count (2/128)\n");
+	printf("  ESC   - Exit\n");
+	printf("=====================\n\n");
+}
 
 //gecuttete version von key_hook
 
@@ -96,6 +117,36 @@ static bool	handle_key_checks(mlx_key_data_t key, t_miniRT *mini)
 	}
 	mini->low_res_mode = true;
 	return (true);
+}
+
+static void toggle_sphere_checker(t_scene *scene)
+{
+	for (int i = 0; i < scene->object_count; i++)
+	{
+		t_object *obj = &scene->objects[i];
+		if (obj->type == SPHERE)
+			((t_sphere *)obj->data)->checker = !((t_sphere *)obj->data)->checker;
+	}
+}
+
+static void toggle_plane_checker(t_scene *scene)
+{
+	for (int i = 0; i < scene->object_count; i++)
+	{
+		t_object *obj = &scene->objects[i];
+		if (obj->type == PLANE)
+			((t_plane *)obj->data)->checker = !((t_plane *)obj->data)->checker;
+	}
+}
+
+static void toggle_cylinder_checker(t_scene *scene)
+{
+	for (int i = 0; i < scene->object_count; i++)
+	{
+		t_object *obj = &scene->objects[i];
+		if (obj->type == CYLINDER)
+			((t_cylinder *)obj->data)->checker = !((t_cylinder *)obj->data)->checker;
+	}
 }
 
 static bool adjust_material_property(t_scene *scene, int property_type, double delta)
@@ -187,6 +238,12 @@ void	key_hook(mlx_key_data_t key, void *param)
 	bool		needs_render;
 
 	mini = (t_miniRT *)param;
+	static bool legend_printed = false;
+	if (!legend_printed)
+	{
+		print_keybind_legend();
+		legend_printed = true;
+	}
 	if (!handle_key_checks(key, mini))
 		return;
 	forward = vec_normalize(mini->scene.camera.orientation);
@@ -212,6 +269,21 @@ void	key_hook(mlx_key_data_t key, void *param)
 	else if (key.key == MLX_KEY_EQUAL || key.key == MLX_KEY_MINUS)
 	{
 		needs_render = handle_samples(mini, key);
+	}
+	else if (key.key == MLX_KEY_Z)
+	{
+		toggle_sphere_checker(&mini->scene);
+		needs_render = true;
+	}
+	else if (key.key == MLX_KEY_X)
+	{
+		toggle_plane_checker(&mini->scene);
+		needs_render = true;
+	}
+	else if (key.key == MLX_KEY_C)
+	{
+		toggle_cylinder_checker(&mini->scene);
+		needs_render = true;
 	}
 	if (needs_render)
 		render_scene(mini->img, mini);

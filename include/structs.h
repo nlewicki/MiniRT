@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/06 11:59:13 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:15:32 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,9 @@ typedef struct s_cylinder
 	double			ks;
 	double			shine;
 	double			reflection;
+	bool			checker;
+	t_color			checker_black;
+	t_color			checker_white;
 	char			*material_link;
 }					t_cylinder;
 

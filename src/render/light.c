@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/06 11:40:21 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/06 12:17:56 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,22 +138,21 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 			if (hit.object->type == SPHERE)
 			{
 				t_sphere *s = (t_sphere *)hit.object->data;
-				// Always enable checkerboard for testing
-				s->checker = true;
+				// Use existing checker flag
 				ks = s->ks;
 				shine = s->shine;
 			}
 			else if (hit.object->type == PLANE)
 			{
 				t_plane *p = (t_plane *)hit.object->data;
-				// Always enable checkerboard for testing
-				p->checker = true;
+				// Use existing checker flag
 				ks = p->ks;
 				shine = p->shine;
 			}
 			else if (hit.object->type == CYLINDER)
 			{
 				t_cylinder *c = (t_cylinder *)hit.object->data;
+				// Use existing checker flag
 				ks = c->ks;
 				shine = c->shine;
 			}
