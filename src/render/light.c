@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/29 11:37:28 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/06 11:40:21 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,15 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 {
 	t_color final_color = color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);
 
+	// If no lights, add a default directional light
+	if (mini->scene.light_count == 0) {
+		// Create a default directional light from above
+		t_vec3 default_light_dir = {0, -1, 0}; // From above
+		double diffuse = fmax(0.0, vec_skal(hit.normal, vec_neg(default_light_dir)));
+		t_color light_contrib = color_scale(hit.color, diffuse * 0.7); // 0.7 intensity
+		final_color = color_add(final_color, light_contrib);
+		return color_clamp(final_color);
+	}
 	for (int i = 0; i < mini->scene.light_count; i++)
 	{
 		t_light light = mini->scene.lights[i];
@@ -121,11 +130,7 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 		if (shadow <= 0.0)
 			continue;
 
-		// Diffuse Beleuchtung
-		double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
-		t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
-
-		// Spekulare Werte abrufen
+		// Spekulare Werte abrufen und Checkerboard anwenden
 		double ks = 0.0;
 		double shine = 0.0;
 		if (hit.object)
@@ -133,12 +138,16 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 			if (hit.object->type == SPHERE)
 			{
 				t_sphere *s = (t_sphere *)hit.object->data;
+				// Always enable checkerboard for testing
+				s->checker = true;
 				ks = s->ks;
 				shine = s->shine;
 			}
 			else if (hit.object->type == PLANE)
 			{
 				t_plane *p = (t_plane *)hit.object->data;
+				// Always enable checkerboard for testing
+				p->checker = true;
 				ks = p->ks;
 				shine = p->shine;
 			}
@@ -149,6 +158,10 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 				shine = c->shine;
 			}
 		}
+
+		// Diffuse Beleuchtung (after applying checkerboard)
+		double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
+		t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
 
 		// Specular Highlight
 		t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));
@@ -164,4 +177,3 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 
 	return color_clamp(final_color);
 }
-
