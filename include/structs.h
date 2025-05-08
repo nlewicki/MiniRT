@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+	/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/06 12:15:32 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:57:57 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ typedef enum e_object_type
 {
 	SPHERE,
 	PLANE,
-	CYLINDER
+	CYLINDER,
+	CONE
 }					t_object_type;
 
 typedef struct s_object t_object;
@@ -169,6 +170,8 @@ typedef struct s_scene
 	int				plane_count;
 	t_cylinder *cylinders; // Array of cylinders
 	int				cylinder_count;
+	t_cone *cones; // Array of cones
+	int				cone_count;
 	t_object *objects; // Array of objects (spheres, planes, etc.)
 	int				object_count;
 }					t_scene;

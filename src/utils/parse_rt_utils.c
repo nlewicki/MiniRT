@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:11:42 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 13:11:57 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:12:28 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	free_scene(t_scene *scene)
 		free(scene->planes);
 	if (scene->cylinders)
 		free(scene->cylinders);
+	if (scene->cones)
+		free(scene->cones);
 	if (scene->objects)
 	{
 		i = 0;

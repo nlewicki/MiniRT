@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 16:28:26 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/06 13:16:15 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:06:42 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,40 @@ t_color checkerboard_cylinder(t_cylinder *cyl, t_vec3 point)
 		return cyl->checker_black;
 	else
 		return cyl->checker_white;
+}
+
+t_color checkerboard_cone(t_cone *cone, t_vec3 point)
+{
+	// Default checkerboard colors
+	cone->checker_white = (t_color){255, 255, 255, 255};
+	cone->checker_black = (t_color){0, 0, 0, 255};
+
+	// Get vector from apex to point
+	t_vec3 ap = vec_sub(point, cone->apex);
+
+	// Get height along cone axis
+	double height = vec_dot(ap, cone->direction);
+	double v = height / cone->height; // 0 to 1
+
+	// Project point onto plane perpendicular to cone axis
+	t_vec3 radial = vec_sub(ap, vec_mul(cone->direction, height));
+	radial = vec_normalize(radial);
+
+	// Get angle around the axis
+	double theta = atan2(radial.z, radial.x);
+	if (theta < 0)
+		theta += 2 * M_PI;
+	double u = theta / (2 * M_PI); // 0 to 1
+
+	// Scale u and v to create checker pattern
+	// Use more squares around circumference due to cone expanding
+	int u_int = (int)(u * 16);
+	int v_int = (int)(v * 8);
+
+	if ((u_int + v_int) % 2 == 0)
+		return cone->checker_black;
+	else
+		return cone->checker_white;
 }
 
 double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit)

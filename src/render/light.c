@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/06 12:17:56 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:49:38 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,13 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 			else if (hit.object->type == CYLINDER)
 			{
 				t_cylinder *c = (t_cylinder *)hit.object->data;
+				// Use existing checker flag
+				ks = c->ks;
+				shine = c->shine;
+			}
+			else if (hit.object->type == CONE)
+			{
+				t_cone *c = (t_cone *)hit.object->data;
 				// Use existing checker flag
 				ks = c->ks;
 				shine = c->shine;

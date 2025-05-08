@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/05/06 13:16:27 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:14:47 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void				parse_cylinder(char **tokens, t_scene *scene);
 void				parse_light(char **tokens, t_scene *scene);
 void				parse_plane(char **tokens, t_scene *scene);
 void				parse_sphere(char **tokens, t_scene *scene);
+void				parse_cone(char **tokens, t_scene *scene);
 
 void				convert_objects(t_scene *scene);
 double				hit_sphere(t_object *obj, const t_ray ray, t_hit *hit_info);
@@ -62,8 +63,11 @@ t_color				checkerboard_sphere(t_sphere *sph, t_vec3 point);
 t_color				checkerboard_plane(t_plane *plane, t_vec3 point);
 double				hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 double				hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
+double	hit_cone(t_object *obj, const t_ray ray, t_hit *hit_info);
 t_color				compute_lighting(t_miniRT *mini, t_hit hit);
 t_color trace_ray(t_miniRT *mini, t_ray ray, int depth);
+
+double	solve_quadratic(double a, double b, double c);
 
 // utils
 t_vec3				vec_sub(t_vec3 a, t_vec3 b);
@@ -81,6 +85,7 @@ t_color color_scale(t_color c, double factor);
 t_color color_clamp(t_color c);
 
 t_color checkerboard_cylinder(t_cylinder *cyl, t_vec3 point);
+t_color checkerboard_cone(t_cone *cone, t_vec3 point);
 
 void	key_hook(mlx_key_data_t key, void *param);
 void	exit_mini(t_miniRT *mini);

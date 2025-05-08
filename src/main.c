@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/28 12:14:08 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:29:43 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,21 @@ void	print_objects(t_scene *scene)
 			printf("  Height: %.2f\n", cylinder->height);
 			printf("  Color: (%d, %d, %d, %d)\n", cylinder->color.r,
 				cylinder->color.g, cylinder->color.b, cylinder->color.a);
+			if (obj->material_link && obj->material_link[0])
+				printf("  Material Link: %s\n", obj->material_link);
+		}
+		else if (obj->type == CONE)
+		{
+			t_cone *cone = (t_cone *)obj->data;
+			printf("Cone\n");
+			printf("  Apex: (%.2f, %.2f, %.2f)\n", cone->apex.x,
+				cone->apex.y, cone->apex.z);
+			printf("  Direction: (%.2f, %.2f, %.2f)\n", cone->direction.x,
+				cone->direction.y, cone->direction.z);
+			printf("  Angle: %.2f\n", cone->angle);
+			printf("  Height: %.2f\n", cone->height);
+			printf("  Color: (%d, %d, %d, %d)\n", cone->color.r,
+				cone->color.g, cone->color.b, cone->color.a);
 			if (obj->material_link && obj->material_link[0])
 				printf("  Material Link: %s\n", obj->material_link);
 		}

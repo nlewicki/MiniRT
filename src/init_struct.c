@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 11:46:10 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 13:03:54 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:12:43 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	init_scene(t_scene *scene)
 	scene->plane_count = 0;
 	scene->cylinders = NULL;
 	scene->cylinder_count = 0;
+	scene->cones = NULL;
+	scene->cone_count = 0;
 	scene->objects = NULL;
 	scene->object_count = 0;
 }

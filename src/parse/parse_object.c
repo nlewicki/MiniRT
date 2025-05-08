@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:23:41 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/25 13:27:41 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:58:34 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,35 @@ void	convert_cylinders(t_scene *scene, int *index)
 	}
 }
 
+void	convert_cones(t_scene *scene, int *index)
+{
+	int			i;
+	t_cone	*cone_data;
+
+	i = 0;
+	while (i < scene->cone_count)
+	{
+		cone_data = malloc(sizeof(t_cone));
+		if (!cone_data)
+			exit_error("Memory allocation failed for cone data");
+		*cone_data = scene->cones[i];
+		scene->objects[*index].type = CONE;
+		scene->objects[*index].data = cone_data;
+		scene->objects[*index].color = cone_data->color;
+		scene->objects[*index].material_link = cone_data->material_link;
+		scene->objects[*index].hit = hit_cone;
+		(*index)++;
+		i++;
+	}
+}
+
 void	convert_objects(t_scene *scene)
 {
 	int	index;
 	int	total_objects;
 
 	total_objects = scene->sphere_count
-		+ scene->plane_count + scene->cylinder_count;
+		+ scene->plane_count + scene->cylinder_count + scene->cone_count;
 	index = 0;
 	scene->objects = malloc(sizeof(t_object) * total_objects);
 	if (!scene->objects)
@@ -93,5 +115,6 @@ void	convert_objects(t_scene *scene)
 	convert_spheres(scene, &index);
 	convert_planes(scene, &index);
 	convert_cylinders(scene, &index);
+	convert_cones(scene, &index);
 	scene->object_count = index;
 }

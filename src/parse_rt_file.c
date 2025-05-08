@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:05:20 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 13:11:51 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:14:58 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ static void	parse_identifier(char **tokens, t_scene *scene)
 		parse_plane(tokens, scene);
 	else if (ft_strcmp(tokens[0], "cy") == 0)
 		parse_cylinder(tokens, scene);
+	else if (ft_strcmp(tokens[0], "co") == 0)
+		parse_cone(tokens, scene);
 	else
 	{
 		ft_free_split(tokens);

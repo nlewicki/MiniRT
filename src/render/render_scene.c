@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_scene.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/30 13:58:01 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/08 12:49:00 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
 			reflection = ((t_plane *)hit_object->data)->reflection;
 		else if (hit_object->type == CYLINDER)
 			reflection = ((t_cylinder *)hit_object->data)->reflection;
+		else if (hit_object->type == CONE)
+			reflection = ((t_cone *)hit_object->data)->reflection;
 
 		// Wenn Reflexion gewünscht ist (reflection > 0)
 		if (reflection > 0)

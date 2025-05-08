@@ -10,9 +10,11 @@ CFILES =	src/main.c \
 			src/parse/parse_sphere.c \
 			src/parse/parse_utils.c \
 			src/parse/parse_object.c \
+			src/parse/parse_cone.c \
 			src/render/render_scene.c \
 			src/render/hit_obj.c \
 			src/render/hit_cylinder.c \
+			src/render/hit_cone.c \
 			src/render/light.c \
 			src/utils/utils.c \
 			src/utils/utils2.c \

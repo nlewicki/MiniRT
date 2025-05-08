@@ -6,13 +6,13 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 12:50:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/06 13:17:37 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:04:35 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-static double	solve_quadratic(double a, double b, double c)
+double	solve_quadratic(double a, double b, double c)
 {
 	double	discriminant;
 	double	q;

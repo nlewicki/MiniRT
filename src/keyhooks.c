@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:25:59 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/06 13:33:51 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:45:26 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,16 @@ static void toggle_cylinder_checker(t_scene *scene)
 	}
 }
 
+static void toggle_cone_checker(t_scene *scene)
+{
+	for (int i = 0; i < scene->object_count; i++)
+	{
+		t_object *obj = &scene->objects[i];
+		if (obj->type == CONE)
+			((t_cone *)obj->data)->checker = !((t_cone *)obj->data)->checker;
+	}
+}
+
 static bool handle_sphere_property(t_sphere *sphere, int property_type, double delta)
 {
 	double new_value;
@@ -224,6 +234,44 @@ static bool handle_cylinder_property(t_cylinder *cylinder, int property_type, do
 	return false;
 }
 
+static bool handle_cone_property(t_cone *cone, int property_type, double delta)
+{
+	double new_value;
+
+	if (property_type == 0)  // KS
+	{
+		new_value = fmax(KS_MIN, fmin(KS_MAX, cone->ks + delta));
+		if (new_value != cone->ks)
+		{
+			cone->ks = new_value;
+			printf("OBJECT TYPE: CONE\nKS: %f\n", cone->ks);
+			return true;
+		}
+	}
+	else if (property_type == 1)  // SHINE
+	{
+		new_value = fmax(SHINE_MIN, fmin(SHINE_MAX, cone->shine + delta));
+		if (new_value != cone->shine)
+		{
+			cone->shine = new_value;
+			printf("OBJECT TYPE: CONE\nSHINE: %f\n", cone->shine);
+			return true;
+		}
+	}
+	else if (property_type == 2)  // REFLECTION
+	{
+		new_value = fmax(REFLECTION_MIN, fmin(REFLECTION_MAX, cone->reflection + delta));
+		if (new_value != cone->reflection)
+		{
+			cone->reflection = new_value;
+			printf("OBJECT TYPE: CONE\nREFLECTION: %f\n", cone->reflection);
+			return true;
+		}
+	}
+	return false;
+}
+
+
 static bool adjust_material_property(t_scene *scene, int property_type, double delta)
 {
 	bool changed = false;
@@ -239,6 +287,11 @@ static bool adjust_material_property(t_scene *scene, int property_type, double d
 		else if (obj->type == CYLINDER)
 		{
 			if (handle_cylinder_property((t_cylinder *)obj->data, property_type, delta))
+			changed = true;
+		}
+		else if (obj->type == CONE)
+		{
+			if (handle_cone_property((t_cone *)obj->data, property_type, delta))
 			changed = true;
 		}
 	}
@@ -281,7 +334,7 @@ static bool handle_samples(t_miniRT *mini, mlx_key_data_t key)
 	return false;
 }
 
-static bool handle_checkerboard_toggle(t_miniRT *mini, int key)
+static bool  handle_checkerboard_toggle(t_miniRT *mini, int key)
 {
 	if (key == MLX_KEY_Z)
 	{
@@ -300,9 +353,15 @@ static bool handle_checkerboard_toggle(t_miniRT *mini, int key)
 	}
 	else if (key == MLX_KEY_V)
 	{
+		toggle_cone_checker(&mini->scene);
+		return true;
+	}
+	else if (key == MLX_KEY_B)
+	{
 		toggle_sphere_checker(&mini->scene);
 		toggle_plane_checker(&mini->scene);
 		toggle_cylinder_checker(&mini->scene);
+		toggle_cone_checker(&mini->scene);
 		return true;
 	}
 	return false;
@@ -348,7 +407,7 @@ void	key_hook(mlx_key_data_t key, void *param)
 		needs_render = handle_samples(mini, key);
 	}
 	else if (key.key == MLX_KEY_Z || key.key == MLX_KEY_X
-		|| key.key == MLX_KEY_C || key.key == MLX_KEY_V)
+		|| key.key == MLX_KEY_C || key.key == MLX_KEY_V || key.key == MLX_KEY_B)
 	{
 		needs_render = handle_checkerboard_toggle(mini, key.key);
 	}
