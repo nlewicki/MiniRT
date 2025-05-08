@@ -139,6 +139,23 @@ typedef struct s_cylinder
 	char			*material_link;
 }					t_cylinder;
 
+typedef struct s_cone
+{
+	t_vec3 apex;         // tip of the cone
+	t_vec3 direction;    // normalized axis from apex downward
+	double angle;        // angle in radians between axis and surface
+	double height;       // height of the cone (for truncated cone)
+	t_color color;
+	double ks;
+	double shine;
+	double reflection;
+	bool			checker;
+	t_color			checker_black;
+	t_color			checker_white;
+	char			*material_link;
+} t_cone;
+
+
 // Main scene struct
 typedef struct s_scene
 {
