@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:01:08 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 12:06:53 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:48:25 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static double	hit_cone_base(t_object *obj, t_cone *cone, const t_ray ray,
 		return (-1.0);
 	radius = tan(cone->angle) * cone->height;
 	if (vec_length(vec_sub(vec_add(ray.origin, vec_mul(ray.direction, t)),
-		base_center)) > radius + 1e-6)
+				base_center)) > radius + 1e-6)
 		return (-1.0);
 	if (hit_info)
 	{
@@ -51,11 +51,16 @@ double	hit_cone(t_object *obj, const t_ray ray, t_hit *hit_info)
 {
 	t_cone	*cone;
 	t_vec3	oc;
+	t_vec3	p;
+	t_vec3	cp;
+	t_vec3	proj;
 	double	t;
 	double	cos2;
+	double	h_ratio;
 	double	a;
 	double	b;
 	double	c;
+	double	h;
 
 	cone = (t_cone *)obj->data;
 	if (!cone)
@@ -72,17 +77,17 @@ double	hit_cone(t_object *obj, const t_ray ray, t_hit *hit_info)
 	t = solve_quadratic(a, b, c);
 	if (t > 0)
 	{
-		t_vec3	p = vec_add(ray.origin, vec_mul(ray.direction, t));
-		double	h = vec_dot(vec_sub(p, cone->apex), cone->direction);
+		p = vec_add(ray.origin, vec_mul(ray.direction, t));
+		h = vec_dot(vec_sub(p, cone->apex), cone->direction);
 		if (h >= 0 && h <= cone->height)
 		{
 			if (hit_info)
 			{
 				hit_info->t = t;
 				hit_info->point = p;
-				t_vec3	cp = vec_sub(p, cone->apex);
-				double	h_ratio = vec_dot(cp, cone->direction);
-				t_vec3	proj = vec_mul(cone->direction, h_ratio);
+				cp = vec_sub(p, cone->apex);
+				h_ratio = vec_dot(cp, cone->direction);
+				proj = vec_mul(cone->direction, h_ratio);
 				hit_info->normal = vec_normalize(vec_sub(cp, proj));
 				hit_info->object = obj;
 				if (cone->checker)
@@ -93,8 +98,6 @@ double	hit_cone(t_object *obj, const t_ray ray, t_hit *hit_info)
 			return (t);
 		}
 	}
-
-	// Check base cap if cone is truncated
 	if (cone->height > 0)
 	{
 		t = hit_cone_base(obj, cone, ray, NULL);

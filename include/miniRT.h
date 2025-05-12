@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/05/08 12:14:47 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:05:19 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,10 @@ void	exit_mini(t_miniRT *mini);
 
 // render
 void				render_scene(mlx_image_t *img, t_miniRT *mini);
+
+t_color	checkerboard_sphere(t_sphere *sph, t_vec3 point);
+t_color	checkerboard_plane(t_plane *plane, t_vec3 point);
+t_color	checkerboard_cylinder(t_cylinder *cyl, t_vec3 point);
+t_color	checkerboard_cone(t_cone *cone, t_vec3 point);
 
 #endif

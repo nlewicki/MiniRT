@@ -13,6 +13,7 @@ CFILES =	src/main.c \
 			src/parse/parse_cone.c \
 			src/render/render_scene.c \
 			src/render/hit_obj.c \
+			src/render/checkerboard.c \
 			src/render/hit_cylinder.c \
 			src/render/hit_cone.c \
 			src/render/light.c \
