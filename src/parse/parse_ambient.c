@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:23:34 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/04/23 11:46:23 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:19:32 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	parse_ambient(char **tokens, t_scene *scene)
 	if (error)
 		exit_error("Invalid ambient values");
 	scene->ambient.is_set = 1;
-	// debug
 	printf("Ambient light set: ratio=%.2f, color=(%d, %d, %d)\n",
 		scene->ambient.ratio, scene->ambient.color.r,
 		scene->ambient.color.g, scene->ambient.color.b);

@@ -6,34 +6,36 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:31 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/06 13:24:35 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:31:56 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-void	parse_sphere(char **tokens, t_scene *scene)
+static void	parse_param(char **tokens, t_sphere *sphere)
 {
-	int			error;
-	t_sphere	*new_sphere;
-	t_sphere	sphere;
+	int	error;
 
 	error = 0;
-	if (!tokens[1] || !tokens[2] || !tokens[3])
-		exit_error("Invalid sphere format");
-	sphere.center = parse_position(tokens[1], &error);
+	sphere->center = parse_position(tokens[1], &error);
 	if (error)
 		exit_error("Invalid sphere center");
-	sphere.diameter = parse_double(tokens[2], 0.0, INFINITY, &error);
+	sphere->diameter = parse_double(tokens[2], 0.0, INFINITY, &error);
 	if (error)
 		exit_error("Invalid sphere diameter");
-	sphere.color = parse_color(tokens[3], &error);
+	sphere->color = parse_color(tokens[3], &error);
 	if (error)
 		exit_error("Invalid sphere color");
-	sphere.material_link = NULL;
-	sphere.checker = false;
+	sphere->material_link = NULL;
+	sphere->checker = false;
 	if (tokens[4])
-		sphere.material_link = ft_strdup(tokens[4]);
+		sphere->material_link = ft_strdup(tokens[4]);
+}
+
+static void	add_sphere_to_scene(t_scene *scene, t_sphere sphere)
+{
+	t_sphere	*new_sphere;
+
 	new_sphere = ft_realloc(scene->spheres,
 			sizeof(t_sphere) * (scene->sphere_count + 1));
 	if (!new_sphere)
@@ -44,9 +46,19 @@ void	parse_sphere(char **tokens, t_scene *scene)
 	scene->spheres->reflection = REFLECTION;
 	scene->spheres->shine = SHINE;
 	scene->spheres->ks = KS;
-	// Debug print
-	printf("Sphere added: center=(%.2f, %.2f, %.2f), diameter=%.2f, color=(%d, %d, %d), material_link=%s\n",
+}
+
+void	parse_sphere(char **tokens, t_scene *scene)
+{
+	t_sphere	sphere;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3])
+		exit_error("Invalid sphere format");
+	parse_param(tokens, &sphere);
+	add_sphere_to_scene(scene, sphere);
+	printf("Sphere added: center=(%.2f, %.2f, %.2f), diameter=%.2f, "
+		"color=(%d, %d, %d), material_link=%s\n",
 		sphere.center.x, sphere.center.y, sphere.center.z, sphere.diameter,
 		sphere.color.r, sphere.color.g, sphere.color.b, sphere.material_link);
-	printf("\n"); // Simpler than write
+	printf("\n");
 }

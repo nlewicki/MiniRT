@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:23:41 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 11:58:34 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:29:27 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	convert_cylinders(t_scene *scene, int *index)
 void	convert_cones(t_scene *scene, int *index)
 {
 	int			i;
-	t_cone	*cone_data;
+	t_cone		*cone_data;
 
 	i = 0;
 	while (i < scene->cone_count)

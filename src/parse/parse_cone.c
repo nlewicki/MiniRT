@@ -6,43 +6,43 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 11:57:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 12:48:28 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:25:31 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-void	parse_cone(char **tokens, t_scene *scene)
+static void	parse_param(char **tokens, t_cone *cone, double *angle_degrees)
 {
-	int			error;
-	t_cone		*new_cones;
-	t_cone		cone;
-	double		angle_degrees;
+	int	error;
 
 	error = 0;
-	if (!tokens[1] || !tokens[2] || !tokens[3]
-		|| !tokens[4] || !tokens[5])
-		exit_error("Invalid cone format");
-	cone.apex = parse_position(tokens[1], &error);
+	cone->apex = parse_position(tokens[1], &error);
 	if (error)
 		exit_error("Invalid cone apex position");
-	cone.direction = parse_orientation(tokens[2], &error);
+	cone->direction = parse_orientation(tokens[2], &error);
 	if (error)
 		exit_error("Invalid cone direction");
-	angle_degrees = parse_double(tokens[3], 0.0, 180.0, &error);
+	*angle_degrees = parse_double(tokens[3], 0.0, 180.0, &error);
 	if (error)
 		exit_error("Invalid cone angle");
-	cone.angle = angle_degrees * M_PI / 180.0;  // Convert to radians
-	cone.height = parse_double(tokens[4], 0.0, INFINITY, &error);
+	cone->angle = *angle_degrees * M_PI / 180.0;
+	cone->height = parse_double(tokens[4], 0.0, INFINITY, &error);
 	if (error)
 		exit_error("Invalid cone height");
-	cone.color = parse_color(tokens[5], &error);
+	cone->color = parse_color(tokens[5], &error);
 	if (error)
 		exit_error("Invalid cone color");
-	cone.material_link = NULL;
-	cone.checker = false;
+	cone->material_link = NULL;
+	cone->checker = false;
 	if (tokens[6])
-		cone.material_link = ft_strdup(tokens[6]);
+		cone->material_link = ft_strdup(tokens[6]);
+}
+
+static void	add_cone_to_scene(t_scene *scene, t_cone cone)
+{
+	t_cone	*new_cones;
+
 	new_cones = ft_realloc(scene->cones,
 			sizeof(t_cone) * (scene->cone_count + 1));
 	if (!new_cones)
@@ -53,8 +53,20 @@ void	parse_cone(char **tokens, t_scene *scene)
 	scene->cones->reflection = REFLECTION;
 	scene->cones->shine = SHINE;
 	scene->cones->ks = KS;
-	// Debug print
-	printf("Cone added: apex=(%.2f, %.2f, %.2f), direction=(%.2f, %.2f, %.2f), angle=%.2f, height=%.2f, color=(%d, %d, %d), material_link=%s\n",
+}
+
+void	parse_cone(char **tokens, t_scene *scene)
+{
+	t_cone	cone;
+	double	angle_degrees;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3]
+		|| !tokens[4] || !tokens[5])
+		exit_error("Invalid cone format");
+	parse_param(tokens, &cone, &angle_degrees);
+	add_cone_to_scene(scene, cone);
+	printf("Cone added: apex=(%.2f, %.2f, %.2f), direction=(%.2f, %.2f, %.2f), "
+		"angle=%.2f, height=%.2f, color=(%d, %d, %d), material_link=%s\n",
 		cone.apex.x, cone.apex.y, cone.apex.z,
 		cone.direction.x, cone.direction.y, cone.direction.z,
 		angle_degrees, cone.height,

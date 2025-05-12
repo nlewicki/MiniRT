@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:01:17 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/04/23 12:02:27 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:42:22 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,26 @@ t_vec3	parse_position(char *str, int *error)
 	return (vec);
 }
 
+static t_vec3	normalize_vector(t_vec3 vec, int *error)
+{
+	double	magnitude;
+
+	magnitude = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+	if (magnitude > 0.0)
+	{
+		vec.x /= magnitude;
+		vec.y /= magnitude;
+		vec.z /= magnitude;
+		return (vec);
+	}
+	*error = 1;
+	return ((t_vec3){0, 0, 0});
+}
+
 t_vec3	parse_orientation(char *str, int *error)
 {
 	char	**coords;
 	t_vec3	vec;
-	double	magnitude;
 
 	coords = ft_split(str, ',');
 	if (!coords || !coords[0] || !coords[1] || !coords[2])
@@ -92,21 +107,8 @@ t_vec3	parse_orientation(char *str, int *error)
 	vec.x = parse_double(coords[0], -1.0, 1.0, error);
 	vec.y = parse_double(coords[1], -1.0, 1.0, error);
 	vec.z = parse_double(coords[2], -1.0, 1.0, error);
-	if (*error)
-	{
-		return (ft_free_split(coords), (t_vec3){0, 0, 0});
-	}
-	magnitude = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-	if (magnitude > 0.0)
-	{
-		vec.x /= magnitude;
-		vec.y /= magnitude;
-		vec.z /= magnitude;
-	}
-	else
-		*error = 1;
 	ft_free_split(coords);
 	if (*error)
 		return ((t_vec3){0, 0, 0});
-	return (vec);
+	return (normalize_vector(vec, error));
 }
