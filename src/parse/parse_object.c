@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:23:41 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 11:58:34 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:05:58 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ void	convert_spheres(t_scene *scene, int *index)
 		scene->objects[*index].type = SPHERE;
 		scene->objects[*index].data = sphere_data;
 		scene->objects[*index].color = sphere_data->color;
-		scene->objects[*index].material_link = sphere_data->material_link;
+		scene->objects[*index].texture = sphere_data->texture;
 		scene->objects[*index].hit = hit_sphere;
+		if (sphere_data->texture.path)
+			printf("Sphere texture path during conversion: %s\n", sphere_data->texture.path);
 		(*index)++;
 		i++;
 	}
@@ -49,8 +51,10 @@ void	convert_planes(t_scene *scene, int *index)
 		scene->objects[*index].type = PLANE;
 		scene->objects[*index].data = plane_data;
 		scene->objects[*index].color = plane_data->color;
-		scene->objects[*index].material_link = plane_data->material_link;
+		scene->objects[*index].texture = plane_data->texture;
 		scene->objects[*index].hit = hit_plane;
+		if (plane_data->texture.path)
+			printf("Plane texture path during conversion: %s\n", plane_data->texture.path);
 		(*index)++;
 		i++;
 	}
@@ -71,8 +75,10 @@ void	convert_cylinders(t_scene *scene, int *index)
 		scene->objects[*index].type = CYLINDER;
 		scene->objects[*index].data = cylinder_data;
 		scene->objects[*index].color = cylinder_data->color;
-		scene->objects[*index].material_link = cylinder_data->material_link;
+		scene->objects[*index].texture = cylinder_data->texture;
 		scene->objects[*index].hit = hit_cylinder;
+		if (cylinder_data->texture.path)
+			printf("Cylinder texture path during conversion: %s\n", cylinder_data->texture.path);
 		(*index)++;
 		i++;
 	}
@@ -93,8 +99,10 @@ void	convert_cones(t_scene *scene, int *index)
 		scene->objects[*index].type = CONE;
 		scene->objects[*index].data = cone_data;
 		scene->objects[*index].color = cone_data->color;
-		scene->objects[*index].material_link = cone_data->material_link;
+		scene->objects[*index].texture = cone_data->texture;
 		scene->objects[*index].hit = hit_cone;
+		if (cone_data->texture.path)
+			printf("Cone texture path during conversion: %s\n", cone_data->texture.path);
 		(*index)++;
 		i++;
 	}

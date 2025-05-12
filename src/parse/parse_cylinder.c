@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:06 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/06 13:24:30 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:34:00 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 
 	error = 0;
 	if (!tokens[1] || !tokens[2] || !tokens[3]
-		|| !tokens[4] || !tokens[5] || tokens[6])
+		|| !tokens[4] || !tokens[5])
 		exit_error("Invalid cylinder format");
 	cylinder.position = parse_position(tokens[1], &error);
 	if (error)
@@ -37,10 +37,10 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 	cylinder.color = parse_color(tokens[5], &error);
 	if (error)
 		exit_error("Invalid cylinder color");
-	cylinder.material_link = NULL;
 	cylinder.checker = false;
-	if (tokens[6])
-		cylinder.material_link = ft_strdup(tokens[6]);
+	init_texture(&cylinder.texture);
+	if (tokens[6] && tokens[6][0])
+		cylinder.texture.path = ft_strdup(tokens[6]);
 	new_cylinders = ft_realloc(scene->cylinders,
 			sizeof(t_cylinder) * (scene->cylinder_count + 1));
 	if (!new_cylinders)
@@ -52,10 +52,11 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 	scene->cylinders->shine = SHINE;
 	scene->cylinders->ks = KS;
 	// Debug print
-	printf("Cylinder added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), diameter=%.2f, height=%.2f, color=(%d, %d, %d), material_link=%s\n",
+	printf("Cylinder added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), diameter=%.2f, height=%.2f, color=(%d, %d, %d), texture=%s\n",
 		cylinder.position.x, cylinder.position.y, cylinder.position.z,
 		cylinder.orientation.x, cylinder.orientation.y, cylinder.orientation.z,
 		cylinder.diameter, cylinder.height,
-		cylinder.color.r, cylinder.color.g, cylinder.color.b, cylinder.material_link);
+		cylinder.color.r, cylinder.color.g, cylinder.color.b,
+		cylinder.texture.path ? cylinder.texture.path : "none");
 	printf("\n");
 }

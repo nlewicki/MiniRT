@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 12:50:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 12:04:35 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:02:22 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,9 @@ double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info) {
                 hit_info->t = t;
                 hit_info->point = p;
                 hit_info->normal = vec_normalize(vec_sub(p, vec_add(cyl->position, vec_mul(cyl->orientation, height))));
-                if (cyl->checker)
+                if (cyl->texture.enabled)
+                    hit_info->color = get_texture_color(&cyl->texture, hit_info->point, obj);
+                else if (cyl->checker)
                     hit_info->color = checkerboard_cylinder(cyl, hit_info->point);
                 else
                     hit_info->color = obj->color;

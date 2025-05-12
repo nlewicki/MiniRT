@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 12:29:43 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:30:23 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	exit_mini(t_miniRT *mini)
 	ft_putendl_fd("Exiting...", 1);
 	if (mini->img)
 		mlx_delete_image(mini->mlx, mini->img);
+	cleanup_scene_textures(&mini->scene);
+	free_scene(&mini->scene);
 	if (mini->mlx)
 		mlx_terminate(mini->mlx);
 	exit(1);
@@ -78,8 +80,8 @@ void	print_objects(t_scene *scene)
 			printf("  Diameter: %.2f\n", sphere->diameter);
 			printf("  Color: (%d, %d, %d, %d)\n", sphere->color.r,
 				sphere->color.g, sphere->color.b, sphere->color.a);
-			if (obj->material_link && obj->material_link[0])
-				printf("  Material Link: %s\n", obj->material_link);
+			if (sphere->texture.path)
+				printf("  Texture: %s\n", sphere->texture.path);
 		}
 		else if (obj->type == PLANE)
 		{
@@ -91,8 +93,8 @@ void	print_objects(t_scene *scene)
 				plane->orientation.y, plane->orientation.z);
 			printf("  Color: (%d, %d, %d, %d)\n", plane->color.r,
 				plane->color.g, plane->color.b, plane->color.a);
-			if (obj->material_link && obj->material_link[0])
-				printf("  Material Link: %s\n", obj->material_link);
+			if (plane->texture.path)
+				printf("  Texture: %s\n", plane->texture.path);
 			if (plane->limit_width > 0 && plane->limit_height > 0)
 				printf("  Limits: width=%.2f, height=%.2f\n", plane->limit_width, plane->limit_height);
 		}
@@ -109,8 +111,8 @@ void	print_objects(t_scene *scene)
 			printf("  Height: %.2f\n", cylinder->height);
 			printf("  Color: (%d, %d, %d, %d)\n", cylinder->color.r,
 				cylinder->color.g, cylinder->color.b, cylinder->color.a);
-			if (obj->material_link && obj->material_link[0])
-				printf("  Material Link: %s\n", obj->material_link);
+			if (cylinder->texture.path)
+				printf("  Texture: %s\n", cylinder->texture.path);
 		}
 		else if (obj->type == CONE)
 		{
@@ -124,8 +126,8 @@ void	print_objects(t_scene *scene)
 			printf("  Height: %.2f\n", cone->height);
 			printf("  Color: (%d, %d, %d, %d)\n", cone->color.r,
 				cone->color.g, cone->color.b, cone->color.a);
-			if (obj->material_link && obj->material_link[0])
-				printf("  Material Link: %s\n", obj->material_link);
+			if (cone->texture.path)
+				printf("  Texture: %s\n", cone->texture.path);
 		}
 		else
 		{
@@ -154,10 +156,14 @@ int	main(int argc, char **argv)
 	if (return_value)
 		return (return_value);
 	printf("----------------------\n");
+	if (!load_scene_textures(&mini.scene, mini.mlx)) {
+		printf("Warning: Some textures failed to load\n");
+	}
 	render_scene(mini.img, &mini);
 	printf("----------------------\n");
 	mlx_loop_hook(mini.mlx, loop, &mini); // optional
 	mlx_loop(mini.mlx);
+	cleanup_scene_textures(&mini.scene);
 	free_scene(&mini.scene);
 	mlx_terminate(mini.mlx);
 	return (return_value);

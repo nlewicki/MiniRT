@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 11:57:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 12:48:28 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:34:42 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ void	parse_cone(char **tokens, t_scene *scene)
 	cone.color = parse_color(tokens[5], &error);
 	if (error)
 		exit_error("Invalid cone color");
-	cone.material_link = NULL;
 	cone.checker = false;
-	if (tokens[6])
-		cone.material_link = ft_strdup(tokens[6]);
+	init_texture(&cone.texture);
+	if (tokens[6] && tokens[6][0])
+		cone.texture.path = ft_strdup(tokens[6]);
 	new_cones = ft_realloc(scene->cones,
 			sizeof(t_cone) * (scene->cone_count + 1));
 	if (!new_cones)
@@ -54,10 +54,11 @@ void	parse_cone(char **tokens, t_scene *scene)
 	scene->cones->shine = SHINE;
 	scene->cones->ks = KS;
 	// Debug print
-	printf("Cone added: apex=(%.2f, %.2f, %.2f), direction=(%.2f, %.2f, %.2f), angle=%.2f, height=%.2f, color=(%d, %d, %d), material_link=%s\n",
+	printf("Cone added: apex=(%.2f, %.2f, %.2f), direction=(%.2f, %.2f, %.2f), angle=%.2f, height=%.2f, color=(%d, %d, %d), texture=%s\n",
 		cone.apex.x, cone.apex.y, cone.apex.z,
 		cone.direction.x, cone.direction.y, cone.direction.z,
 		angle_degrees, cone.height,
-		cone.color.r, cone.color.g, cone.color.b, cone.material_link);
+		cone.color.r, cone.color.g, cone.color.b,
+		cone.texture.path ? cone.texture.path : "none");
 	printf("\n");
 }

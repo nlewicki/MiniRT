@@ -15,6 +15,15 @@
 
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 
+// For textures
+typedef struct s_texture
+{
+	xpm_t			*xpm;
+	mlx_texture_t	*texture;
+	char			*path;
+	bool			enabled;
+}					t_texture;
+
 // For RGB colors
 typedef struct s_color
 {
@@ -62,8 +71,8 @@ typedef struct s_object
 {
 	t_object_type	type;
 	void			*data;
-	char			*material_link;
 	t_color			color;
+	t_texture		texture;
 	double			(*hit)(struct s_object *, const t_ray ray, t_hit *hit_info);
 }					t_object;
 
@@ -104,7 +113,7 @@ typedef struct s_sphere
 	bool			checker;
 	t_color			checker_black;
 	t_color			checker_white;
-	char			*material_link;
+	t_texture		texture;
 
 }					t_sphere;
 
@@ -119,7 +128,7 @@ typedef struct s_plane
 	bool			checker;
 	t_color			checker_black;
 	t_color			checker_white;
-	char			*material_link;
+	t_texture		texture;
 	double			limit_width;
 	double			limit_height;
 }					t_plane;
@@ -137,7 +146,7 @@ typedef struct s_cylinder
 	bool			checker;
 	t_color			checker_black;
 	t_color			checker_white;
-	char			*material_link;
+	t_texture		texture;
 }					t_cylinder;
 
 typedef struct s_cone
@@ -153,7 +162,7 @@ typedef struct s_cone
 	bool			checker;
 	t_color			checker_black;
 	t_color			checker_white;
-	char			*material_link;
+	t_texture		texture;
 } t_cone;
 
 

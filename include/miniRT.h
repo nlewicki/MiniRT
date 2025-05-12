@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/05/08 12:14:47 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:16:35 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "../lib/libft/get_next_line.h"
 # include "../lib/libft/libft.h"
 # include "structs.h"
+# include "texture_manager.h"
 # include "fcntl.h"
 # include <math.h>
 # include <stdio.h>
@@ -92,5 +93,9 @@ void	exit_mini(t_miniRT *mini);
 
 // render
 void				render_scene(mlx_image_t *img, t_miniRT *mini);
+
+// Texture management
+bool				load_scene_textures(t_scene *scene, mlx_t *mlx);
+void				cleanup_scene_textures(t_scene *scene);
 
 #endif

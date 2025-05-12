@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 16:28:26 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/08 12:06:42 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 11:54:42 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,10 +168,12 @@ double hit_sphere(t_object *obj, const t_ray ray, t_hit *hit)
 	hit->t = t;
 	hit->point = vec_add(ray.origin, vec_mul(ray.direction, t));
 	hit->normal = vec_normalize(vec_sub(hit->point, sphere->center));
-	if (sphere->checker)
-    	hit->color = checkerboard_sphere(sphere, hit->point);
+	if (sphere->texture.enabled)
+		hit->color = get_texture_color(&sphere->texture, hit->point, obj);
+	else if (sphere->checker)
+		hit->color = checkerboard_sphere(sphere, hit->point);
 	else
-    	hit->color = obj->color;
+		hit->color = obj->color;
 	hit->object = obj;
 	return (t);
 }
@@ -192,7 +194,9 @@ double hit_plane(t_object *obj, const t_ray ray, t_hit *hit)
 	hit->t = t;
 	hit->point = vec_add(ray.origin, vec_mul(ray.direction, t));
 	hit->normal = vec_normalize(plane->orientation);
-	if (plane->checker)
+	if (plane->texture.enabled)
+		hit->color = get_texture_color(&plane->texture, hit->point, obj);
+	else if (plane->checker)
 		hit->color = checkerboard_plane(plane, hit->point);
 	else
 		hit->color = obj->color;

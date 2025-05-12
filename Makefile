@@ -16,6 +16,9 @@ CFILES =	src/main.c \
 			src/render/hit_cylinder.c \
 			src/render/hit_cone.c \
 			src/render/light.c \
+			src/render/texture_manager.c \
+			src/render/load_textures.c \
+			src/free_scene.c \
 			src/utils/utils.c \
 			src/utils/utils2.c \
 			src/utils/parse_rt_utils.c \

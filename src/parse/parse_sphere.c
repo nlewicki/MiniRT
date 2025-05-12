@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:31 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/06 13:24:35 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:15:18 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ void	parse_sphere(char **tokens, t_scene *scene)
 	sphere.color = parse_color(tokens[3], &error);
 	if (error)
 		exit_error("Invalid sphere color");
-	sphere.material_link = NULL;
 	sphere.checker = false;
-	if (tokens[4])
-		sphere.material_link = ft_strdup(tokens[4]);
+	init_texture(&sphere.texture);
+	if (tokens[4] && tokens[4][0])
+		sphere.texture.path = ft_strdup(tokens[4]);
 	new_sphere = ft_realloc(scene->spheres,
 			sizeof(t_sphere) * (scene->sphere_count + 1));
 	if (!new_sphere)
@@ -45,8 +45,9 @@ void	parse_sphere(char **tokens, t_scene *scene)
 	scene->spheres->shine = SHINE;
 	scene->spheres->ks = KS;
 	// Debug print
-	printf("Sphere added: center=(%.2f, %.2f, %.2f), diameter=%.2f, color=(%d, %d, %d), material_link=%s\n",
+	printf("Sphere added: center=(%.2f, %.2f, %.2f), diameter=%.2f, color=(%d, %d, %d), texture_path=%s\n",
 		sphere.center.x, sphere.center.y, sphere.center.z, sphere.diameter,
-		sphere.color.r, sphere.color.g, sphere.color.b, sphere.material_link);
+		sphere.color.r, sphere.color.g, sphere.color.b,
+		sphere.texture.path ? sphere.texture.path : "none");
 	printf("\n"); // Simpler than write
 }

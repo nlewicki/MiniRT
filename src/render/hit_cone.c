@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:01:08 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 12:06:53 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:09:28 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,9 @@ static double	hit_cone_base(t_object *obj, t_cone *cone, const t_ray ray,
 		hit_info->point = vec_add(ray.origin, vec_mul(ray.direction, t));
 		hit_info->normal = (denom > 0) ? vec_mul(normal, -1) : normal;
 		hit_info->object = obj;
-		if (cone->checker)
+		if (cone->texture.enabled)
+			hit_info->color = get_texture_color(&cone->texture, hit_info->point, obj);
+		else if (cone->checker)
 			hit_info->color = checkerboard_cone(cone, hit_info->point);
 		else
 			hit_info->color = obj->color;
@@ -85,7 +87,9 @@ double	hit_cone(t_object *obj, const t_ray ray, t_hit *hit_info)
 				t_vec3	proj = vec_mul(cone->direction, h_ratio);
 				hit_info->normal = vec_normalize(vec_sub(cp, proj));
 				hit_info->object = obj;
-				if (cone->checker)
+				if (cone->texture.enabled)
+					hit_info->color = get_texture_color(&cone->texture, hit_info->point, obj);
+				else if (cone->checker)
 					hit_info->color = checkerboard_cone(cone, hit_info->point);
 				else
 					hit_info->color = obj->color;
