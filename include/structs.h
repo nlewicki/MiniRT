@@ -98,6 +98,8 @@ typedef struct s_sphere
 	t_vec3			center;
 	double			diameter;
 	t_color			color;
+	xpm_t			*texture;
+	xpm_t			*bump_map;
 	double			ks;
 	double			shine;
 	double			reflection;
@@ -113,6 +115,8 @@ typedef struct s_plane
 	t_vec3			position;
 	t_vec3			orientation;
 	t_color			color;
+	xpm_t			*texture;
+	xpm_t			*bump_map;
 	double			ks;
 	double			shine;
 	double			reflection;
@@ -131,6 +135,8 @@ typedef struct s_cylinder
 	double			diameter;
 	double			height;
 	t_color			color;
+	xpm_t			*texture;
+	xpm_t			*bump_map;
 	double			ks;
 	double			shine;
 	double			reflection;
