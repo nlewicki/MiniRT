@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:08:57 by lkubler           #+#    #+#             */
-/*   Updated: 2025/04/25 11:29:09 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/13 11:24:36 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,3 @@ double	vec_dot(t_vec3 a, t_vec3 b)
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
-
-t_vec3 vec_neg(t_vec3 v)
-{
-	return (t_vec3){ -v.x, -v.y, -v.z };
-}
-

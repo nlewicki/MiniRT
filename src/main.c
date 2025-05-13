@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 12:29:43 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/13 11:30:17 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,6 @@ void	exit_mini(t_miniRT *mini)
 	if (mini->mlx)
 		mlx_terminate(mini->mlx);
 	exit(1);
-}
-
-void	draw_smth(t_miniRT *mini)
-{
-	mlx_put_string(mini->mlx, "leo sucked", 50, 50);
 }
 
 void	loop(void *param)
@@ -156,7 +151,7 @@ int	main(int argc, char **argv)
 	printf("----------------------\n");
 	render_scene(mini.img, &mini);
 	printf("----------------------\n");
-	mlx_loop_hook(mini.mlx, loop, &mini); // optional
+	mlx_loop_hook(mini.mlx, loop, &mini);
 	mlx_loop(mini.mlx);
 	free_scene(&mini.scene);
 	mlx_terminate(mini.mlx);

@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/05/12 14:05:19 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/13 11:50:41 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,14 @@ void	exit_mini(t_miniRT *mini);
 
 // render
 void				render_scene(mlx_image_t *img, t_miniRT *mini);
+
+bool	handle_material_property(t_miniRT *mini, int key);
+bool	handle_checkerboard_toggle(t_miniRT *mini, int key);
+void	handle_camera_rotation(t_miniRT *mini, int key, t_vec3 forward);
+void	handle_vertical_rotation(t_miniRT *mini, int key, t_vec3 forward);
+void	handle_horizontal_rotation(t_miniRT *mini, int key, t_vec3 forward);
+void	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward);
+
 
 t_color	checkerboard_sphere(t_sphere *sph, t_vec3 point);
 t_color	checkerboard_plane(t_plane *plane, t_vec3 point);

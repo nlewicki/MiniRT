@@ -6,35 +6,35 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/12 14:16:59 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/13 11:25:47 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/miniRT.h"
 
-t_color color_clamp(t_color c)
+t_color	color_clamp(t_color c)
 {
 	c.r = fmin(255, fmax(0, c.r));
 	c.g = fmin(255, fmax(0, c.g));
 	c.b = fmin(255, fmax(0, c.b));
-	return c;
+	return (c);
 }
 
-static t_ray generate_camera_ray(t_camera cam, int x, int y)
+static t_ray	generate_camera_ray(t_camera cam, int x, int y)
 {
-	double aspect_ratio;
-	double fov_rad;
-	double viewport_height;
-	double viewport_width;
-	double u;
-	double v;
-	double px;
-	double py;
-	t_vec3 forward;
-	t_vec3 up;
-	t_vec3 right;
-	t_vec3 ray_dir;
-	t_ray ray;
+	double		aspect_ratio;
+	double		fov_rad;
+	double		viewport_height;
+	double		viewport_width;
+	double		u;
+	double		v;
+	double		px;
+	double		py;
+	t_vec3		forward;
+	t_vec3		up;
+	t_vec3		right;
+	t_vec3		ray_dir;
+	t_ray		ray;
 
 	aspect_ratio = (double)WIDTH / (double)HEIGHT;
 	fov_rad = (cam.fov * M_PI) / 180.0;
@@ -55,24 +55,24 @@ static t_ray generate_camera_ray(t_camera cam, int x, int y)
 	return (ray);
 }
 
-t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
+t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth)
 {
-	double closest;
-	t_hit closest_hit;
-	bool hit_any;
-	t_object *hit_object;
-	t_hit temp_hit;
-	double t;
-	t_color local_color;
-	double reflection;
-	t_vec3 reflect_dir;
-	t_ray reflect_ray;
-	t_color reflected_color;
-	t_color final_color;
-	int i;
+	double		closest;
+	t_hit		closest_hit;
+	bool		hit_any;
+	t_object	*hit_object;
+	t_hit		temp_hit;
+	double		t;
+	t_color		local_color;
+	double		reflection;
+	t_vec3		reflect_dir;
+	t_ray		reflect_ray;
+	t_color		reflected_color;
+	t_color		final_color;
+	int			i;
 
 	if (depth <= 0)
-		return color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);
+		return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
 	closest = 1e30;
 	hit_any = false;
 	hit_object = NULL;
@@ -108,13 +108,13 @@ t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
 			reflect_ray.direction = reflect_dir;
 			reflected_color = trace_ray(mini, reflect_ray, depth - 1);
 			final_color = color_mix(local_color, reflected_color, reflection);
-			return color_clamp(final_color);
+			return (color_clamp(final_color));
 		}
-		return local_color;
+		return (local_color);
 	}
 	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
-		return (t_color){30, 30, 30, 255};
-	return color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);
+		return ((t_color){30, 30, 30, 255});
+	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
 }
 
 //static t_color apply_gamma(t_color c, double gamma)
@@ -128,30 +128,33 @@ t_color trace_ray(t_miniRT *mini, t_ray ray, int depth)
 //	return result;
 //}
 
-uint32_t color_to_uint32(t_color color)
+uint32_t	color_to_uint32(t_color color)
 {
 	return ((color.r << 24) | (color.g << 16) | (color.b << 8) | color.a);
 }
 
-void render_scene(mlx_image_t *img, t_miniRT *mini)
+void	render_scene(mlx_image_t *img, t_miniRT *mini)
 {
-	double closest;
-	bool hit_any;
-	t_scene *scene;
-	int scale;
-	t_ray ray;
-	u_int32_t pixel_color;
-	t_hit temp_hit;
-	double t;
-	t_color lit;
-	int x;
-	int y;
-	int i;
-	int dx;
-	int dy;
+	double		closest;
+	bool		hit_any;
+	t_scene		*scene;
+	int			scale;
+	t_ray		ray;
+	u_int32_t	pixel_color;
+	t_hit		temp_hit;
+	double		t;
+	t_color		lit;
+	int			x;
+	int			y;
+	int			i;
+	int			dx;
+	int			dy;
 
 	scene = &mini->scene;
-	scale = mini->low_res_mode ? mini->res_scale : 1;
+	if (mini->low_res_mode)
+		scale = mini->res_scale;
+	else
+		scale = 1;
 	y = 0;
 	while (y < HEIGHT)
 	{
