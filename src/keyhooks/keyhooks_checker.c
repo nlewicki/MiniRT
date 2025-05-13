@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:48:06 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/13 11:55:12 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/13 12:01:57 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ static void	toggle_sphere_checker(t_scene *scene)
 	{
 		obj = &scene->objects[i];
 		if (obj->type == SPHERE)
-			((t_sphere *)obj->data)->checker =!((t_sphere *)obj->data)->checker;
+			((t_sphere *)obj->data)->checker = !((t_sphere *)obj->data)->checker;
+		i++;
 	}
 }
 
@@ -37,6 +38,7 @@ static void	toggle_plane_checker(t_scene *scene)
 		obj = &scene->objects[i];
 		if (obj->type == PLANE)
 			((t_plane *)obj->data)->checker = !((t_plane *)obj->data)->checker;
+		i++;
 	}
 }
 
@@ -51,6 +53,7 @@ static void	toggle_cylinder_checker(t_scene *scene)
 		obj = &scene->objects[i];
 		if (obj->type == CYLINDER)
 			((t_cylinder *)obj->data)->checker = !((t_cylinder *)obj->data)->checker;
+		i++;
 	}
 }
 
@@ -65,6 +68,7 @@ static void	toggle_cone_checker(t_scene *scene)
 		obj = &scene->objects[i];
 		if (obj->type == CONE)
 			((t_cone *)obj->data)->checker = !((t_cone *)obj->data)->checker;
+		i++;
 	}
 }
 

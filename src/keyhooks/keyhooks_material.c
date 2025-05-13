@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:36:57 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/13 11:44:23 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/13 12:02:49 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ static bool	adjust_material_property(t_scene *scene, int property_type, double d
 			if (handle_cone_property((t_cone *)obj->data, property_type, delta))
 				changed = true;
 		}
+		i++;
 	}
 	return (changed);
 }
