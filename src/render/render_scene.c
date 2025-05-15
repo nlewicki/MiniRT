@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_scene.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/13 11:25:47 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:55:14 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,82 @@ t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth)
 			reflect_dir = vec_reflect(ray.direction, closest_hit.normal);
 			reflect_ray.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4));
 			reflect_ray.direction = reflect_dir;
-			reflected_color = trace_ray(mini, reflect_ray, depth - 1);
+			
+			// Skip the current object when tracing reflection rays to avoid self-intersection
+			reflected_color = trace_ray_skip_object(mini, reflect_ray, depth - 1, hit_object);
+			
+			final_color = color_mix(local_color, reflected_color, reflection);
+			return (color_clamp(final_color));
+		}
+		return (local_color);
+	}
+	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
+		return ((t_color){30, 30, 30, 255});
+	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
+}
+
+// Modified to use compute_lighting_skip_object
+t_color trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth, t_object *skip_object)
+{
+	double		closest;
+	t_hit		closest_hit;
+	bool		hit_any;
+	t_object	*hit_object;
+	t_hit		temp_hit;
+	double		t;
+	t_color		local_color;
+	double		reflection;
+	t_vec3		reflect_dir;
+	t_ray		reflect_ray;
+	t_color		reflected_color;
+	t_color		final_color;
+	int			i;
+
+	if (depth <= 0)
+		return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
+	closest = 1e30;
+	hit_any = false;
+	hit_object = NULL;
+	i = 0;
+	while (i < mini->scene.object_count)
+	{
+		// Skip the object we want to ignore (usually the one we just reflected from)
+		if (&mini->scene.objects[i] != skip_object)
+		{
+			t = mini->scene.objects[i].hit(&mini->scene.objects[i], ray, &temp_hit);
+			if (t > 0 && t < closest)
+			{
+				closest = t;
+				closest_hit = temp_hit;
+				hit_object = &mini->scene.objects[i];
+				hit_any = true;
+			}
+		}
+		i++;
+	}
+	if (hit_any)
+	{
+		// Use the new lighting function that also skips the object during shadow calculations
+		local_color = compute_lighting_skip_object(mini, closest_hit, skip_object);
+		
+		reflection = 0;
+		if (hit_object->type == SPHERE)
+			reflection = ((t_sphere *)hit_object->data)->reflection;
+		else if (hit_object->type == PLANE)
+			reflection = ((t_plane *)hit_object->data)->reflection;
+		else if (hit_object->type == CYLINDER)
+			reflection = ((t_cylinder *)hit_object->data)->reflection;
+		else if (hit_object->type == CONE)
+			reflection = ((t_cone *)hit_object->data)->reflection;
+		if (reflection > 0)
+		{
+			reflect_dir = vec_reflect(ray.direction, closest_hit.normal);
+			reflect_ray.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4));
+			reflect_ray.direction = reflect_dir;
+			
+			// Continue skipping the original object, but also skip the current object
+			reflected_color = trace_ray_skip_object(mini, reflect_ray, depth - 1, hit_object);
+			
 			final_color = color_mix(local_color, reflected_color, reflection);
 			return (color_clamp(final_color));
 		}

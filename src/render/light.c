@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/08 12:49:38 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:54:10 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ static t_vec3	random_points(t_vec3 center, double radius)
 	return ((t_vec3){center.x + x, center.y + y, center.z + z});
 }
 
-static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point, t_light light)
+// Modified to accept a skip_object parameter
+static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point, t_light light, t_object *skip_object)
 {
 	int			unblocked;
 	double		dist;
@@ -88,6 +89,10 @@ static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point, t_light light)
 		shadow_ray.direction = dir;
 		for (int j = 0; j < mini->scene.object_count; j++)
 		{
+			// Skip the object we want to ignore (for reflections)
+			if (skip_object && &mini->scene.objects[j] == skip_object)
+				continue;
+				
 			t_hit hit;
 			t = mini->scene.objects[j].hit(&mini->scene.objects[j], shadow_ray, &hit);
 			if (t > 0 && t < dist)
@@ -102,7 +107,14 @@ static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point, t_light light)
 	return ((double)unblocked / (double)mini->samples); // Minimum brightness factor
 }
 
+// Original function kept for backward compatibility
 t_color compute_lighting(t_miniRT *mini, t_hit hit)
+{
+	return compute_lighting_skip_object(mini, hit, NULL);
+}
+
+// New function that can skip an object during shadow calculations
+t_color compute_lighting_skip_object(t_miniRT *mini, t_hit hit, t_object *skip_object)
 {
 	t_color final_color = color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);
 
@@ -120,12 +132,8 @@ t_color compute_lighting(t_miniRT *mini, t_hit hit)
 		t_light light = mini->scene.lights[i];
 		t_vec3 light_dir = vec_normalize(vec_sub(light.position, hit.point));
 
-		// Schattenprüfung
-		t_ray shadow_ray;
-		shadow_ray.origin = vec_add(hit.point, vec_mul(light_dir, 1e-4));
-		shadow_ray.direction = light_dir;
-
-		double shadow = compute_shadow_factor(mini, hit.point, light);
+		// Shadow calculation with skip_object parameter
+		double shadow = compute_shadow_factor(mini, hit.point, light, skip_object);
 		shadow = pow(shadow, 0.7);
 		if (shadow <= 0.0)
 			continue;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/13 12:14:10 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:55:12 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,9 @@ void	handle_camera_rotation(t_miniRT *mini, int key, t_vec3 forward);
 void	handle_vertical_rotation(t_miniRT *mini, int key, t_vec3 forward);
 void	handle_horizontal_rotation(t_miniRT *mini, int key, t_vec3 forward);
 void	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward);
+t_color trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth, t_object *skip_object);
+t_color				compute_lighting_skip_object(t_miniRT *mini, t_hit hit, t_object *skip_object);;
+
 
 t_color	checkerboard_sphere(t_sphere *sph, t_vec3 point);
 t_color	checkerboard_plane(t_plane *plane, t_vec3 point);
