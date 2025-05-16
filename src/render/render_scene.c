@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/15 13:55:14 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/16 10:46:02 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,9 @@ t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth)
 			reflection = ((t_cone *)hit_object->data)->reflection;
 		if (reflection > 0)
 		{
-			reflect_dir = vec_reflect(ray.direction, closest_hit.normal);
+			// FIX: Correct reflection direction calculation
+			// The incoming ray direction needs to be negated first
+			reflect_dir = vec_reflect(vec_neg(ray.direction), closest_hit.normal);
 			reflect_ray.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4));
 			reflect_ray.direction = reflect_dir;
 			
@@ -175,7 +177,9 @@ t_color trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth, t_object *sk
 			reflection = ((t_cone *)hit_object->data)->reflection;
 		if (reflection > 0)
 		{
-			reflect_dir = vec_reflect(ray.direction, closest_hit.normal);
+			// FIX: Correct reflection direction calculation
+			// The incoming ray direction needs to be negated first
+			reflect_dir = vec_reflect(vec_neg(ray.direction), closest_hit.normal);
 			reflect_ray.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4));
 			reflect_ray.direction = reflect_dir;
 			

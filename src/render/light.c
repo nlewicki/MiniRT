@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/15 13:54:10 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/16 10:46:20 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,11 @@ t_color compute_lighting_skip_object(t_miniRT *mini, t_hit hit, t_object *skip_o
 
 		// Specular Highlight
 		t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));
+		
+		// FIX: Correct specular reflection calculation
+		// The light direction should be negated first
 		t_vec3 reflect_dir = vec_reflect(vec_neg(light_dir), hit.normal);
+		
 		double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), shine);
 		t_color specular = color_scale(light.color, ks * spec * light.brightness * shadow);
 
