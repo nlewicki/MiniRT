@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:05:20 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/08 12:14:58 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:04:22 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	process_line(char *line, t_scene *scene)
 
 	if (!line[0] || line[0] == '\n')
 		return ;
-	tokens = ft_split(line, ' ');
+	tokens = ft_split_whitespace(line);
 	if (!tokens || !tokens[0])
 	{
 		free(line);
