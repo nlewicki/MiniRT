@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_scene.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/16 10:46:02 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/16 12:15:13 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,38 @@ static t_ray	generate_camera_ray(t_camera cam, int x, int y)
 	return (ray);
 }
 
+static t_color	handle_hit_reflection(t_miniRT *mini, t_object *hit_object,
+				t_hit closest_hit, t_ray ray)
+{
+	t_color		local_color;
+	double		reflection;
+	t_vec3		reflect_dir;
+	t_ray		reflect_ray;
+	t_color		reflected_color;
+	t_color		final_color;
+
+	local_color = compute_lighting(mini, closest_hit);
+	reflection = 0;
+	if (hit_object->type == SPHERE)
+		reflection = ((t_sphere *)hit_object->data)->reflection;
+	else if (hit_object->type == PLANE)
+		reflection = ((t_plane *)hit_object->data)->reflection;
+	else if (hit_object->type == CYLINDER)
+		reflection = ((t_cylinder *)hit_object->data)->reflection;
+	else if (hit_object->type == CONE)
+		reflection = ((t_cone *)hit_object->data)->reflection;
+	if (reflection > 0)
+	{
+		reflect_dir = vec_reflect(vec_neg(ray.direction), closest_hit.normal);
+		reflect_ray.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4));
+		reflect_ray.direction = reflect_dir;
+		reflected_color = trace_ray_skip_object(mini, reflect_ray, 2, hit_object);
+		final_color = color_mix(local_color, reflected_color, reflection);
+		return (color_clamp(final_color));
+	}
+	return (local_color);
+}
+
 t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth)
 {
 	double		closest;
@@ -63,12 +95,6 @@ t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth)
 	t_object	*hit_object;
 	t_hit		temp_hit;
 	double		t;
-	t_color		local_color;
-	double		reflection;
-	t_vec3		reflect_dir;
-	t_ray		reflect_ray;
-	t_color		reflected_color;
-	t_color		final_color;
 	int			i;
 
 	if (depth <= 0)
@@ -90,39 +116,12 @@ t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth)
 		i++;
 	}
 	if (hit_any)
-	{
-		local_color = compute_lighting(mini, closest_hit);
-		reflection = 0;
-		if (hit_object->type == SPHERE)
-			reflection = ((t_sphere *)hit_object->data)->reflection;
-		else if (hit_object->type == PLANE)
-			reflection = ((t_plane *)hit_object->data)->reflection;
-		else if (hit_object->type == CYLINDER)
-			reflection = ((t_cylinder *)hit_object->data)->reflection;
-		else if (hit_object->type == CONE)
-			reflection = ((t_cone *)hit_object->data)->reflection;
-		if (reflection > 0)
-		{
-			// FIX: Correct reflection direction calculation
-			// The incoming ray direction needs to be negated first
-			reflect_dir = vec_reflect(vec_neg(ray.direction), closest_hit.normal);
-			reflect_ray.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4));
-			reflect_ray.direction = reflect_dir;
-			
-			// Skip the current object when tracing reflection rays to avoid self-intersection
-			reflected_color = trace_ray_skip_object(mini, reflect_ray, depth - 1, hit_object);
-			
-			final_color = color_mix(local_color, reflected_color, reflection);
-			return (color_clamp(final_color));
-		}
-		return (local_color);
-	}
+		return (handle_hit_reflection(mini, hit_object, closest_hit, ray));
 	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
 		return ((t_color){30, 30, 30, 255});
 	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
 }
 
-// Modified to use compute_lighting_skip_object
 t_color trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth, t_object *skip_object)
 {
 	double		closest;
@@ -131,12 +130,6 @@ t_color trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth, t_object *sk
 	t_object	*hit_object;
 	t_hit		temp_hit;
 	double		t;
-	t_color		local_color;
-	double		reflection;
-	t_vec3		reflect_dir;
-	t_ray		reflect_ray;
-	t_color		reflected_color;
-	t_color		final_color;
 	int			i;
 
 	if (depth <= 0)
@@ -147,7 +140,6 @@ t_color trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth, t_object *sk
 	i = 0;
 	while (i < mini->scene.object_count)
 	{
-		// Skip the object we want to ignore (usually the one we just reflected from)
 		if (&mini->scene.objects[i] != skip_object)
 		{
 			t = mini->scene.objects[i].hit(&mini->scene.objects[i], ray, &temp_hit);
@@ -162,50 +154,11 @@ t_color trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth, t_object *sk
 		i++;
 	}
 	if (hit_any)
-	{
-		// Use the new lighting function that also skips the object during shadow calculations
-		local_color = compute_lighting_skip_object(mini, closest_hit, skip_object);
-		
-		reflection = 0;
-		if (hit_object->type == SPHERE)
-			reflection = ((t_sphere *)hit_object->data)->reflection;
-		else if (hit_object->type == PLANE)
-			reflection = ((t_plane *)hit_object->data)->reflection;
-		else if (hit_object->type == CYLINDER)
-			reflection = ((t_cylinder *)hit_object->data)->reflection;
-		else if (hit_object->type == CONE)
-			reflection = ((t_cone *)hit_object->data)->reflection;
-		if (reflection > 0)
-		{
-			// FIX: Correct reflection direction calculation
-			// The incoming ray direction needs to be negated first
-			reflect_dir = vec_reflect(vec_neg(ray.direction), closest_hit.normal);
-			reflect_ray.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4));
-			reflect_ray.direction = reflect_dir;
-			
-			// Continue skipping the original object, but also skip the current object
-			reflected_color = trace_ray_skip_object(mini, reflect_ray, depth - 1, hit_object);
-			
-			final_color = color_mix(local_color, reflected_color, reflection);
-			return (color_clamp(final_color));
-		}
-		return (local_color);
-	}
+		return (handle_hit_reflection(mini, hit_object, closest_hit, ray));
 	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
 		return ((t_color){30, 30, 30, 255});
 	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
 }
-
-//static t_color apply_gamma(t_color c, double gamma)
-//{
-//	t_color result;
-
-//	result.r = pow(fmin(1.0, c.r / 255.0), 1.0 / gamma) * 255.0;
-//	result.g = pow(fmin(1.0, c.g / 255.0), 1.0 / gamma) * 255.0;
-//	result.b = pow(fmin(1.0, c.b / 255.0), 1.0 / gamma) * 255.0;
-//	result.a = c.a;
-//	return result;
-//}
 
 uint32_t	color_to_uint32(t_color color)
 {
@@ -277,3 +230,14 @@ void	render_scene(mlx_image_t *img, t_miniRT *mini)
 		y += scale;
 	}
 }
+
+//static t_color apply_gamma(t_color c, double gamma)
+//{
+//	t_color result;
+
+//	result.r = pow(fmin(1.0, c.r / 255.0), 1.0 / gamma) * 255.0;
+//	result.g = pow(fmin(1.0, c.g / 255.0), 1.0 / gamma) * 255.0;
+//	result.b = pow(fmin(1.0, c.b / 255.0), 1.0 / gamma) * 255.0;
+//	result.a = c.a;
+//	return result;
+//}
