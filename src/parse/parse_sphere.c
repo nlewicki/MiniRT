@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:31 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/12 13:31:56 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:55:17 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@ static void	add_sphere_to_scene(t_scene *scene, t_sphere sphere)
 	scene->spheres[scene->sphere_count] = sphere;
 	scene->sphere_count++;
 	scene->spheres->reflection = REFLECTION;
-	scene->spheres->shine = SHINE;
-	scene->spheres->ks = KS;
 }
 
 void	parse_sphere(char **tokens, t_scene *scene)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/16 10:46:20 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/16 11:54:22 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point, t_light light,
 			// Skip the object we want to ignore (for reflections)
 			if (skip_object && &mini->scene.objects[j] == skip_object)
 				continue;
-				
+
 			t_hit hit;
 			t = mini->scene.objects[j].hit(&mini->scene.objects[j], shadow_ray, &hit);
 			if (t > 0 && t < dist)
@@ -138,58 +138,10 @@ t_color compute_lighting_skip_object(t_miniRT *mini, t_hit hit, t_object *skip_o
 		if (shadow <= 0.0)
 			continue;
 
-		// Spekulare Werte abrufen und Checkerboard anwenden
-		double ks = 0.0;
-		double shine = 0.0;
-		if (hit.object)
-		{
-			if (hit.object->type == SPHERE)
-			{
-				t_sphere *s = (t_sphere *)hit.object->data;
-				// Use existing checker flag
-				ks = s->ks;
-				shine = s->shine;
-			}
-			else if (hit.object->type == PLANE)
-			{
-				t_plane *p = (t_plane *)hit.object->data;
-				// Use existing checker flag
-				ks = p->ks;
-				shine = p->shine;
-			}
-			else if (hit.object->type == CYLINDER)
-			{
-				t_cylinder *c = (t_cylinder *)hit.object->data;
-				// Use existing checker flag
-				ks = c->ks;
-				shine = c->shine;
-			}
-			else if (hit.object->type == CONE)
-			{
-				t_cone *c = (t_cone *)hit.object->data;
-				// Use existing checker flag
-				ks = c->ks;
-				shine = c->shine;
-			}
-		}
-
-		// Diffuse Beleuchtung (after applying checkerboard)
+		// Diffuse lighting
 		double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
 		t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
-
-		// Specular Highlight
-		t_vec3 view_dir = vec_normalize(vec_sub(mini->scene.camera.position, hit.point));
-		
-		// FIX: Correct specular reflection calculation
-		// The light direction should be negated first
-		t_vec3 reflect_dir = vec_reflect(vec_neg(light_dir), hit.normal);
-		
-		double spec = pow(fmax(vec_skal(reflect_dir, view_dir), 0.0), shine);
-		t_color specular = color_scale(light.color, ks * spec * light.brightness * shadow);
-
-		// Kombinieren
-		t_color combined = color_add(light_contrib, specular);
-		light_contrib = color_mix(combined, light.color, 0.2);
+		light_contrib = color_mix(light_contrib, light.color, 0.2);
 		final_color = color_add(final_color, light_contrib);
 	}
 

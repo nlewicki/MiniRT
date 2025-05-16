@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 11:57:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/12 13:25:31 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:55:23 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ static void	add_cone_to_scene(t_scene *scene, t_cone cone)
 	scene->cones[scene->cone_count] = cone;
 	scene->cone_count++;
 	scene->cones->reflection = REFLECTION;
-	scene->cones->shine = SHINE;
-	scene->cones->ks = KS;
 }
 
 void	parse_cone(char **tokens, t_scene *scene)

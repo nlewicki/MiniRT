@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/12 13:30:54 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:55:06 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ static void	add_plane_to_scene(t_scene *scene, t_plane plane)
 	scene->planes[scene->plane_count] = plane;
 	scene->plane_count++;
 	scene->planes->reflection = REFLECTION;
-	scene->planes->shine = SHINE;
-	scene->planes->ks = KS;
 }
 
 void	parse_plane(char **tokens, t_scene *scene)

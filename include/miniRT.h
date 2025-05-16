@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/15 13:55:12 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/16 11:53:42 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,8 @@
 # define WIDTH 800
 # define HEIGHT 600
 # define DEG2RAD (M_PI / 180.0)
-# define SHINE 0
-# define KS 0
 # define REFLECTION 0
 
-# define SHINE_MIN 0
-# define SHINE_MAX 100
-# define KS_MIN 0
-# define KS_MAX 1
 # define REFLECTION_MIN 0
 # define REFLECTION_MAX 1
 # define MAX_DEPTH 4

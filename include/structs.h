@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/13 12:16:23 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:53:24 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ typedef struct s_sphere
 	t_color				color;
 	xpm_t				*texture;
 	xpm_t				*bump_map;
-	double				ks;
-	double				shine;
 	double				reflection;
 	bool				checker;
 	t_color				checker_black;
@@ -111,8 +109,6 @@ typedef struct s_plane
 	t_color				color;
 	xpm_t				*texture;
 	xpm_t				*bump_map;
-	double				ks;
-	double				shine;
 	double				reflection;
 	bool				checker;
 	t_color				checker_black;
@@ -131,8 +127,6 @@ typedef struct s_cylinder
 	t_color				color;
 	xpm_t				*texture;
 	xpm_t				*bump_map;
-	double				ks;
-	double				shine;
 	double				reflection;
 	bool				checker;
 	t_color				checker_black;
@@ -147,8 +141,6 @@ typedef struct s_cone
 	double				angle;
 	double				height;
 	t_color				color;
-	double				ks;
-	double				shine;
 	double				reflection;
 	bool				checker;
 	t_color				checker_black;

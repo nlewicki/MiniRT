@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:25:59 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/13 11:49:45 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:53:17 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,7 @@ void	key_hook(mlx_key_data_t key, void *param)
 		handle_camera_rotation(mini, key.key, forward);
 		needs_render = true;
 	}
-	else if (key.key == MLX_KEY_1 || key.key == MLX_KEY_2
-		|| key.key == MLX_KEY_3 || key.key == MLX_KEY_4
-		|| key.key == MLX_KEY_5 || key.key == MLX_KEY_6)
+	else if (key.key == MLX_KEY_1 || key.key == MLX_KEY_2)
 	{
 		needs_render = handle_material_property(mini, key.key);
 	}

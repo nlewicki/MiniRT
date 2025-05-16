@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:06 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/12 13:26:24 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:54:51 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ static void	add_cylinder_to_scene(t_scene *scene, t_cylinder cylinder)
 	scene->cylinders[scene->cylinder_count] = cylinder;
 	scene->cylinder_count++;
 	scene->cylinders->reflection = REFLECTION;
-	scene->cylinders->shine = SHINE;
-	scene->cylinders->ks = KS;
 }
 
 void	parse_cylinder(char **tokens, t_scene *scene)
