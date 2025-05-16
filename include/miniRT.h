@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/16 11:53:42 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:10:11 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 # define WIDTH 800
 # define HEIGHT 600
-# define DEG2RAD (M_PI / 180.0)
+# define DEG2RAD (M_PI / 180.0) //////// NORMINETTE IST NICHT HAPPY DAMIT
 # define REFLECTION 0
 
 # define REFLECTION_MIN 0
@@ -93,9 +93,10 @@ void	handle_camera_rotation(t_miniRT *mini, int key, t_vec3 forward);
 void	handle_vertical_rotation(t_miniRT *mini, int key, t_vec3 forward);
 void	handle_horizontal_rotation(t_miniRT *mini, int key, t_vec3 forward);
 void	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward);
-t_color trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth, t_object *skip_object);
-t_color				compute_lighting_skip_object(t_miniRT *mini, t_hit hit, t_object *skip_object);;
-
+t_color	trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth,
+			t_object *skip_object);
+t_color	compute_lighting_skip_object(t_miniRT *mini, t_hit hit,
+			t_object *skip_object);
 
 t_color	checkerboard_sphere(t_sphere *sph, t_vec3 point);
 t_color	checkerboard_plane(t_plane *plane, t_vec3 point);
