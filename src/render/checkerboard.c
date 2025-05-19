@@ -6,16 +6,11 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 14:03:49 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 13:50:46 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:02:34 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-t_vec3	get_local_coords(t_vec3 point, t_vec3 origin)
-{
-	return (vec_normalize(vec_sub(point, origin)));
-}
 
 t_color	checkerboard_sphere(t_sphere *sph, t_vec3 point)
 {
@@ -35,22 +30,21 @@ t_color	checkerboard_sphere(t_sphere *sph, t_vec3 point)
 	return (sph->checker_white);
 }
 
-// t_vec3	get_u_axis(t_vec3 normal)
-// {
-// 	t_vec3	u_axis;
+t_vec3	get_u_axis(t_vec3 normal)
+{
+	t_vec3	u_axis;
 
-// 	if (fabs(normal.x) < fabs(normal.y) && fabs(normal.x) < fabs(normal.z))
-// 		u_axis = (t_vec3){0, -normal.z, normal.y};
-// 	else if (fabs(normal.y) < fabs(normal.z))
-// 		u_axis = (t_vec3){-normal.z, 0, normal.x};
-// 	else
-// 		u_axis = (t_vec3){-normal.y, normal.x, 0};
-// 	return (vec_normalize(u_axis));
-// }
+	if (fabs(normal.x) < fabs(normal.y) && fabs(normal.x) < fabs(normal.z))
+		u_axis = (t_vec3){0, -normal.z, normal.y};
+	else if (fabs(normal.y) < fabs(normal.z))
+		u_axis = (t_vec3){-normal.z, 0, normal.x};
+	else
+		u_axis = (t_vec3){-normal.y, normal.x, 0};
+	return (vec_normalize(u_axis));
+}
 
 t_color	checkerboard_plane(t_plane *plane, t_vec3 point)
 {
-	t_vec3	normal;
 	t_vec3	relative_pos;
 	double	scale;
 	t_vec3	uv_axis[2];
@@ -59,15 +53,8 @@ t_color	checkerboard_plane(t_plane *plane, t_vec3 point)
 
 	plane->checker_white = (t_color){255, 255, 255, 255};
 	plane->checker_black = (t_color){0, 0, 0, 255};
-	normal = plane->orientation;
-	if (fabs(normal.x) < fabs(normal.y) && fabs(normal.x) < fabs(normal.z))
-		uv_axis[0] = (t_vec3){0, -normal.z, normal.y};
-	else if (fabs(normal.y) < fabs(normal.z))
-		uv_axis[0] = (t_vec3){-normal.z, 0, normal.x};
-	else
-		uv_axis[0] = (t_vec3){-normal.y, normal.x, 0};
-	uv_axis[0] = vec_normalize(uv_axis[0]);
-	uv_axis[1] = vec_cross(normal, uv_axis[0]);
+	uv_axis[0] = get_u_axis(plane->orientation);
+	uv_axis[1] = vec_cross(plane->orientation, uv_axis[0]);
 	relative_pos = vec_sub(point, plane->position);
 	uv[0] = vec_dot(relative_pos, uv_axis[0]);
 	uv[1] = vec_dot(relative_pos, uv_axis[1]);
@@ -81,28 +68,22 @@ t_color	checkerboard_plane(t_plane *plane, t_vec3 point)
 
 t_color	checkerboard_cylinder(t_cylinder *cyl, t_vec3 point)
 {
-	t_vec3	axis;
 	t_vec3	cp;
-	t_vec3	radial;
 	double	height;
 	double	theta;
-	double	uv[2];
 	int		uv_int[2];
 
 	cyl->checker_white = (t_color){255, 255, 255, 255};
 	cyl->checker_black = (t_color){0, 0, 0, 255};
-	axis = vec_normalize(cyl->orientation);
 	cp = vec_sub(point, cyl->position);
-	height = vec_dot(cp, axis);
-	radial = vec_sub(cp, vec_mul(axis, height));
-	radial = vec_normalize(radial);
-	theta = atan2(radial.z, radial.x);
+	height = vec_dot(cp, vec_normalize(cyl->orientation));
+	cp = vec_normalize(vec_sub(cp,
+				vec_mul(vec_normalize(cyl->orientation), height)));
+	theta = atan2(cp.z, cp.x);
 	if (theta < 0)
 		theta += 2 * M_PI;
-	uv[0] = theta / (2 * M_PI);
-	uv[1] = height / cyl->height;
-	uv_int[0] = (int)(uv[0] * 12);
-	uv_int[1] = (int)(uv[1] * 6);
+	uv_int[0] = (int)((theta / (2 * M_PI)) * 12);
+	uv_int[1] = (int)((height / cyl->height) * 6);
 	if ((uv_int[0] + uv_int[1]) % 2 == 0)
 		return (cyl->checker_black);
 	return (cyl->checker_white);
@@ -111,25 +92,20 @@ t_color	checkerboard_cylinder(t_cylinder *cyl, t_vec3 point)
 t_color	checkerboard_cone(t_cone *cone, t_vec3 point)
 {
 	t_vec3	ap;
-	t_vec3	radial;
 	double	height;
 	double	theta;
-	double	uv[2];
 	int		uv_int[2];
 
 	cone->checker_white = (t_color){255, 255, 255, 255};
 	cone->checker_black = (t_color){0, 0, 0, 255};
 	ap = vec_sub(point, cone->apex);
 	height = vec_dot(ap, cone->direction);
-	uv[1] = height / cone->height;
-	radial = vec_sub(ap, vec_mul(cone->direction, height));
-	radial = vec_normalize(radial);
-	theta = atan2(radial.z, radial.x);
+	ap = vec_normalize(vec_sub(ap, vec_mul(cone->direction, height)));
+	theta = atan2(ap.z, ap.x);
 	if (theta < 0)
 		theta += 2 * M_PI;
-	uv[0] = theta / (2 * M_PI);
-	uv_int[0] = (int)(uv[0] * 16);
-	uv_int[1] = (int)(uv[1] * 8);
+	uv_int[0] = (int)((theta / (2 * M_PI)) * 16);
+	uv_int[1] = (int)((height / cone->height) * 8);
 	if ((uv_int[0] + uv_int[1]) % 2 == 0)
 		return (cone->checker_black);
 	return (cone->checker_white);

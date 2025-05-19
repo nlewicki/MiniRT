@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 13:08:03 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:15:42 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,5 +106,9 @@ t_color	checkerboard_cone(t_cone *cone, t_vec3 point);
 bool	handle_sphere_reflection(t_sphere *sphere, double delta);
 bool	handle_cylinder_reflection(t_cylinder *cylinder, double delta);
 bool	handle_cone_reflection(t_cone *cone, double delta);
+
+t_vec3	get_local_coords(t_vec3 point, t_vec3 origin);
+void	set_base_hit_normal(t_hit *hit_info, t_vec3 normal, double denom);
+void	check_mode(t_hit *hit_info, t_cone *cone, t_object *obj);
 
 #endif

@@ -6,20 +6,56 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:01:08 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/12 13:48:25 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:15:19 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-static double	hit_cone_base(t_object *obj, t_cone *cone, const t_ray ray,
-	t_hit *hit_info)
+static double	cone_body_intersection(t_cone *cone, t_ray ray, t_vec3 oc)
+{
+	double	cos2;
+	double	a;
+	double	b;
+	double	c;
+
+	cos2 = cos(cone->angle) * cos(cone->angle);
+	a = vec_dot(ray.direction, ray.direction) * cos2
+		- pow(vec_dot(ray.direction, cone->direction), 2);
+	b = 2 * (vec_dot(ray.direction, oc) * cos2 - vec_dot(ray.direction,
+				cone->direction) * vec_dot(oc, cone->direction));
+	c = vec_dot(oc, oc) * cos2 - pow(vec_dot(oc, cone->direction), 2);
+	return (solve_quadratic(a, b, c));
+}
+
+static void	set_cone_hit_info(t_hit_data *data, double t)
+{
+	t_vec3	p;
+	t_vec3	cp;
+	double	h_ratio;
+	t_vec3	proj;
+
+	data->hit_info->t = t;
+	p = vec_add(data->ray.origin, vec_mul(data->ray.direction, t));
+	data->hit_info->point = p;
+	cp = vec_sub(p, data->cone->apex);
+	h_ratio = vec_dot(cp, data->cone->direction);
+	proj = vec_mul(data->cone->direction, h_ratio);
+	data->hit_info->normal = vec_normalize(vec_sub(cp, proj));
+	data->hit_info->object = data->obj;
+	if (data->cone->checker)
+		data->hit_info->color = checkerboard_cone(data->cone, p);
+	else
+		data->hit_info->color = data->obj->color;
+}
+
+static double	hit_cone_base(t_object *obj, t_cone *cone, t_ray ray,
+		t_hit *hit_info)
 {
 	t_vec3	base_center;
 	t_vec3	normal;
 	double	denom;
 	double	t;
-	double	radius;
 
 	normal = vec_mul(cone->direction, -1);
 	base_center = vec_add(cone->apex, vec_mul(cone->direction, cone->height));
@@ -29,20 +65,43 @@ static double	hit_cone_base(t_object *obj, t_cone *cone, const t_ray ray,
 	t = vec_dot(vec_sub(base_center, ray.origin), normal) / denom;
 	if (t < 0)
 		return (-1.0);
-	radius = tan(cone->angle) * cone->height;
 	if (vec_length(vec_sub(vec_add(ray.origin, vec_mul(ray.direction, t)),
-				base_center)) > radius + 1e-6)
+				base_center)) > tan(cone->angle) * cone->height + 1e-6)
 		return (-1.0);
 	if (hit_info)
 	{
 		hit_info->t = t;
 		hit_info->point = vec_add(ray.origin, vec_mul(ray.direction, t));
-		hit_info->normal = (denom > 0) ? vec_mul(normal, -1) : normal;
+		set_base_hit_normal(hit_info, normal, denom);
 		hit_info->object = obj;
-		if (cone->checker)
-			hit_info->color = checkerboard_cone(cone, hit_info->point);
-		else
-			hit_info->color = obj->color;
+		check_mode(hit_info, cone, obj);
+	}
+	return (t);
+}
+
+static double	check_cone_body_hit(t_object *obj, t_cone *cone, t_ray ray,
+		t_hit *hit_info)
+{
+	t_vec3		oc;
+	double		t;
+	double		h;
+	t_hit_data	data;
+
+	oc = vec_sub(ray.origin, cone->apex);
+	t = cone_body_intersection(cone, ray, oc);
+	if (t <= 0)
+		return (-1.0);
+	h = vec_dot(vec_sub(vec_add(ray.origin, vec_mul(ray.direction, t)),
+				cone->apex), cone->direction);
+	if (h < 0 || h > cone->height)
+		return (-1.0);
+	if (hit_info)
+	{
+		data.hit_info = hit_info;
+		data.obj = obj;
+		data.cone = cone;
+		data.ray = ray;
+		set_cone_hit_info(&data, t);
 	}
 	return (t);
 }
@@ -50,62 +109,28 @@ static double	hit_cone_base(t_object *obj, t_cone *cone, const t_ray ray,
 double	hit_cone(t_object *obj, const t_ray ray, t_hit *hit_info)
 {
 	t_cone	*cone;
-	t_vec3	oc;
-	t_vec3	p;
-	t_vec3	cp;
-	t_vec3	proj;
-	double	t;
-	double	cos2;
-	double	h_ratio;
-	double	a;
-	double	b;
-	double	c;
-	double	h;
+	double	t_body;
+	double	t_base;
 
 	cone = (t_cone *)obj->data;
 	if (!cone)
 		return (-1.0);
 	cone->direction = vec_normalize(cone->direction);
-	oc = vec_sub(ray.origin, cone->apex);
-	cos2 = cos(cone->angle) * cos(cone->angle);
-	a = vec_dot(ray.direction, ray.direction) * cos2
-		- pow(vec_dot(ray.direction, cone->direction), 2);
-	b = 2 * (vec_dot(ray.direction, oc) * cos2
-			- vec_dot(ray.direction, cone->direction)
-			* vec_dot(oc, cone->direction));
-	c = vec_dot(oc, oc) * cos2 - pow(vec_dot(oc, cone->direction), 2);
-	t = solve_quadratic(a, b, c);
-	if (t > 0)
+	t_body = check_cone_body_hit(obj, cone, ray, NULL);
+	if (t_body > 0)
 	{
-		p = vec_add(ray.origin, vec_mul(ray.direction, t));
-		h = vec_dot(vec_sub(p, cone->apex), cone->direction);
-		if (h >= 0 && h <= cone->height)
-		{
-			if (hit_info)
-			{
-				hit_info->t = t;
-				hit_info->point = p;
-				cp = vec_sub(p, cone->apex);
-				h_ratio = vec_dot(cp, cone->direction);
-				proj = vec_mul(cone->direction, h_ratio);
-				hit_info->normal = vec_normalize(vec_sub(cp, proj));
-				hit_info->object = obj;
-				if (cone->checker)
-					hit_info->color = checkerboard_cone(cone, hit_info->point);
-				else
-					hit_info->color = obj->color;
-			}
-			return (t);
-		}
+		if (hit_info)
+			check_cone_body_hit(obj, cone, ray, hit_info);
+		return (t_body);
 	}
 	if (cone->height > 0)
 	{
-		t = hit_cone_base(obj, cone, ray, NULL);
-		if (t > 0)
+		t_base = hit_cone_base(obj, cone, ray, NULL);
+		if (t_base > 0)
 		{
 			if (hit_info)
 				hit_cone_base(obj, cone, ray, hit_info);
-			return (t);
+			return (t_base);
 		}
 	}
 	return (-1.0);

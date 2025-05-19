@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/16 11:53:24 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:16:08 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,5 +175,13 @@ typedef struct s_miniRT
 	int					res_scale;
 	int					samples;
 }						t_miniRT;
+
+typedef struct s_hit_data
+{
+	t_hit		*hit_info;
+	t_object	*obj;
+	t_cone		*cone;
+	t_ray		ray;
+}				t_hit_data;
 
 #endif
