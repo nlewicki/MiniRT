@@ -2,6 +2,7 @@ CFILES =	src/main.c \
 			src/keyhooks/keyhooks.c \
 			src/keyhooks/keyhooks_material.c \
 			src/keyhooks/keyhooks_rotation.c \
+			src/keyhooks/keyhooks_reflection.c \
 			src/keyhooks/keyhooks_checker.c \
 			src/init_struct.c \
 			src/parse_rt_file.c \

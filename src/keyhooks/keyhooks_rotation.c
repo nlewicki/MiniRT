@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:49:24 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 12:52:02 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:08:32 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,17 @@ bool	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward)
 	right = vec_cross(forward, up);
 	right = vec_normalize(right);
 	if (key == MLX_KEY_W)
-		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(forward, move_speed));
+		mini->scene.camera.position = vec_add(mini->scene.camera.position,
+				vec_mul(forward, move_speed));
 	else if (key == MLX_KEY_S)
-		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(forward, move_speed));
+		mini->scene.camera.position = vec_sub(mini->scene.camera.position,
+				vec_mul(forward, move_speed));
 	else if (key == MLX_KEY_A)
-		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(right, move_speed));
+		mini->scene.camera.position = vec_sub(mini->scene.camera.position,
+				vec_mul(right, move_speed));
 	else if (key == MLX_KEY_D)
-		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(right, move_speed));
+		mini->scene.camera.position = vec_add(mini->scene.camera.position,
+				vec_mul(right, move_speed));
 	return (true);
 }
 

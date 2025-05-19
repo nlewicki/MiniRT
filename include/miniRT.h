@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 12:52:45 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:08:03 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,9 @@ t_color	checkerboard_sphere(t_sphere *sph, t_vec3 point);
 t_color	checkerboard_plane(t_plane *plane, t_vec3 point);
 t_color	checkerboard_cylinder(t_cylinder *cyl, t_vec3 point);
 t_color	checkerboard_cone(t_cone *cone, t_vec3 point);
+
+bool	handle_sphere_reflection(t_sphere *sphere, double delta);
+bool	handle_cylinder_reflection(t_cylinder *cylinder, double delta);
+bool	handle_cone_reflection(t_cone *cone, double delta);
 
 #endif
