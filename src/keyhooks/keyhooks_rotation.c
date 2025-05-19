@@ -6,13 +6,13 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:49:24 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/13 11:51:14 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 12:52:02 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/miniRT.h"
 
-void	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward)
+bool	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward)
 {
 	const double	move_speed = 0.5;
 	t_vec3			up;
@@ -29,6 +29,7 @@ void	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward)
 		mini->scene.camera.position = vec_sub(mini->scene.camera.position, vec_mul(right, move_speed));
 	else if (key == MLX_KEY_D)
 		mini->scene.camera.position = vec_add(mini->scene.camera.position, vec_mul(right, move_speed));
+	return (true);
 }
 
 void	handle_horizontal_rotation(t_miniRT *mini, int key, t_vec3 forward)
@@ -69,10 +70,11 @@ void	handle_vertical_rotation(t_miniRT *mini, int key, t_vec3 forward)
 	mini->scene.camera.orientation = vec_normalize(rotated);
 }
 
-void	handle_camera_rotation(t_miniRT *mini, int key, t_vec3 forward)
+bool	handle_camera_rotation(t_miniRT *mini, int key, t_vec3 forward)
 {
 	if (key == MLX_KEY_LEFT || key == MLX_KEY_RIGHT)
 		handle_horizontal_rotation(mini, key, forward);
 	else if (key == MLX_KEY_UP || key == MLX_KEY_DOWN)
 		handle_vertical_rotation(mini, key, forward);
+	return (true);
 }

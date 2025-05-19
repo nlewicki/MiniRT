@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/16 12:10:11 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 12:52:45 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,10 @@ void	render_scene(mlx_image_t *img, t_miniRT *mini);
 
 bool	handle_material_property(t_miniRT *mini, int key);
 bool	handle_checkerboard_toggle(t_miniRT *mini, int key);
-void	handle_camera_rotation(t_miniRT *mini, int key, t_vec3 forward);
+bool	handle_camera_rotation(t_miniRT *mini, int key, t_vec3 forward);
 void	handle_vertical_rotation(t_miniRT *mini, int key, t_vec3 forward);
 void	handle_horizontal_rotation(t_miniRT *mini, int key, t_vec3 forward);
-void	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward);
+bool	handle_camera_movement(t_miniRT *mini, int key, t_vec3 forward);
 t_color	trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth,
 			t_object *skip_object);
 t_color	compute_lighting_skip_object(t_miniRT *mini, t_hit hit,
