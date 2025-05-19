@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/12 13:23:56 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:10:54 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	parse_camera(char **tokens, t_scene *scene)
 	if (error)
 		exit_error("Invalid camera values");
 	scene->camera.is_set = 1;
-	printf("Camera set: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), fov=%d\n",
+	printf("Camera set: position=(%.2f, %.2f, %.2f),"
+		"orientation=(%.2f, %.2f, %.2f), fov=%d\n",
 		scene->camera.position.x, scene->camera.position.y,
 		scene->camera.position.z, scene->camera.orientation.x,
 		scene->camera.orientation.y, scene->camera.orientation.z,

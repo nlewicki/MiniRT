@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/16 11:55:06 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:12:20 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,10 @@ void	parse_plane(char **tokens, t_scene *scene)
 		exit_error("Invalid plane format");
 	parse_param(tokens, &plane);
 	add_plane_to_scene(scene, plane);
-	printf("Plane added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), "
-		"color=(%d, %d, %d), material_link=%s, limit_width=%.2f, limit_height=%.2f\n",
+	printf("Plane added: position=(%.2f, %.2f, %.2f),"
+		"orientation=(%.2f, %.2f, %.2f), "
+		"color=(%d, %d, %d), material_link=%s, "
+		"limit_width=%.2f, limit_height=%.2f\n",
 		plane.position.x, plane.position.y, plane.position.z,
 		plane.orientation.x, plane.orientation.y, plane.orientation.z,
 		plane.color.r, plane.color.g, plane.color.b, plane.material_link,

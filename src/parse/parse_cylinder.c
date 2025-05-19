@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:06 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/16 11:54:51 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:11:23 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,13 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 		exit_error("Invalid cylinder format");
 	parse_param(tokens, &cylinder);
 	add_cylinder_to_scene(scene, cylinder);
-	printf("Cylinder added: position=(%.2f, %.2f, %.2f), orientation=(%.2f, %.2f, %.2f), "
+	printf("Cylinder added: position=(%.2f, %.2f, %.2f),"
+		"orientation=(%.2f, %.2f, %.2f), "
 		"diameter=%.2f, height=%.2f, color=(%d, %d, %d), material_link=%s\n",
 		cylinder.position.x, cylinder.position.y, cylinder.position.z,
 		cylinder.orientation.x, cylinder.orientation.y, cylinder.orientation.z,
 		cylinder.diameter, cylinder.height,
-		cylinder.color.r, cylinder.color.g, cylinder.color.b, cylinder.material_link);
+		cylinder.color.r, cylinder.color.g,
+		cylinder.color.b, cylinder.material_link);
 	printf("\n");
 }
