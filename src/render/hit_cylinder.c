@@ -44,106 +44,93 @@ double	solve_quadratic(double a, double b, double c)
 	return (-1.0);
 }
 
-static double	hit_cylinder_caps(t_object *obj, t_cylinder *cyl, const t_ray ray, t_hit *hit_info, t_vec3 cap_center)
-{
-	t_vec3	normal;
-	t_vec3	p;
-	double	denom;
-	double	t;
-
-	normal = cyl->orientation;
-	denom = vec_dot(ray.direction, normal);
-	if (fabs(denom) < 1e-6)
-		return (-1.0);
-	t = vec_dot(vec_sub(cap_center, ray.origin), normal) / denom;
-	if (t < 0)
-		return (-1.0);
-	p = vec_add(ray.origin, vec_mul(ray.direction, t));
-	if (vec_length(vec_sub(p, cap_center)) > (cyl->diameter / 2) + 1e-6)
-		return (-1.0);
-	if (hit_info)
-	{
-		hit_info->t = t;
-		hit_info->point = p;
-		if (denom > 0)
-			hit_info->normal = normal;
-		else
-			hit_info->normal = vec_mul(normal, -1);
-		hit_info->object = obj;
-	}
-	return (t);
+static double cap_denom(const t_ray ray, t_vec3 normal) {
+	return vec_dot(ray.direction, normal);
 }
 
-double	hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info)
-{
-	t_cylinder	*cyl;
-	t_vec3		oc;
-	t_vec3		d;
-	t_vec3		axis;
-	t_vec3		bottom_cap;
-	t_vec3		top_cap;
-	t_vec3		p;
-	double		t;
-	double		t_cap;
-	double		dot_d_axis;
-	double		dot_oc_axis;
-	double		a;
-	double		b;
-	double		c;
-	double		t_body;
-	double		height;
+static double cap_t(const t_ray ray, t_vec3 cap_center, t_vec3 normal, double denom) {
+	return vec_dot(vec_sub(cap_center, ray.origin), normal) / denom;
+}
 
-	cyl = (t_cylinder *)obj->data;
-	if (!cyl)
+static int cap_within_radius(t_vec3 p, t_vec3 cap_center, double diameter) {
+	return (vec_length(vec_sub(p, cap_center)) <= (diameter / 2) + 1e-6);
+}
+
+static void fill_cap_hitinfo(t_hit *hit_info, t_object *obj, t_vec3 p, double t, t_vec3 normal, double denom) {
+	hit_info->t = t;
+	hit_info->point = p;
+	hit_info->normal = (denom > 0) ? normal : vec_mul(normal, -1);
+	hit_info->object = obj;
+}
+
+static double hit_cylinder_caps(t_object *obj, t_cylinder *cyl, const t_ray ray, t_hit *hit_info, t_vec3 cap_center) {
+	double vals[2]; // [0]=denom, [1]=t
+	t_vec3 normal = cyl->orientation;
+	vals[0] = cap_denom(ray, normal);
+	if (fabs(vals[0]) < 1e-6)
 		return (-1.0);
+	vals[1] = cap_t(ray, cap_center, normal, vals[0]);
+	if (vals[1] < 0)
+		return (-1.0);
+	t_vec3 p = vec_add(ray.origin, vec_mul(ray.direction, vals[1]));
+	if (!cap_within_radius(p, cap_center, cyl->diameter))
+		return (-1.0);
+	if (hit_info)
+		fill_cap_hitinfo(hit_info, obj, p, vals[1], normal, vals[0]);
+	return (vals[1]);
+}
+
+static void compute_caps(t_object *obj, t_cylinder *cyl, const t_ray ray, t_hit *hit_info, double *t, t_vec3 *bottom_cap, t_vec3 *top_cap) {
+	double t_cap;
+	t_cap = hit_cylinder_caps(obj, cyl, ray, NULL, *bottom_cap);
+	if (t_cap > 0 && t_cap < *t) {
+		*t = t_cap;
+		if (hit_info)
+			hit_cylinder_caps(obj, cyl, ray, hit_info, *bottom_cap);
+	}
+	t_cap = hit_cylinder_caps(obj, cyl, ray, NULL, *top_cap);
+	if (t_cap > 0 && t_cap < *t) {
+		*t = t_cap;
+		if (hit_info)
+			hit_cylinder_caps(obj, cyl, ray, hit_info, *top_cap);
+	}
+}
+
+static void fill_body_hitinfo(t_cylinder *cyl, t_object *obj, t_hit *hit_info, double t, t_vec3 p, double height) {
+	hit_info->t = t;
+	hit_info->point = p;
+	hit_info->normal = vec_normalize(vec_sub(p, vec_add(cyl->position, vec_mul(cyl->orientation, height))));
+	if (cyl->checker)
+		hit_info->color = checkerboard_cylinder(cyl, hit_info->point);
+	else
+		hit_info->color = obj->color;
+	hit_info->object = obj;
+}
+
+double hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info) {
+	double t = INFINITY, vals[3]; // [0]=a, [1]=b, [2]=c
+	t_cylinder *cyl = (t_cylinder *)obj->data;
+	if (!cyl) return (-1.0);
 	cyl->orientation = vec_normalize(cyl->orientation);
-	bottom_cap = cyl->position;
-	top_cap = vec_add(cyl->position, vec_mul(cyl->orientation, cyl->height));
-	t = INFINITY;
-	t_cap = hit_cylinder_caps(obj, cyl, ray, NULL, bottom_cap);
-	if (t_cap > 0 && t_cap < t)
-	{
-		t = t_cap;
-		if (hit_info)
-			hit_cylinder_caps(obj, cyl, ray, hit_info, bottom_cap);
-	}
-	t_cap = hit_cylinder_caps(obj, cyl, ray, NULL, top_cap);
-	if (t_cap > 0 && t_cap < t)
-	{
-		t = t_cap;
-		if (hit_info)
-			hit_cylinder_caps(obj, cyl, ray, hit_info, top_cap);
-	}
-	oc = vec_sub(ray.origin, cyl->position);
-	d = ray.direction;
-	axis = cyl->orientation;
-	dot_d_axis = vec_dot(d, axis);
-	dot_oc_axis = vec_dot(oc, axis);
-	a = vec_dot(d, d) - dot_d_axis * dot_d_axis;
-	b = 2 * (vec_dot(d, oc) - dot_d_axis * dot_oc_axis);
-	c = vec_dot(oc, oc) - dot_oc_axis * dot_oc_axis - (cyl->diameter * cyl->diameter) / 4;
-	t_body = solve_quadratic(a, b, c);
-	if (t_body > 0 && t_body < t)
-	{
-		p = vec_add(ray.origin, vec_mul(ray.direction, t_body));
-		height = vec_dot(vec_sub(p, cyl->position), cyl->orientation);
-		if (height >= -1e-6 && height <= cyl->height + 1e-6)
-		{
+	t_vec3 caps[2] = {cyl->position, vec_add(cyl->position, vec_mul(cyl->orientation, cyl->height))};
+	compute_caps(obj, cyl, ray, hit_info, &t, &caps[0], &caps[1]);
+	t_vec3 oc = vec_sub(ray.origin, cyl->position);
+	double dot_d_axis = vec_dot(ray.direction, cyl->orientation);
+	double dot_oc_axis = vec_dot(oc, cyl->orientation);
+	vals[0] = vec_dot(ray.direction, ray.direction) - dot_d_axis * dot_d_axis;
+	vals[1] = 2 * (vec_dot(ray.direction, oc) - dot_d_axis * dot_oc_axis);
+	vals[2] = vec_dot(oc, oc) - dot_oc_axis * dot_oc_axis - (cyl->diameter * cyl->diameter) / 4;
+	double t_body = solve_quadratic(vals[0], vals[1], vals[2]);
+	if (t_body > 0 && t_body < t) {
+		t_vec3 p = vec_add(ray.origin, vec_mul(ray.direction, t_body));
+		double height = vec_dot(vec_sub(p, cyl->position), cyl->orientation);
+		if (height >= -1e-6 && height <= cyl->height + 1e-6) {
 			t = t_body;
 			if (hit_info)
-			{
-				hit_info->t = t;
-				hit_info->point = p;
-				hit_info->normal = vec_normalize(vec_sub(p, vec_add(cyl->position, vec_mul(cyl->orientation, height))));
-				if (cyl->checker)
-					hit_info->color = checkerboard_cylinder(cyl, hit_info->point);
-				else
-					hit_info->color = obj->color;
-				hit_info->object = obj;
-			}
+				fill_body_hitinfo(cyl, obj, hit_info, t, p, height);
 		}
 	}
 	if (t == INFINITY)
 		return (-1.0);
 	return (t);
-}
+
