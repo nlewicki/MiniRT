@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/22 12:07:08 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/22 12:59:05 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ t_vec3	vec_reflect(t_vec3 v, t_vec3 n);
 t_color	color_mix(t_color a, t_color b, double factor);
 t_color	color_scale(t_color c, double factor);
 t_color	color_clamp(t_color c);
+t_color	color_add(t_color c1, t_color c2);
+
 
 t_color	checkerboard_cylinder(t_cylinder *cyl, t_vec3 point);
 t_color	checkerboard_cone(t_cone *cone, t_vec3 point);
@@ -121,7 +123,11 @@ t_color	handle_reflection(t_miniRT *mini, t_hit hit, t_ray ray,
 			t_object *hit_object, int depth);
 t_color	handle_reflection_skip(t_miniRT *mini, t_hit hit, t_ray ray, 
 			t_object *hit_object, int depth, t_object *skip_object);
-
+t_vec3	random_points(t_vec3 center, double radius);
+bool	is_shadow_blocked(t_miniRT *mini, t_ray shadow_ray,
+	double dist, t_object *skip_object);
+bool	is_point_visible(t_miniRT *mini, t_vec3 point,
+		t_light light, t_object *skip_object);
 //camera
 void	calculate_viewport(t_camera cam, int x, int y, double *coords);
 void	calculate_camera_basis(t_camera cam, t_vec3 *basis);

@@ -6,27 +6,11 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:23:23 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 11:49:26 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/22 12:56:32 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-// Get reflection coefficient based on object type
-double	get_reflection_coef(t_object *hit_object)
-{
-	if (!hit_object)
-		return (0.0);
-	if (hit_object->type == SPHERE)
-		return (((t_sphere *)hit_object->data)->reflection);
-	else if (hit_object->type == PLANE)
-		return (((t_plane *)hit_object->data)->reflection);
-	else if (hit_object->type == CYLINDER)
-		return (((t_cylinder *)hit_object->data)->reflection);
-	else if (hit_object->type == CONE)
-		return (((t_cone *)hit_object->data)->reflection);
-	return (0.0);
-}
 
 // Create a reflection ray from a hit point
 t_ray	create_reflection_ray(t_hit hit, t_ray incident_ray)
@@ -83,8 +67,8 @@ t_color	handle_reflection(t_miniRT *mini, t_hit hit, t_ray ray,
 
 	reflection = get_reflection_coef(hit_object);
 	if (reflection <= 0.0 || depth <= 0)
-		return (compute_lighting(mini, hit));
-	local_color = compute_lighting(mini, hit);
+		return (compute_lighting_skip_object(mini, hit, NULL));
+	local_color = compute_lighting_skip_object(mini, hit, NULL);
 	reflect_ray = create_reflection_ray(hit, ray);
 	reflected_color = trace_ray_skip_object(mini, reflect_ray, depth - 1,
 			hit_object);
