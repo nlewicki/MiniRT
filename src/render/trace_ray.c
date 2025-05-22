@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:24:54 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 11:25:29 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/22 11:40:57 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,12 @@ t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth)
 	bool		hit_any;
 
 	if (depth <= 0)
-		return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
-
-	// Find closest hit
+		return (color_scale(mini->scene.ambient.color,
+				mini->scene.ambient.ratio));
 	closest_hit = find_closest_hit(mini, ray, &hit_object);
 	hit_any = (hit_object != NULL);
-
 	if (hit_any)
 		return (handle_reflection(mini, closest_hit, ray, hit_object, depth));
-	
-	// Return background color if no hit
 	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
 		return ((t_color){30, 30, 30, 255});
 	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
