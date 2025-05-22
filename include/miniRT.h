@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 14:15:42 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:15:52 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <math.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 # include <unistd.h>
 
 # define WIDTH 800
@@ -42,6 +43,7 @@ double	parse_double(char *str, double min, double max, int *error);
 t_color	parse_color(char *str, int *error);
 t_vec3	parse_position(char *str, int *error);
 t_vec3	parse_orientation(char *str, int *error);
+t_vec3	normalize_vector(t_vec3 vec, int *error);
 
 void	parse_ambient(char **tokens, t_scene *scene);
 void	parse_camera(char **tokens, t_scene *scene);

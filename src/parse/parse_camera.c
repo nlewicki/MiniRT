@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/19 13:10:54 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:16:46 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,18 @@ void	parse_camera(char **tokens, t_scene *scene)
 	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		exit_error("Invalid camera format");
 	scene->camera.position = parse_position(tokens[1], &error);
-	scene->camera.orientation = parse_orientation(tokens[2], &error);
+	if (!strcmp(tokens[2], "0,0,0"))
+	{
+		scene->camera.orientation = (t_vec3)
+		{
+			-scene->camera.position.x,
+			-scene->camera.position.y,
+			-scene->camera.position.z
+		};
+		scene->camera.orientation = normalize_vector(scene->camera.orientation, &error);
+	}
+	else
+		scene->camera.orientation = parse_orientation(tokens[2], &error);
 	scene->camera.fov = ft_atoi(tokens[3]);
 	if (scene->camera.fov < 0 || scene->camera.fov > 180)
 		error = 1;

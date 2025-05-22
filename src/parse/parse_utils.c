@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:01:17 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/12 13:42:22 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:15:27 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ t_vec3	parse_position(char *str, int *error)
 	return (vec);
 }
 
-static t_vec3	normalize_vector(t_vec3 vec, int *error)
+t_vec3	normalize_vector(t_vec3 vec, int *error)
 {
 	double	magnitude;
 
