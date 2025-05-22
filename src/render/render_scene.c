@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_scene.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/16 12:15:13 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 11:35:41 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,146 +18,6 @@ t_color	color_clamp(t_color c)
 	c.g = fmin(255, fmax(0, c.g));
 	c.b = fmin(255, fmax(0, c.b));
 	return (c);
-}
-
-static t_ray	generate_camera_ray(t_camera cam, int x, int y)
-{
-	double		aspect_ratio;
-	double		fov_rad;
-	double		viewport_height;
-	double		viewport_width;
-	double		u;
-	double		v;
-	double		px;
-	double		py;
-	t_vec3		forward;
-	t_vec3		up;
-	t_vec3		right;
-	t_vec3		ray_dir;
-	t_ray		ray;
-
-	aspect_ratio = (double)WIDTH / (double)HEIGHT;
-	fov_rad = (cam.fov * M_PI) / 180.0;
-	viewport_height = 2.0 * tan(fov_rad / 2.0);
-	viewport_width = viewport_height * aspect_ratio;
-	u = ((double)x + 0.5) / WIDTH * 2.0 - 1.0;
-	v = (1.0 - ((double)y + 0.5) / HEIGHT) * 2.0 - 1.0;
-	px = u * (viewport_width / 2.0);
-	py = v * (viewport_height / 2.0);
-	forward = vec_normalize(cam.orientation);
-	up = (t_vec3){0, 1, 0};
-	right = vec_normalize(vec_cross(forward, up));
-	up = vec_cross(right, forward);
-	ray_dir = vec_add(vec_add(vec_mul(right, px), vec_mul(up, py)), forward);
-	ray_dir = vec_normalize(ray_dir);
-	ray.origin = cam.position;
-	ray.direction = ray_dir;
-	return (ray);
-}
-
-static t_color	handle_hit_reflection(t_miniRT *mini, t_object *hit_object,
-				t_hit closest_hit, t_ray ray)
-{
-	t_color		local_color;
-	double		reflection;
-	t_vec3		reflect_dir;
-	t_ray		reflect_ray;
-	t_color		reflected_color;
-	t_color		final_color;
-
-	local_color = compute_lighting(mini, closest_hit);
-	reflection = 0;
-	if (hit_object->type == SPHERE)
-		reflection = ((t_sphere *)hit_object->data)->reflection;
-	else if (hit_object->type == PLANE)
-		reflection = ((t_plane *)hit_object->data)->reflection;
-	else if (hit_object->type == CYLINDER)
-		reflection = ((t_cylinder *)hit_object->data)->reflection;
-	else if (hit_object->type == CONE)
-		reflection = ((t_cone *)hit_object->data)->reflection;
-	if (reflection > 0)
-	{
-		reflect_dir = vec_reflect(vec_neg(ray.direction), closest_hit.normal);
-		reflect_ray.origin = vec_add(closest_hit.point, vec_mul(reflect_dir, 1e-4));
-		reflect_ray.direction = reflect_dir;
-		reflected_color = trace_ray_skip_object(mini, reflect_ray, 2, hit_object);
-		final_color = color_mix(local_color, reflected_color, reflection);
-		return (color_clamp(final_color));
-	}
-	return (local_color);
-}
-
-t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth)
-{
-	double		closest;
-	t_hit		closest_hit;
-	bool		hit_any;
-	t_object	*hit_object;
-	t_hit		temp_hit;
-	double		t;
-	int			i;
-
-	if (depth <= 0)
-		return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
-	closest = 1e30;
-	hit_any = false;
-	hit_object = NULL;
-	i = 0;
-	while (i < mini->scene.object_count)
-	{
-		t = mini->scene.objects[i].hit(&mini->scene.objects[i], ray, &temp_hit);
-		if (t > 0 && t < closest)
-		{
-			closest = t;
-			closest_hit = temp_hit;
-			hit_object = &mini->scene.objects[i];
-			hit_any = true;
-		}
-		i++;
-	}
-	if (hit_any)
-		return (handle_hit_reflection(mini, hit_object, closest_hit, ray));
-	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
-		return ((t_color){30, 30, 30, 255});
-	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
-}
-
-t_color trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth, t_object *skip_object)
-{
-	double		closest;
-	t_hit		closest_hit;
-	bool		hit_any;
-	t_object	*hit_object;
-	t_hit		temp_hit;
-	double		t;
-	int			i;
-
-	if (depth <= 0)
-		return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
-	closest = 1e30;
-	hit_any = false;
-	hit_object = NULL;
-	i = 0;
-	while (i < mini->scene.object_count)
-	{
-		if (&mini->scene.objects[i] != skip_object)
-		{
-			t = mini->scene.objects[i].hit(&mini->scene.objects[i], ray, &temp_hit);
-			if (t > 0 && t < closest)
-			{
-				closest = t;
-				closest_hit = temp_hit;
-				hit_object = &mini->scene.objects[i];
-				hit_any = true;
-			}
-		}
-		i++;
-	}
-	if (hit_any)
-		return (handle_hit_reflection(mini, hit_object, closest_hit, ray));
-	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
-		return ((t_color){30, 30, 30, 255});
-	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
 }
 
 uint32_t	color_to_uint32(t_color color)
