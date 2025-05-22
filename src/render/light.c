@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/16 11:54:22 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 14:10:39 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,14 +134,22 @@ t_color compute_lighting_skip_object(t_miniRT *mini, t_hit hit, t_object *skip_o
 
 		// Shadow calculation with skip_object parameter
 		double shadow = compute_shadow_factor(mini, hit.point, light, skip_object);
-		shadow = pow(shadow, 0.7);
+		shadow = pow(shadow, 1.5);  // More moderate shadow contrast
 		if (shadow <= 0.0)
 			continue;
 
-		// Diffuse lighting
+		// Calculate distance falloff with gentler curve
+		double dist = vec_length(vec_sub(light.position, hit.point));
+		double falloff = 1.0 / (1.0 + 0.05 * dist * dist);
+
+		// Diffuse lighting with distance falloff
 		double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
-		t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
-		light_contrib = color_mix(light_contrib, light.color, 0.2);
+		double intensity = diffuse * light.brightness * shadow * falloff;
+		t_color light_contrib = color_scale(hit.color, intensity);
+		if (light.color.r > 0 || light.color.g > 0 || light.color.b > 0) {
+			t_color tint = color_scale(light.color, intensity * 0.2);
+			light_contrib = color_add(light_contrib, tint);
+		}
 		final_color = color_add(final_color, light_contrib);
 	}
 

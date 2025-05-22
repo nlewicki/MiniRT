@@ -14,8 +14,11 @@ correctly???
 - seg fault wtflipppppppppp
 
 
-(-bump textures)
 
 - checker seitliche planes
 - planes groese begrenzen
 - resizing blockieren
+- plane farbe
+
+
+(-bump textures)

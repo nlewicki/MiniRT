@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 16:28:26 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 13:07:29 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 14:17:48 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,11 @@ double	hit_plane(t_object *obj, const t_ray ray, t_hit *hit)
 	}
 	hit->t = t;
 	hit->point = hit_point;
-	hit->normal = vec_normalize(plane->orientation);
+	hit->normal = (denom > 0) ? vec_mul(plane->orientation, -1)
+		: vec_normalize(plane->orientation);
+	hit->color = obj->color;
 	if (plane->checker)
 		hit->color = checkerboard_plane(plane, hit->point);
-	else
-		hit->color = obj->color;
 	hit->object = obj;
 	return (t);
 }
