@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 12:56:02 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/22 14:04:08 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,6 @@ t_color	compute_lighting_skip_object(t_miniRT *mini, t_hit hit,
 	final_color = color_scale(mini->scene.ambient.color,
 			mini->scene.ambient.ratio);
 	if (mini->scene.light_count == 0)
-		return (compute_default_lighting(mini, hit));	
+		return (compute_default_lighting(mini, hit));
 	return (compute_all_lights(mini, hit, skip_object, final_color));
-	}
+}

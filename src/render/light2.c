@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:55:23 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 12:57:56 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/22 14:03:33 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ bool	is_shadow_blocked(t_miniRT *mini, t_ray shadow_ray,
 	}
 	return (false);
 }
-
 
 bool	is_point_visible(t_miniRT *mini, t_vec3 point,
 	t_light light, t_object *skip_object)
