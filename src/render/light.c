@@ -3,25 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/16 11:54:22 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:46:30 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../include/miniRT.h"
 
-t_color color_scale(t_color c, double factor)
+t_color	color_scale(t_color c, double factor)
 {
-	t_color result = {
-		.r = c.r * factor,
-		.g = c.g * factor,
-		.b = c.b * factor,
-		.a = c.a
-	};
-	return result;
+	t_color	result;
+
+	result.r = c.r * factor;
+	result.g = c.g * factor;
+	result.b = c.b * factor;
+	result.a = c.a;
+	return (result);
 }
 
 //static t_color color_mult(t_color c1, t_color c2)
@@ -35,115 +34,176 @@ t_color color_scale(t_color c, double factor)
 //	return result;
 //}
 
-static t_color color_add(t_color c1, t_color c2)
+static t_color	color_add(t_color c1, t_color c2)
 {
-	t_color result = {
-		.r = c1.r + c2.r,
-		.g = c1.g + c2.g,
-		.b = c1.b + c2.b,
-		.a = c1.a
-	};
-	return result;
+	t_color	result;
+
+	result.r = c1.r + c2.r;
+	result.g = c1.g + c2.g;
+	result.b = c1.b + c2.b;
+	result.a = c1.a;
+	return (result);
 }
 
-t_color color_mix(t_color a, t_color b, double factor)
+t_color	color_mix(t_color a, t_color b, double factor)
 {
-	t_color result;
+	t_color	result;
 
 	result.r = a.r * (1 - factor) + b.r * factor;
 	result.g = a.g * (1 - factor) + b.g * factor;
 	result.b = a.b * (1 - factor) + b.b * factor;
-	return result;
+	return (result);
 }
 
 static t_vec3	random_points(t_vec3 center, double radius)
 {
-	double u = (double)rand() / RAND_MAX;
-	double v = (double)rand() / RAND_MAX;
-	double theta = 2.0 * M_PI * u;
-	double phi = acos(2.0 * v - 1.0);
-	double x = radius * sin(phi) * cos(theta);
-	double y = radius * sin(phi) * sin(theta);
-	double z = radius * cos(phi);
-	return ((t_vec3){center.x + x, center.y + y, center.z + z});
+	double	u;
+	double	v;
+	double	theta;
+	double	phi;
+	double	x;
+	double	y;
+	double	z;
+	t_vec3	point;
+
+	u = (double)rand() / RAND_MAX;
+	v = (double)rand() / RAND_MAX;
+	theta = 2.0 * M_PI * u;
+	phi = acos(2.0 * v - 1.0);
+	x = radius * sin(phi) * cos(theta);
+	y = radius * sin(phi) * sin(theta);
+	z = radius * cos(phi);
+	point.x = center.x + x;
+	point.y = center.y + y;
+	point.z = center.z + z;
+	return (point);
+}
+
+static bool	is_shadow_blocked(t_miniRT *mini, t_ray shadow_ray,
+	double dist, t_object *skip_object)
+{
+	int		j;
+	double	t;
+	t_hit	hit;
+
+	j = 0;
+	while (j < mini->scene.object_count)
+	{
+		if (!skip_object || &mini->scene.objects[j] != skip_object)
+		{
+			t = mini->scene.objects[j].hit(&mini->scene.objects[j],
+					shadow_ray, &hit);
+			if (t > 0 && t < dist)
+				return (true);
+		}
+		j++;
+	}
+	return (false);
+}
+
+static bool	is_point_visible(t_miniRT *mini, t_vec3 point,
+	t_light light, t_object *skip_object)
+{
+	t_vec3	samples_pos;
+	t_vec3	dir;
+	double	dist;
+	t_ray	shadow_ray;
+
+	samples_pos = random_points(light.position, 0.2);
+	dir = vec_sub(samples_pos, point);
+	dist = vec_length(dir);
+	dir = vec_normalize(dir);
+	shadow_ray.origin = vec_add(point, vec_mul(dir, 1e-4));
+	shadow_ray.direction = dir;
+	return (!is_shadow_blocked(mini, shadow_ray, dist, skip_object));
 }
 
 // Modified to accept a skip_object parameter
-static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point, t_light light, t_object *skip_object)
+static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point,
+	t_light light, t_object *skip_object)
 {
 	int			unblocked;
-	double		dist;
-	double		t;
-	bool		blocked;
+	int			i;
+	double		shadow_ratio;
 
 	unblocked = 0;
-	for (int i = 0; i < mini->samples; i++)
+	i = 0;
+	while (i < mini->samples)
 	{
-		blocked = false;
-		t_vec3 samples_pos = random_points(light.position, 0.2);
-		t_vec3 dir = vec_sub(samples_pos, point);
-		dist = vec_length(dir);
-		dir = vec_normalize(dir);
-		t_ray shadow_ray;
-		shadow_ray.origin = vec_add(point, vec_mul(dir, 1e-4));
-		shadow_ray.direction = dir;
-		for (int j = 0; j < mini->scene.object_count; j++)
-		{
-			// Skip the object we want to ignore (for reflections)
-			if (skip_object && &mini->scene.objects[j] == skip_object)
-				continue;
-
-			t_hit hit;
-			t = mini->scene.objects[j].hit(&mini->scene.objects[j], shadow_ray, &hit);
-			if (t > 0 && t < dist)
-			{
-				blocked = true;
-				break;
-			}
-		}
-		if (!blocked)
-			unblocked ++;
+		if (is_point_visible(mini, point, light, skip_object))
+			unblocked++;
+		i++;
 	}
-	return ((double)unblocked / (double)mini->samples); // Minimum brightness factor
+	shadow_ratio = (double)unblocked / (double)mini->samples;
+	return (shadow_ratio);
 }
 
-// Original function kept for backward compatibility
-t_color compute_lighting(t_miniRT *mini, t_hit hit)
+static t_color	add_light_contribution(t_miniRT *mini, t_hit hit,
+	t_light light, t_object *skip_object,
+	t_color current_color)
 {
-	return compute_lighting_skip_object(mini, hit, NULL);
+	t_vec3	light_dir;
+	double	shadow;
+	double	diffuse;
+	t_color	light_contrib;
+
+	light_dir = vec_normalize(vec_sub(light.position, hit.point));
+	shadow = compute_shadow_factor(mini, hit.point, light, skip_object);
+	shadow = pow(shadow, 0.7);
+	if (shadow <= 0.0)
+		return (current_color);
+	diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
+	light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
+	light_contrib = color_mix(light_contrib, light.color, 0.2);
+	return (color_add(current_color, light_contrib));
+}
+
+static t_color	compute_all_lights(t_miniRT *mini, t_hit hit,
+	t_object *skip_object, t_color ambient_color)
+{
+	int		i;
+	t_color	final_color;
+
+	final_color = ambient_color;
+	i = 0;
+	while (i < mini->scene.light_count)
+	{
+		final_color = add_light_contribution(mini, hit,
+				mini->scene.lights[i], skip_object, final_color);
+		i++;
+	}
+	return (color_clamp(final_color));
+}
+
+static t_color	compute_default_lighting(t_miniRT *mini, t_hit hit)
+{
+	t_vec3	default_light_dir;
+	double	diffuse;
+	t_color	light_contrib;
+	t_color	final_color;
+
+	default_light_dir = (t_vec3){0, -1, 0};
+	diffuse = fmax(0.0, vec_skal(hit.normal, vec_neg(default_light_dir)));
+	light_contrib = color_scale(hit.color, diffuse * 0.7);
+	final_color = color_add(color_scale(mini->scene.ambient.color,
+				mini->scene.ambient.ratio), light_contrib);
+	return (color_clamp(final_color));
 }
 
 // New function that can skip an object during shadow calculations
-t_color compute_lighting_skip_object(t_miniRT *mini, t_hit hit, t_object *skip_object)
+t_color	compute_lighting_skip_object(t_miniRT *mini, t_hit hit,
+	t_object *skip_object)
 {
-	t_color final_color = color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio);
+	t_color	final_color;
 
-	// If no lights, add a default directional light
-	if (mini->scene.light_count == 0) {
-		// Create a default directional light from above
-		t_vec3 default_light_dir = {0, -1, 0}; // From above
-		double diffuse = fmax(0.0, vec_skal(hit.normal, vec_neg(default_light_dir)));
-		t_color light_contrib = color_scale(hit.color, diffuse * 0.7); // 0.7 intensity
-		final_color = color_add(final_color, light_contrib);
-		return color_clamp(final_color);
-	}
-	for (int i = 0; i < mini->scene.light_count; i++)
-	{
-		t_light light = mini->scene.lights[i];
-		t_vec3 light_dir = vec_normalize(vec_sub(light.position, hit.point));
-
-		// Shadow calculation with skip_object parameter
-		double shadow = compute_shadow_factor(mini, hit.point, light, skip_object);
-		shadow = pow(shadow, 0.7);
-		if (shadow <= 0.0)
-			continue;
-
-		// Diffuse lighting
-		double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
-		t_color light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
-		light_contrib = color_mix(light_contrib, light.color, 0.2);
-		final_color = color_add(final_color, light_contrib);
+	final_color = color_scale(mini->scene.ambient.color,
+			mini->scene.ambient.ratio);
+	if (mini->scene.light_count == 0)
+		return (compute_default_lighting(mini, hit));	
+	return (compute_all_lights(mini, hit, skip_object, final_color));
 	}
 
-	return color_clamp(final_color);
+t_color	compute_lighting(t_miniRT *mini, t_hit hit)
+{
+	return (compute_lighting_skip_object(mini, hit, NULL));
 }
