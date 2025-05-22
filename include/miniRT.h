@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 14:15:42 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 11:34:35 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,21 @@ bool	handle_cone_reflection(t_cone *cone, double delta);
 t_vec3	get_local_coords(t_vec3 point, t_vec3 origin);
 void	set_base_hit_normal(t_hit *hit_info, t_vec3 normal, double denom);
 void	check_mode(t_hit *hit_info, t_cone *cone, t_object *obj);
+
+// Reflection functions
+double	get_reflection_coef(t_object *hit_object);
+t_ray	create_reflection_ray(t_hit hit, t_ray incident_ray);
+t_hit	find_closest_hit_skip(t_miniRT *mini, t_ray ray, t_object *skip_object, 
+			t_object **hit_object);
+t_hit	find_closest_hit(t_miniRT *mini, t_ray ray, t_object **hit_object);
+t_color	handle_reflection(t_miniRT *mini, t_hit hit, t_ray ray, 
+			t_object *hit_object, int depth);
+t_color	handle_reflection_skip(t_miniRT *mini, t_hit hit, t_ray ray, 
+			t_object *hit_object, int depth, t_object *skip_object);
+
+//camera
+void	calculate_viewport(t_camera cam, int x, int y, double *coords);
+void	calculate_camera_basis(t_camera cam, t_vec3 *basis);
+t_ray	generate_camera_ray(t_camera cam, int x, int y);
 
 #endif

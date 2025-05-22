@@ -25,6 +25,9 @@ CFILES =	src/main.c \
 			src/utils/utils.c \
 			src/utils/utils2.c \
 			src/utils/parse_rt_utils.c \
+			src/render/camera.c \
+			src/render/reflection.c \
+			src/render/trace_ray.c \
 
 NAME = miniRT
 CC = cc
