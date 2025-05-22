@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 16:28:26 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/12 14:04:05 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 13:07:29 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,11 @@ double	hit_plane(t_object *obj, const t_ray ray, t_hit *hit)
 	t_plane	*plane;
 	double	denom;
 	double	t;
+	t_vec3	hit_point;
+	t_vec3	right;
+	t_vec3	forward;
+	double	x;
+	double	z;
 
 	plane = (t_plane *)obj->data;
 	denom = vec_skal(plane->orientation, ray.direction);
@@ -61,8 +66,23 @@ double	hit_plane(t_object *obj, const t_ray ray, t_hit *hit)
 	t = vec_skal(vec_sub(plane->position, ray.origin), plane->orientation) / denom;
 	if (t < 0)
 		return (-1);
+	hit_point = vec_add(ray.origin, vec_mul(ray.direction, t));
+
+	if (plane->limit_width > 0 && plane->limit_height > 0)
+	{
+		forward = vec_normalize(plane->orientation);
+		right = vec_normalize(vec_cross((t_vec3){0, 1, 0}, forward));
+		if (fabs(vec_dot(right, right)) < 1e-6)
+			right = vec_normalize(vec_cross((t_vec3){1, 0, 0}, forward));
+
+		x = vec_dot(vec_sub(hit_point, plane->position), right);
+		z = vec_dot(vec_sub(hit_point, plane->position), vec_cross(forward, right));
+
+		if (fabs(x) > plane->limit_width / 2 || fabs(z) > plane->limit_height / 2)
+			return (-1);
+	}
 	hit->t = t;
-	hit->point = vec_add(ray.origin, vec_mul(ray.direction, t));
+	hit->point = hit_point;
 	hit->normal = vec_normalize(plane->orientation);
 	if (plane->checker)
 		hit->color = checkerboard_plane(plane, hit->point);

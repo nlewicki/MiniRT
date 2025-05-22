@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/13 11:30:17 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 13:02:39 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ void	print_objects(t_scene *scene)
 			printf("  Diameter: %.2f\n", sphere->diameter);
 			printf("  Color: (%d, %d, %d, %d)\n", sphere->color.r,
 				sphere->color.g, sphere->color.b, sphere->color.a);
-			if (obj->material_link && obj->material_link[0])
-				printf("  Material Link: %s\n", obj->material_link);
 		}
 		else if (obj->type == PLANE)
 		{
@@ -86,8 +84,6 @@ void	print_objects(t_scene *scene)
 				plane->orientation.y, plane->orientation.z);
 			printf("  Color: (%d, %d, %d, %d)\n", plane->color.r,
 				plane->color.g, plane->color.b, plane->color.a);
-			if (obj->material_link && obj->material_link[0])
-				printf("  Material Link: %s\n", obj->material_link);
 			if (plane->limit_width > 0 && plane->limit_height > 0)
 				printf("  Limits: width=%.2f, height=%.2f\n", plane->limit_width, plane->limit_height);
 		}
@@ -104,8 +100,6 @@ void	print_objects(t_scene *scene)
 			printf("  Height: %.2f\n", cylinder->height);
 			printf("  Color: (%d, %d, %d, %d)\n", cylinder->color.r,
 				cylinder->color.g, cylinder->color.b, cylinder->color.a);
-			if (obj->material_link && obj->material_link[0])
-				printf("  Material Link: %s\n", obj->material_link);
 		}
 		else if (obj->type == CONE)
 		{
@@ -119,8 +113,6 @@ void	print_objects(t_scene *scene)
 			printf("  Height: %.2f\n", cone->height);
 			printf("  Color: (%d, %d, %d, %d)\n", cone->color.r,
 				cone->color.g, cone->color.b, cone->color.a);
-			if (obj->material_link && obj->material_link[0])
-				printf("  Material Link: %s\n", obj->material_link);
 		}
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:23:41 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/12 13:29:27 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 13:02:58 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	convert_spheres(t_scene *scene, int *index)
 		scene->objects[*index].type = SPHERE;
 		scene->objects[*index].data = sphere_data;
 		scene->objects[*index].color = sphere_data->color;
-		scene->objects[*index].material_link = sphere_data->material_link;
 		scene->objects[*index].hit = hit_sphere;
 		(*index)++;
 		i++;
@@ -49,7 +48,6 @@ void	convert_planes(t_scene *scene, int *index)
 		scene->objects[*index].type = PLANE;
 		scene->objects[*index].data = plane_data;
 		scene->objects[*index].color = plane_data->color;
-		scene->objects[*index].material_link = plane_data->material_link;
 		scene->objects[*index].hit = hit_plane;
 		(*index)++;
 		i++;
@@ -71,7 +69,6 @@ void	convert_cylinders(t_scene *scene, int *index)
 		scene->objects[*index].type = CYLINDER;
 		scene->objects[*index].data = cylinder_data;
 		scene->objects[*index].color = cylinder_data->color;
-		scene->objects[*index].material_link = cylinder_data->material_link;
 		scene->objects[*index].hit = hit_cylinder;
 		(*index)++;
 		i++;
@@ -93,7 +90,6 @@ void	convert_cones(t_scene *scene, int *index)
 		scene->objects[*index].type = CONE;
 		scene->objects[*index].data = cone_data;
 		scene->objects[*index].color = cone_data->color;
-		scene->objects[*index].material_link = cone_data->material_link;
 		scene->objects[*index].hit = hit_cone;
 		(*index)++;
 		i++;

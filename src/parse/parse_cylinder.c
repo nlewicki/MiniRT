@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:06 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/19 13:11:23 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 13:01:00 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ static void	parse_param(char **tokens, t_cylinder *cylinder)
 	cylinder->color = parse_color(tokens[5], &error);
 	if (error)
 		exit_error("Invalid cylinder color");
-	cylinder->material_link = NULL;
 	cylinder->checker = false;
-	if (tokens[6])
-		cylinder->material_link = ft_strdup(tokens[6]);
 }
 
 static void	add_cylinder_to_scene(t_scene *scene, t_cylinder cylinder)
@@ -57,17 +54,16 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 	t_cylinder	cylinder;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3]
-		|| !tokens[4] || !tokens[5] || tokens[6])
+		|| !tokens[4] || !tokens[5])
 		exit_error("Invalid cylinder format");
 	parse_param(tokens, &cylinder);
 	add_cylinder_to_scene(scene, cylinder);
 	printf("Cylinder added: position=(%.2f, %.2f, %.2f),"
 		"orientation=(%.2f, %.2f, %.2f), "
-		"diameter=%.2f, height=%.2f, color=(%d, %d, %d), material_link=%s\n",
+		"diameter=%.2f, height=%.2f, color=(%d, %d, %d)\n",
 		cylinder.position.x, cylinder.position.y, cylinder.position.z,
 		cylinder.orientation.x, cylinder.orientation.y, cylinder.orientation.z,
 		cylinder.diameter, cylinder.height,
-		cylinder.color.r, cylinder.color.g,
-		cylinder.color.b, cylinder.material_link);
+		cylinder.color.r, cylinder.color.g, cylinder.color.b);
 	printf("\n");
 }

@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 14:16:08 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:59:05 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ typedef struct s_object
 {
 	t_object_type		type;
 	void				*data;
-	char				*material_link;
 	t_color				color;
 	double				(*hit)(struct s_object *, const t_ray ray,
 			t_hit *hit_info);
@@ -98,8 +97,6 @@ typedef struct s_sphere
 	bool				checker;
 	t_color				checker_black;
 	t_color				checker_white;
-	char				*material_link;
-
 }						t_sphere;
 
 typedef struct s_plane
@@ -113,7 +110,6 @@ typedef struct s_plane
 	bool				checker;
 	t_color				checker_black;
 	t_color				checker_white;
-	char				*material_link;
 	double				limit_width;
 	double				limit_height;
 }						t_plane;
@@ -131,7 +127,6 @@ typedef struct s_cylinder
 	bool				checker;
 	t_color				checker_black;
 	t_color				checker_white;
-	char				*material_link;
 }						t_cylinder;
 
 typedef struct s_cone
@@ -145,7 +140,6 @@ typedef struct s_cone
 	bool				checker;
 	t_color				checker_black;
 	t_color				checker_white;
-	char				*material_link;
 }						t_cone;
 
 typedef struct s_scene

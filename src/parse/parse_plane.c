@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/19 13:12:20 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:59:31 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,12 @@ static void	parse_param(char **tokens, t_plane *plane)
 	plane->color = parse_color(tokens[3], &error);
 	if (error)
 		exit_error("Invalid plane color");
-	plane->material_link = NULL;
 	plane->limit_width = 0;
 	plane->limit_height = 0;
 	plane->checker = false;
 	if (tokens[4])
 	{
-		plane->material_link = ft_strdup(tokens[4]);
-		if (tokens[5])
-			parse_limits(tokens[5], plane, &error);
+		parse_limits(tokens[4], plane, &error);
 		if (error)
 			exit_error("Invalid plane limits");
 	}
@@ -82,11 +79,11 @@ void	parse_plane(char **tokens, t_scene *scene)
 	add_plane_to_scene(scene, plane);
 	printf("Plane added: position=(%.2f, %.2f, %.2f),"
 		"orientation=(%.2f, %.2f, %.2f), "
-		"color=(%d, %d, %d), material_link=%s, "
+		"color=(%d, %d, %d), "
 		"limit_width=%.2f, limit_height=%.2f\n",
 		plane.position.x, plane.position.y, plane.position.z,
 		plane.orientation.x, plane.orientation.y, plane.orientation.z,
-		plane.color.r, plane.color.g, plane.color.b, plane.material_link,
+		plane.color.r, plane.color.g, plane.color.b,
 		plane.limit_width, plane.limit_height);
 	printf("\n");
 }
