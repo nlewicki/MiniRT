@@ -2,11 +2,8 @@ Aufgaben fuer naechstes mal:
 - cylinder fixen (deckel und boden)
 value = strtod(str, &endptr); schreiben
 
-- planes groese begrenzen
 - norminette
 - print funktionen entfernen (duerfen aber benutzen)
-- checker seitliche planes
-- resizing blockieren
 
 • If applicable, all possible intersections and the inside of the object must be handled
 correctly???
@@ -18,3 +15,7 @@ correctly???
 
 
 (-bump textures)
+
+- checker seitliche planes
+- planes groese begrenzen
+- resizing blockieren
