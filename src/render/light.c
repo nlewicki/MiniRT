@@ -6,14 +6,14 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 11:15:06 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:28:32 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/miniRT.h"
 
 // Modified to accept a skip_object parameter
-static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point,
+double	compute_shadow_factor(t_miniRT *mini, t_vec3 point,
 	t_light light, t_object *skip_object)
 {
 	int			unblocked;
@@ -30,22 +30,6 @@ static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point,
 	}
 	shadow_ratio = (double)unblocked / (double)mini->samples;
 	return (shadow_ratio);
-}
-
-static double	calculate_light_factors(t_light_context ctx, t_light light)
-{
-	t_vec3	light_dir;
-	double	shadow;
-	double	diffuse;
-
-	light_dir = vec_normalize(vec_sub(light.position, ctx.hit.point));
-	shadow = compute_shadow_factor(ctx.mini, ctx.hit.point, light, 
-			ctx.skip_object);
-	shadow = pow(shadow, 0.7);
-	if (shadow <= 0.0)
-		return (-1.0);
-	diffuse = fmax(0.0, vec_skal(ctx.hit.normal, light_dir));
-	return (diffuse * light.brightness * shadow);
 }
 
 static t_color	add_light_contribution(t_light_context ctx, t_light light)

@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/23 11:09:11 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:29:22 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,9 @@ t_hit	find_closest_hit(t_miniRT *mini, t_ray ray, t_object **hit_object);
 t_color handle_reflection(t_miniRT *mini, t_hit hit, t_ray ray, int depth);
 t_color handle_reflection_skip(t_miniRT *mini, t_hit hit, 
 	t_reflection_context context);
+double	calculate_light_factors(t_light_context ctx, t_light light);
+double	compute_shadow_factor(t_miniRT *mini, t_vec3 point,
+	t_light light, t_object *skip_object);
 t_vec3	random_points(t_vec3 center, double radius);
 bool	is_shadow_blocked(t_miniRT *mini, t_ray shadow_ray,
 	double dist, t_object *skip_object);

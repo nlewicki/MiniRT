@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:24:54 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 11:02:20 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:25:38 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,20 @@ t_color	trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth,
 	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
 		return ((t_color){30, 30, 30, 255});
 	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
+}
+
+double	calculate_light_factors(t_light_context ctx, t_light light)
+{
+	t_vec3	light_dir;
+	double	shadow;
+	double	diffuse;
+
+	light_dir = vec_normalize(vec_sub(light.position, ctx.hit.point));
+	shadow = compute_shadow_factor(ctx.mini, ctx.hit.point, light,
+			ctx.skip_object);
+	shadow = pow(shadow, 0.7);
+	if (shadow <= 0.0)
+		return (-1.0);
+	diffuse = fmax(0.0, vec_skal(ctx.hit.normal, light_dir));
+	return (diffuse * light.brightness * shadow);
 }
