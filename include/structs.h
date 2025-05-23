@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/22 12:59:05 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/23 11:30:59 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,5 +177,29 @@ typedef struct s_hit_data
 	t_cone		*cone;
 	t_ray		ray;
 }				t_hit_data;
+
+typedef struct s_reflection_context
+{
+	t_ray		ray;
+	int			depth;
+	t_object	*skip_object;
+}				t_reflection_context;
+
+typedef struct s_light_context
+{
+	t_miniRT	*mini;
+	t_hit		hit;
+	t_object	*skip_object;
+	t_color		current_color;
+}	t_light_context;
+
+typedef struct s_render_context
+{
+	t_miniRT	*mini;
+	mlx_image_t	*img;
+	int			scale;
+	int			x;
+	int			y;
+}	t_render_context;
 
 #endif
