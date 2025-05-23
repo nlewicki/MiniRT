@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:24:54 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 10:51:30 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:02:20 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ t_hit	find_closest_hit_skip(t_miniRT *mini, t_ray ray, t_object *skip_object)
 
 	closest = 1e30;
 	i = 0;
-	// Initialize closest_hit.object to NULL to indicate no hit
 	closest_hit.object = NULL;
 	while (i < mini->scene.object_count)
 	{
@@ -91,17 +90,15 @@ t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth)
 t_color	trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth,
 							t_object *skip_object)
 {
-	t_hit				closest_hit;
-	bool				hit_any;
-	t_reflection_context context;
+	t_hit					closest_hit;
+	bool					hit_any;
+	t_reflection_context	context;
 
 	if (depth <= 0)
 		return (color_scale(mini->scene.ambient.color,
 				mini->scene.ambient.ratio));
-	
 	closest_hit = find_closest_hit_skip(mini, ray, skip_object);
 	hit_any = (closest_hit.object != NULL);
-	
 	if (hit_any)
 	{
 		context.ray = ray;
@@ -109,7 +106,6 @@ t_color	trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth,
 		context.skip_object = skip_object;
 		return (handle_reflection_skip(mini, closest_hit, context));
 	}
-	
 	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
 		return ((t_color){30, 30, 30, 255});
 	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));

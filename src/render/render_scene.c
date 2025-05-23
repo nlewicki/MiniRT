@@ -6,24 +6,11 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 11:35:41 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:03:26 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/miniRT.h"
-
-t_color	color_clamp(t_color c)
-{
-	c.r = fmin(255, fmax(0, c.r));
-	c.g = fmin(255, fmax(0, c.g));
-	c.b = fmin(255, fmax(0, c.b));
-	return (c);
-}
-
-uint32_t	color_to_uint32(t_color color)
-{
-	return ((color.r << 24) | (color.g << 16) | (color.b << 8) | color.a);
-}
 
 void	render_scene(mlx_image_t *img, t_miniRT *mini)
 {

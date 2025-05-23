@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:23:23 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 11:00:22 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:01:17 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_color	handle_reflection(t_miniRT *mini, t_hit hit, t_ray ray, int depth)
 }
 
 // Handle reflection for a hit point, skipping a specific object for shadows
-t_color	handle_reflection_skip(t_miniRT *mini, t_hit hit, 
+t_color	handle_reflection_skip(t_miniRT *mini, t_hit hit,
 							t_reflection_context context)
 {
 	double	reflection;
@@ -59,8 +59,8 @@ t_color	handle_reflection_skip(t_miniRT *mini, t_hit hit,
 		return (compute_lighting_skip_object(mini, hit, context.skip_object));
 	local_color = compute_lighting_skip_object(mini, hit, context.skip_object);
 	reflect_ray = create_reflection_ray(hit, context.ray);
-	reflected_color = trace_ray_skip_object(mini, reflect_ray, context.depth - 1,
-			hit.object);
+	reflected_color = trace_ray_skip_object(mini, reflect_ray,
+			context.depth - 1, hit.object);
 	final_color = color_mix(local_color, reflected_color, reflection);
 	return (color_clamp(final_color));
 }
