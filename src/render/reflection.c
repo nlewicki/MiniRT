@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:23:23 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 11:01:17 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:07:51 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,22 @@ t_ray	create_reflection_ray(t_hit hit, t_ray incident_ray)
 	reflect_ray.origin = vec_add(hit.point, vec_mul(reflect_dir, 1e-4));
 	reflect_ray.direction = reflect_dir;
 	return (reflect_ray);
+}
+
+// Get reflection coefficient based on object type
+double	get_reflection_coef(t_object *hit_object)
+{
+	if (!hit_object)
+		return (0.0);
+	if (hit_object->type == SPHERE)
+		return (((t_sphere *)hit_object->data)->reflection);
+	else if (hit_object->type == PLANE)
+		return (((t_plane *)hit_object->data)->reflection);
+	else if (hit_object->type == CYLINDER)
+		return (((t_cylinder *)hit_object->data)->reflection);
+	else if (hit_object->type == CONE)
+		return (((t_cone *)hit_object->data)->reflection);
+	return (0.0);
 }
 
 // Handle reflection for a hit point
