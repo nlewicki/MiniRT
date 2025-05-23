@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/22 13:02:39 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/23 12:40:45 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	loop(void *param)
 int	init_mlx(t_miniRT *mini)
 {
 	mlx_set_setting(MLX_MAXIMIZED, false);
-	mini->mlx = mlx_init(WIDTH, HEIGHT, "mini", true);
+	mini->mlx = mlx_init(WIDTH, HEIGHT, "mini", false);
 	if (!mini->mlx)
 		return (1);
 	mini->img = mlx_new_image(mini->mlx, WIDTH, HEIGHT);

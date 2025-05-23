@@ -1,14 +1,14 @@
 Aufgaben fuer naechstes mal:
 
 
-- cylinder fixen (deckel und boden)
-- chckerboard cylinder???!??!
 
 - seg fault wtflipppppppppp
 
 
 NICOLO
 - resizing blockieren
+- cylinder fixen (deckel und boden)
+- chckerboard cylinder???!??!
 
 
 (-bump textures)
