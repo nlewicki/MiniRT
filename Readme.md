@@ -6,7 +6,6 @@ Aufgaben fuer naechstes mal:
 
 
 NICOLO
-- resizing blockieren
 - cylinder fixen (deckel und boden)
 - chckerboard cylinder???!??!
 
