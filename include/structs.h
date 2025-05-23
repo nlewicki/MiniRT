@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/23 10:31:07 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:16:10 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,4 +191,11 @@ typedef struct s_reflection_context
 	t_object	*skip_object;
 }				t_reflection_context;
 
+typedef struct s_light_context
+{
+	t_miniRT	*mini;
+	t_hit		hit;
+	t_object	*skip_object;
+	t_color		current_color;
+}	t_light_context;
 #endif

@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 14:04:08 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:15:06 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,41 +32,52 @@ static double	compute_shadow_factor(t_miniRT *mini, t_vec3 point,
 	return (shadow_ratio);
 }
 
-static t_color	add_light_contribution(t_miniRT *mini, t_hit hit,
-	t_light light, t_object *skip_object,
-	t_color current_color)
+static double	calculate_light_factors(t_light_context ctx, t_light light)
 {
 	t_vec3	light_dir;
 	double	shadow;
 	double	diffuse;
-	t_color	light_contrib;
 
-	light_dir = vec_normalize(vec_sub(light.position, hit.point));
-	shadow = compute_shadow_factor(mini, hit.point, light, skip_object);
+	light_dir = vec_normalize(vec_sub(light.position, ctx.hit.point));
+	shadow = compute_shadow_factor(ctx.mini, ctx.hit.point, light, 
+			ctx.skip_object);
 	shadow = pow(shadow, 0.7);
 	if (shadow <= 0.0)
-		return (current_color);
-	diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
-	light_contrib = color_scale(hit.color, diffuse * light.brightness * shadow);
+		return (-1.0);
+	diffuse = fmax(0.0, vec_skal(ctx.hit.normal, light_dir));
+	return (diffuse * light.brightness * shadow);
+}
+
+static t_color	add_light_contribution(t_light_context ctx, t_light light)
+{
+	double	light_factor;
+	t_color	light_contrib;
+
+	light_factor = calculate_light_factors(ctx, light);
+	if (light_factor < 0.0)
+		return (ctx.current_color);
+	light_contrib = color_scale(ctx.hit.color, light_factor);
 	light_contrib = color_mix(light_contrib, light.color, 0.2);
-	return (color_add(current_color, light_contrib));
+	return (color_add(ctx.current_color, light_contrib));
 }
 
 static t_color	compute_all_lights(t_miniRT *mini, t_hit hit,
 	t_object *skip_object, t_color ambient_color)
 {
-	int		i;
-	t_color	final_color;
+	int				i;
+	t_light_context	ctx;
 
-	final_color = ambient_color;
+	ctx.mini = mini;
+	ctx.hit = hit;
+	ctx.skip_object = skip_object;
+	ctx.current_color = ambient_color;
 	i = 0;
 	while (i < mini->scene.light_count)
 	{
-		final_color = add_light_contribution(mini, hit,
-				mini->scene.lights[i], skip_object, final_color);
+		ctx.current_color = add_light_contribution(ctx, mini->scene.lights[i]);
 		i++;
 	}
-	return (color_clamp(final_color));
+	return (color_clamp(ctx.current_color));
 }
 
 static t_color	compute_default_lighting(t_miniRT *mini, t_hit hit)

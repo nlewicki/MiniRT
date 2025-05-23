@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/23 10:57:19 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:09:11 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ t_color	color_mix(t_color a, t_color b, double factor);
 t_color	color_scale(t_color c, double factor);
 t_color	color_clamp(t_color c);
 t_color	color_add(t_color c1, t_color c2);
+uint32_t	color_to_uint32(t_color color);
 
 
 t_color	checkerboard_cylinder(t_cylinder *cyl, t_vec3 point);
