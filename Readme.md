@@ -8,9 +8,6 @@ Aufgaben fuer naechstes mal:
 
 
 NICOLO
-- value = strtod(str, &endptr); schreiben
-- checker seitliche planes
-- planes groese begrenzen
 - resizing blockieren
 
 
