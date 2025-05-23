@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:47:50 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 12:54:06 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:03:37 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,18 @@ t_color	color_mix(t_color a, t_color b, double factor)
 	return (result);
 }
 
+t_color	color_clamp(t_color c)
+{
+	c.r = fmin(255, fmax(0, c.r));
+	c.g = fmin(255, fmax(0, c.g));
+	c.b = fmin(255, fmax(0, c.b));
+	return (c);
+}
+
+uint32_t	color_to_uint32(t_color color)
+{
+	return ((color.r << 24) | (color.g << 16) | (color.b << 8) | color.a);
+}
 
 //static t_color color_mult(t_color c1, t_color c2)
 //{
