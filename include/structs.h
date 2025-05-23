@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 14:16:08 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/23 10:31:07 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,5 +183,12 @@ typedef struct s_hit_data
 	t_cone		*cone;
 	t_ray		ray;
 }				t_hit_data;
+
+typedef struct s_reflection_context
+{
+	t_ray		ray;
+	int			depth;
+	t_object	*skip_object;
+}				t_reflection_context;
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/22 12:59:05 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/23 10:57:19 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_color	checkerboard_plane(t_plane *plane, t_vec3 point);
 double	hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 double	hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
 double	hit_cone(t_object *obj, const t_ray ray, t_hit *hit_info);
-t_color	compute_lighting(t_miniRT *mini, t_hit hit);
+//t_color	compute_lighting(t_miniRT *mini, t_hit hit);
 t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth);
 
 double	solve_quadratic(double a, double b, double c);
@@ -116,13 +116,11 @@ void	check_mode(t_hit *hit_info, t_cone *cone, t_object *obj);
 // Reflection functions
 double	get_reflection_coef(t_object *hit_object);
 t_ray	create_reflection_ray(t_hit hit, t_ray incident_ray);
-t_hit	find_closest_hit_skip(t_miniRT *mini, t_ray ray, t_object *skip_object, 
-			t_object **hit_object);
+t_hit find_closest_hit_skip(t_miniRT *mini, t_ray ray, t_object *skip_object);
 t_hit	find_closest_hit(t_miniRT *mini, t_ray ray, t_object **hit_object);
-t_color	handle_reflection(t_miniRT *mini, t_hit hit, t_ray ray, 
-			t_object *hit_object, int depth);
-t_color	handle_reflection_skip(t_miniRT *mini, t_hit hit, t_ray ray, 
-			t_object *hit_object, int depth, t_object *skip_object);
+t_color handle_reflection(t_miniRT *mini, t_hit hit, t_ray ray, int depth);
+t_color handle_reflection_skip(t_miniRT *mini, t_hit hit, 
+	t_reflection_context context);
 t_vec3	random_points(t_vec3 center, double radius);
 bool	is_shadow_blocked(t_miniRT *mini, t_ray shadow_ray,
 	double dist, t_object *skip_object);

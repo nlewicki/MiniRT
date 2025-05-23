@@ -27,6 +27,7 @@ double	solve_quadratic(double a, double b, double c)
 		return (-1.0);
 	if (b > 0)
 		q = -0.5 * (b + sqrt(discriminant));
+		
 	else
 		q = -0.5 * (b - sqrt(discriminant));
 	t1 = q / a;
