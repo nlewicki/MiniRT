@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 14:03:49 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 14:02:34 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/23 12:24:05 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,25 @@ t_vec3	get_u_axis(t_vec3 normal)
 	return (vec_normalize(u_axis));
 }
 
-t_color	checkerboard_plane(t_plane *plane, t_vec3 point)
+t_color	checkerboard_plane(t_plane *pl, t_vec3 point)
 {
-	t_vec3	relative_pos;
-	double	scale;
-	t_vec3	uv_axis[2];
-	double	uv[2];
-	int		uv_int[2];
+	double	checker_size;
+	t_vec3	u;
+	t_vec3	v;
+	t_vec3	rel;
+	int		check;
 
-	plane->checker_white = (t_color){255, 255, 255, 255};
-	plane->checker_black = (t_color){0, 0, 0, 255};
-	uv_axis[0] = get_u_axis(plane->orientation);
-	uv_axis[1] = vec_cross(plane->orientation, uv_axis[0]);
-	relative_pos = vec_sub(point, plane->position);
-	uv[0] = vec_dot(relative_pos, uv_axis[0]);
-	uv[1] = vec_dot(relative_pos, uv_axis[1]);
-	scale = 1.0;
-	uv_int[0] = (int)(uv[0] / scale);
-	uv_int[1] = (int)(uv[1] / scale);
-	if ((uv_int[0] + uv_int[1]) % 2 == 0)
-		return (plane->checker_black);
-	return (plane->checker_white);
+	pl->checker_white = (t_color){255, 255, 255, 255};
+	pl->checker_black = (t_color){0, 0, 0, 255};
+	checker_size = 0.5;
+	u = get_u_axis(pl->orientation);
+	v = vec_cross(pl->orientation, u);
+	rel = vec_sub(point, pl->position);
+	check = ((int)floor(vec_dot(rel, u) / checker_size)
+			+ (int)floor(vec_dot(rel, v) / checker_size)) % 2;
+	if (check == 0)
+		return (pl->checker_white);
+	return (pl->checker_black);
 }
 
 t_color	checkerboard_cylinder(t_cylinder *cyl, t_vec3 point)

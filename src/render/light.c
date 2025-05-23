@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 14:10:39 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/23 11:14:10 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ t_color compute_lighting_skip_object(t_miniRT *mini, t_hit hit, t_object *skip_o
 
 		// Calculate distance falloff with gentler curve
 		double dist = vec_length(vec_sub(light.position, hit.point));
-		double falloff = 1.0 / (1.0 + 0.05 * dist * dist);
+		double falloff = 2 / (1.0 + 0.05 * dist * dist);
 
 		// Diffuse lighting with distance falloff
 		double diffuse = fmax(0.0, vec_skal(hit.normal, light_dir));
