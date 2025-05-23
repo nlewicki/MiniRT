@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:20:32 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 11:22:35 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/22 14:04:59 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ t_ray	generate_camera_ray(t_camera cam, int x, int y)
 	calculate_viewport(cam, x, y, coords);
 	calculate_camera_basis(cam, basis);
 	ray_dir = vec_add(basis[0], vec_add(
-		vec_mul(basis[1], coords[2]),
-		vec_mul(basis[2], coords[3])));
+				vec_mul(basis[1], coords[2]),
+				vec_mul(basis[2], coords[3])));
 	ray_dir = vec_normalize(ray_dir);
 	ray.origin = cam.position;
 	ray.direction = ray_dir;

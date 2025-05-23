@@ -21,6 +21,7 @@ CFILES =	src/main.c \
 			src/render/hit_cylinder.c \
 			src/render/hit_cone.c \
 			src/render/light.c \
+			src/render/light2.c \
 			src/render/render_utils.c \
 			src/utils/utils.c \
 			src/utils/utils2.c \
@@ -28,6 +29,7 @@ CFILES =	src/main.c \
 			src/render/camera.c \
 			src/render/reflection.c \
 			src/render/trace_ray.c \
+			src/utils/color_utils.c \
 
 NAME = miniRT
 CC = cc
