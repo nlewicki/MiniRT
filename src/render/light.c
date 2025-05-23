@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 12:27:14 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/23 12:47:30 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,17 @@ static t_color	add_light_contribution(t_light_context ctx, t_light light)
 {
 	double	light_factor;
 	t_color	light_contrib;
+	t_color	tint;
 
 	light_factor = calculate_light_factors(ctx, light);
 	if (light_factor < 0.0)
 		return (ctx.current_color);
 	light_contrib = color_scale(ctx.hit.color, light_factor);
-	light_contrib = color_mix(light_contrib, light.color, 0.2);
+	if (light.color.r > 0 || light.color.g > 0 || light.color.b > 0)
+	{
+		tint = color_scale(light.color, light_factor * 0.2);
+		light_contrib = color_add(light_contrib, tint);
+	}
 	return (color_add(ctx.current_color, light_contrib));
 }
 
