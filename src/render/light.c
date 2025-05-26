@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 12:47:30 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/26 10:16:25 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static t_color	compute_default_lighting(t_miniRT *mini, t_hit hit)
 	return (color_clamp(final_color));
 }
 
-// New function that can skip an object during shadow calculations
+//function to skip an object during shadow calculations
 t_color	compute_lighting_skip_object(t_miniRT *mini, t_hit hit,
 	t_object *skip_object)
 {

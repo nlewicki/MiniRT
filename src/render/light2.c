@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:55:23 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 11:07:48 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/26 10:17:39 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ bool	is_shadow_blocked(t_miniRT *mini, t_ray shadow_ray,
 	}
 	return (false);
 }
-
+//check point visibility
 bool	is_point_visible(t_miniRT *mini, t_vec3 point,
 	t_light light, t_object *skip_object)
 {

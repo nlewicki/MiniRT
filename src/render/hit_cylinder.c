@@ -6,12 +6,12 @@
 /*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 12:50:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/26 10:10:48 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/05/26 10:17:11 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
+// vlt überflüssig
 double	solve_quadratic(double a, double b, double c)
 {
 	double	discriminant;
