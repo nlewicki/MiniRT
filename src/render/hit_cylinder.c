@@ -6,41 +6,11 @@
 /*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 12:50:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/26 12:40:30 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/05/26 14:41:28 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-static double	hit_cylinder_caps(t_object *obj, t_cylinder *cyl, const t_ray ray, t_hit *hit_info, t_vec3 cap_center)
-{
-	double	t;
-	double	denom;
-	t_vec3	normal;
-	t_vec3	p;
-
-	normal = cyl->orientation;
-	denom = vec_dot(ray.direction, normal);
-	if (fabs(denom) < 1e-6)
-		return (-1.0);
-	t = vec_dot(vec_sub(cap_center, ray.origin), normal) / denom;
-	if (t < 0)
-		return (-1.0);
-	p = vec_add(ray.origin, vec_mul(ray.direction, t));
-	if (vec_length(vec_sub(p, cap_center)) > (cyl->diameter / 2) + 1e-6)
-		return (-1.0);
-	if (hit_info)
-	{
-		hit_info->t = t;
-		hit_info->point = p;
-		if (denom > 0)
-			hit_info->normal = normal;
-		else
-			hit_info->normal = vec_mul(normal, -1);
-		hit_info->object = obj;
-	}
-	return (t);
-}
 
 // Check and update cylinder caps
 static void	check_cylinder_caps(t_cylinder_context *ctx)
@@ -52,21 +22,19 @@ static void	check_cylinder_caps(t_cylinder_context *ctx)
 	bottom_cap = ctx->cyl->position;
 	top_cap = vec_add(ctx->cyl->position,
 			vec_mul(ctx->cyl->orientation, ctx->cyl->height));
-	t_cap = hit_cylinder_caps(ctx->obj, ctx->cyl, ctx->ray, NULL, bottom_cap);
+	t_cap = hit_cylinder_caps(ctx, bottom_cap);
 	if (t_cap > 0 && t_cap < ctx->closest_t)
 	{
 		ctx->closest_t = t_cap;
 		if (ctx->hit_info)
-			hit_cylinder_caps(ctx->obj, ctx->cyl, ctx->ray,
-				ctx->hit_info, bottom_cap);
+			hit_cylinder_caps(ctx, bottom_cap);
 	}
-	t_cap = hit_cylinder_caps(ctx->obj, ctx->cyl, ctx->ray, NULL, top_cap);
+	t_cap = hit_cylinder_caps(ctx, top_cap);
 	if (t_cap > 0 && t_cap < ctx->closest_t)
 	{
 		ctx->closest_t = t_cap;
 		if (ctx->hit_info)
-			hit_cylinder_caps(ctx->obj, ctx->cyl, ctx->ray,
-				ctx->hit_info, top_cap);
+			hit_cylinder_caps(ctx, top_cap);
 	}
 }
 

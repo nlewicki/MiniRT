@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
+/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/26 10:13:23 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/05/26 14:42:38 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,5 +218,13 @@ typedef struct s_cylinder_math
 	double		dot_d_axis;
 	double		dot_oc_axis;
 }	t_cylinder_math;
+
+typedef struct s_cap_hit
+{
+	t_vec3	normal;
+	t_vec3	point;
+	double	t;
+	double	denom;
+}	t_cap_hit;
 
 #endif

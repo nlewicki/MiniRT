@@ -19,6 +19,7 @@ CFILES =	src/main.c \
 			src/render/hit_obj.c \
 			src/render/checkerboard.c \
 			src/render/hit_cylinder.c \
+			src/render/hit_cylinder_utils.c \
 			src/render/hit_cone.c \
 			src/render/light.c \
 			src/render/light2.c \

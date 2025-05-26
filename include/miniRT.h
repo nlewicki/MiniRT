@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/23 11:30:54 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/26 14:38:30 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ t_color	checkerboard_sphere(t_sphere *sph, t_vec3 point);
 t_color	checkerboard_plane(t_plane *plane, t_vec3 point);
 double	hit_plane(t_object *obj, const t_ray ray, t_hit *hit_info);
 double	hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info);
+double	hit_cylinder_caps(t_cylinder_context *ctx, t_vec3 cap_center);
 double	hit_cone(t_object *obj, const t_ray ray, t_hit *hit_info);
 //t_color	compute_lighting(t_miniRT *mini, t_hit hit);
 t_color	trace_ray(t_miniRT *mini, t_ray ray, int depth);
