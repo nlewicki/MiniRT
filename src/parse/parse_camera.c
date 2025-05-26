@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   parse_camera.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/22 12:16:46 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:48:49 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
+
+static t_vec3	zero_vec(t_vec3 pos, int *error)
+{
+	t_vec3	v;
+
+	v = (t_vec3)
+	{
+		-pos.x,
+		-pos.y,
+		-pos.z
+	};
+	return (normalize_vector(v, error));
+}
 
 void	parse_camera(char **tokens, t_scene *scene)
 {
@@ -23,15 +36,7 @@ void	parse_camera(char **tokens, t_scene *scene)
 		exit_error("Invalid camera format");
 	scene->camera.position = parse_position(tokens[1], &error);
 	if (!strcmp(tokens[2], "0,0,0"))
-	{
-		scene->camera.orientation = (t_vec3)
-		{
-			-scene->camera.position.x,
-			-scene->camera.position.y,
-			-scene->camera.position.z
-		};
-		scene->camera.orientation = normalize_vector(scene->camera.orientation, &error);
-	}
+		scene->camera.orientation = zero_vec(scene->camera.position, &error);
 	else
 		scene->camera.orientation = parse_orientation(tokens[2], &error);
 	scene->camera.fov = ft_atoi(tokens[3]);
