@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   hit_obj.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 16:28:26 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/22 14:17:48 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/26 15:06:18 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/miniRT.h"
+
+static void	set_sphere_info(t_hit_data *data, t_sphere *sphere, double t)
+{
+	data->hit_info->t = t;
+	data->hit_info->point = vec_add(data->ray.origin,
+		vec_mul(data->ray.direction, t));
+	data->hit_info->normal = vec_normalize(vec_sub(data->hit_info->point,
+		sphere->center));
+	if (sphere->checker)
+		data->hit_info->color = checkerboard_sphere(sphere,
+			data->hit_info->point);
+	else
+		data->hit_info->color = data->obj->color;
+	data->hit_info->object = data->obj;
+}
 
 double	hit_sphere(t_object *obj, const t_ray ray, t_hit *hit)
 {
@@ -37,15 +52,24 @@ double	hit_sphere(t_object *obj, const t_ray ray, t_hit *hit)
 		t = (-b + sqrt(discriminant)) / (2.0 * a);
 	if (t < 0)
 		return (-1);
-	hit->t = t;
-	hit->point = vec_add(ray.origin, vec_mul(ray.direction, t));
-	hit->normal = vec_normalize(vec_sub(hit->point, sphere->center));
-	if (sphere->checker)
-		hit->color = checkerboard_sphere(sphere, hit->point);
-	else
-		hit->color = obj->color;
-	hit->object = obj;
+	set_sphere_info(&(t_hit_data){hit, obj, NULL, ray}, sphere, t);
 	return (t);
+}
+
+static void	set_plane_info(t_hit_data *data, t_plane *plane, double t)
+{
+	data->hit_info->t = t;
+	data->hit_info->point = vec_add(data->ray.origin,
+		vec_mul(data->ray.direction, t));
+	if (vec_dot(data->ray.direction, plane->orientation) > 0)
+		data->hit_info->normal = vec_mul(plane->orientation, -1);
+	else
+		data->hit_info->normal = vec_normalize(plane->orientation);
+	data->hit_info->color = data->obj->color;
+	if (plane->checker)
+		data->hit_info->color = checkerboard_plane(plane,
+			data->hit_info->point);
+	data->hit_info->object = data->obj;
 }
 
 double	hit_plane(t_object *obj, const t_ray ray, t_hit *hit)
@@ -81,13 +105,6 @@ double	hit_plane(t_object *obj, const t_ray ray, t_hit *hit)
 		if (fabs(x) > plane->limit_width / 2 || fabs(z) > plane->limit_height / 2)
 			return (-1);
 	}
-	hit->t = t;
-	hit->point = hit_point;
-	hit->normal = (denom > 0) ? vec_mul(plane->orientation, -1)
-		: vec_normalize(plane->orientation);
-	hit->color = obj->color;
-	if (plane->checker)
-		hit->color = checkerboard_plane(plane, hit->point);
-	hit->object = obj;
+	set_plane_info(&(t_hit_data){hit, obj, NULL, ray}, plane, t);
 	return (t);
 }
