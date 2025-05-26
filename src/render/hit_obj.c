@@ -6,7 +6,7 @@
 /*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 16:28:26 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/26 15:09:54 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/05/26 15:17:01 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,31 +29,25 @@ static void	set_sphere_info(t_hit_data *data, t_sphere *sphere, double t)
 
 double	hit_sphere(t_object *obj, const t_ray ray, t_hit *hit)
 {
-	t_sphere	*sphere;
-	double		radius;
-	t_vec3		oc;
-	double		a;
-	double		b;
-	double		c;
-	double		discriminant;
-	double		t;
+	t_sphere				*sphere;
+	t_sphere_intersection	inter;
 
 	sphere = (t_sphere *)obj->data;
-	radius = sphere->diameter / 2.0;
-	oc = vec_sub(ray.origin, sphere->center);
-	a = vec_skal(ray.direction, ray.direction);
-	b = 2.0 * vec_skal(oc, ray.direction);
-	c = vec_skal(oc, oc) - radius * radius;
-	discriminant = b * b - 4 * a * c;
-	if (discriminant < 0)
+	inter.radius = sphere->diameter / 2.0;
+	inter.oc = vec_sub(ray.origin, sphere->center);
+	inter.a = vec_skal(ray.direction, ray.direction);
+	inter.b = 2.0 * vec_skal(inter.oc, ray.direction);
+	inter.c = vec_skal(inter.oc, inter.oc) - inter.radius * inter.radius;
+	inter.discriminant = inter.b * inter.b - 4 * inter.a * inter.c;
+	if (inter.discriminant < 0)
 		return (-1.0);
-	t = (-b - sqrt(discriminant)) / (2.0 * a);
-	if (t < 0)
-		t = (-b + sqrt(discriminant)) / (2.0 * a);
-	if (t < 0)
+	inter.t = (-inter.b - sqrt(inter.discriminant)) / (2.0 * inter.a);
+	if (inter.t < 0)
+		inter.t = (-inter.b + sqrt(inter.discriminant)) / (2.0 * inter.a);
+	if (inter.t < 0)
 		return (-1);
-	set_sphere_info(&(t_hit_data){hit, obj, NULL, ray}, sphere, t);
-	return (t);
+	set_sphere_info(&(t_hit_data){hit, obj, NULL, ray}, sphere, inter.t);
+	return (inter.t);
 }
 
 static void	set_plane_info(t_hit_data *data, t_plane *plane, double t)
@@ -72,40 +66,44 @@ static void	set_plane_info(t_hit_data *data, t_plane *plane, double t)
 	data->hit_info->object = data->obj;
 }
 
-double	hit_plane(t_object *obj, const t_ray ray, t_hit *hit)
+static bool	check_plane_limits(t_plane *plane, t_plane_intersection *inter)
 {
-	t_plane	*plane;
-	double	denom;
-	double	t;
-	t_vec3	hit_point;
-	t_vec3	right;
-	t_vec3	forward;
-	double	x;
-	double	z;
-
-	plane = (t_plane *)obj->data;
-	denom = vec_skal(plane->orientation, ray.direction);
-	if (fabs(denom) < 1e-6)
-		return (-1);
-	t = vec_skal(vec_sub(plane->position, ray.origin),
-			plane->orientation) / denom;
-	if (t < 0)
-		return (-1);
-	hit_point = vec_add(ray.origin, vec_mul(ray.direction, t));
 	if (plane->limit_width > 0 && plane->limit_height > 0)
 	{
-		forward = vec_normalize(plane->orientation);
-		right = vec_normalize(vec_cross((t_vec3){0, 1, 0}, forward));
-		if (fabs(vec_dot(right, right)) < 1e-6)
-			right = vec_normalize(vec_cross((t_vec3){1, 0, 0}, forward));
-		x = vec_dot(vec_sub(hit_point, plane->position),
-				right);
-		z = vec_dot(vec_sub(hit_point, plane->position),
-				vec_cross(forward, right));
-		if (fabs(x) > plane->limit_width / 2
-			|| fabs(z) > plane->limit_height / 2)
-			return (-1);
+		inter->forward = vec_normalize(plane->orientation);
+		inter->right = vec_normalize(vec_cross((t_vec3){0, 1, 0},
+					inter->forward));
+		if (fabs(vec_dot(inter->right, inter->right)) < 1e-6)
+			inter->right = vec_normalize(vec_cross((t_vec3){1, 0, 0},
+						inter->forward));
+		inter->x = vec_dot(vec_sub(inter->hit_point, plane->position),
+				inter->right);
+		inter->z = vec_dot(vec_sub(inter->hit_point, plane->position),
+				vec_cross(inter->forward, inter->right));
+		if (fabs(inter->x) > plane->limit_width / 2
+			|| fabs(inter->z) > plane->limit_height / 2)
+			return (false);
 	}
+	return (true);
+}
+
+double	hit_plane(t_object *obj, const t_ray ray, t_hit *hit)
+{
+	t_plane					*plane;
+	t_plane_intersection	inter;
+	double					t;
+
+	plane = (t_plane *)obj->data;
+	inter.denom = vec_skal(plane->orientation, ray.direction);
+	if (fabs(inter.denom) < 1e-6)
+		return (-1);
+	t = vec_skal(vec_sub(plane->position, ray.origin),
+			plane->orientation) / inter.denom;
+	if (t < 0)
+		return (-1);
+	inter.hit_point = vec_add(ray.origin, vec_mul(ray.direction, t));
+	if (!check_plane_limits(plane, &inter))
+		return (-1);
 	set_plane_info(&(t_hit_data){hit, obj, NULL, ray}, plane, t);
 	return (t);
 }

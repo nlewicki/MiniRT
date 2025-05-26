@@ -6,7 +6,7 @@
 /*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/26 14:46:57 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/05/26 15:17:06 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,22 +227,25 @@ typedef struct s_cap_hit
 	double	denom;
 }	t_cap_hit;
 
-typedef struct s_sphere_hit
+typedef struct s_sphere_intersection
 {
-	t_sphere	*sphere;
 	double		radius;
-	double		t;
 	t_vec3		oc;
-	double		abc[3];
-}	t_sphere_hit;
+	double		a;
+	double		b;
+	double		c;
+	double		discriminant;
+	double		t;
+}	t_sphere_intersection;
 
-typedef struct s_plane_hit
+typedef struct s_plane_intersection
 {
-	t_plane	*plane;
-	double	denom;
-	double	t;
-	t_vec3	hit_point;
-	t_vec3	dir;
-}	t_plane_hit;
+	double		denom;
+	t_vec3		hit_point;
+	t_vec3		right;
+	t_vec3		forward;
+	double		x;
+	double		z;
+}	t_plane_intersection;
 
 #endif
