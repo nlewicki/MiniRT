@@ -6,7 +6,7 @@
 /*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 12:50:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/26 10:10:21 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/05/26 10:10:48 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,42 @@ static double	calculate_body_intersection(t_cylinder_context *ctx)
 	return (solve_quadratic(a, b, c));
 }
 
+// Validate and set body hit information
+static bool	process_body_hit(t_cylinder_context *ctx, double t_body)
+{
+	t_vec3	p;
+	double	height;
 
+	p = vec_add(ctx->ray.origin, vec_mul(ctx->ray.direction, t_body));
+	height = vec_dot(vec_sub(p, ctx->cyl->position), ctx->cyl->orientation);
+	if (height < -1e-6 || height > ctx->cyl->height + 1e-6)
+		return (false);
+	ctx->closest_t = t_body;
+	if (ctx->hit_info)
+	{
+		ctx->hit_info->t = t_body;
+		ctx->hit_info->point = p;
+		ctx->hit_info->normal = vec_normalize(vec_sub(p, 
+				vec_add(ctx->cyl->position, 
+					vec_mul(ctx->cyl->orientation, height))));
+		if (ctx->cyl->checker)
+			ctx->hit_info->color = checkerboard_cylinder(ctx->cyl, p);
+		else
+			ctx->hit_info->color = ctx->obj->color;
+		ctx->hit_info->object = ctx->obj;
+	}
+	return (true);
+}
+
+// Check cylinder body intersection
+static void	check_cylinder_body(t_cylinder_context *ctx)
+{
+	double	t_body;
+
+	t_body = calculate_body_intersection(ctx);
+	if (t_body > 0 && t_body < ctx->closest_t)
+		process_body_hit(ctx, t_body);
+}
 
 // Main cylinder intersection function
 double	hit_cylinder(t_object *obj, const t_ray ray, t_hit *hit_info)

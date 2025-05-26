@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/23 11:30:59 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/26 10:13:23 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,5 +201,22 @@ typedef struct s_render_context
 	int			x;
 	int			y;
 }	t_render_context;
+
+typedef struct s_cylinder_context
+{
+	t_cylinder	*cyl;
+	t_object	*obj;
+	t_ray		ray;
+	t_hit		*hit_info;
+	double		closest_t;
+}	t_cylinder_context;
+
+typedef struct s_cylinder_math
+{
+	t_vec3		oc;
+	t_vec3		axis;
+	double		dot_d_axis;
+	double		dot_oc_axis;
+}	t_cylinder_math;
 
 #endif
