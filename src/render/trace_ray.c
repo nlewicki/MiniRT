@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   trace_ray.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:24:54 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 12:52:33 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/26 10:31:54 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ double	calculate_light_factors(t_light_context ctx, t_light light)
 	if (shadow <= 0.0)
 		return (-1.0);
 	dist = vec_length(vec_sub(light.position, ctx.hit.point));
-	falloff = 2.0 / (1.0 + 0.1 * dist * dist);  // Stronger falloff for more dramatic lighting
+	falloff = 2.0 / (1.0 + 0.1 * dist * dist);
 	diffuse = fmax(0.0, vec_skal(ctx.hit.normal, light_dir));
 	return (diffuse * light.brightness * shadow * falloff);
 }
