@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_cone.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 12:01:08 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/19 14:15:19 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:51:59 by nicolewicki      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,28 +109,27 @@ static double	check_cone_body_hit(t_object *obj, t_cone *cone, t_ray ray,
 double	hit_cone(t_object *obj, const t_ray ray, t_hit *hit_info)
 {
 	t_cone	*cone;
-	double	t_body;
-	double	t_base;
+	double	t[2];
 
 	cone = (t_cone *)obj->data;
 	if (!cone)
 		return (-1.0);
 	cone->direction = vec_normalize(cone->direction);
-	t_body = check_cone_body_hit(obj, cone, ray, NULL);
-	if (t_body > 0)
+	t[0] = check_cone_body_hit(obj, cone, ray, NULL);
+	if (t[0] > 0)
 	{
 		if (hit_info)
 			check_cone_body_hit(obj, cone, ray, hit_info);
-		return (t_body);
+		return (t[0]);
 	}
 	if (cone->height > 0)
 	{
-		t_base = hit_cone_base(obj, cone, ray, NULL);
-		if (t_base > 0)
+		t[1] = hit_cone_base(obj, cone, ray, NULL);
+		if (t[1] > 0)
 		{
 			if (hit_info)
 				hit_cone_base(obj, cone, ray, hit_info);
-			return (t_base);
+			return (t[1]);
 		}
 	}
 	return (-1.0);
