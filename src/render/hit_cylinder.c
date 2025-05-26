@@ -6,7 +6,7 @@
 /*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 12:50:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/26 10:36:59 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/05/26 12:08:39 by leokubler        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,27 @@ double	solve_quadratic(double a, double b, double c)
 	if (t2 > 0)
 		return (t2);
 	return (-1.0);
+}
+
+static double hit_cylinder_caps(t_object *obj, t_cylinder *cyl, const t_ray ray, t_hit *hit_info, t_vec3 cap_center) {
+    t_vec3 normal = cyl->orientation;
+    double denom = vec_dot(ray.direction, normal);
+    if (fabs(denom) < 1e-6) // Ray is parallel to cap
+        return -1.0;
+    double t = vec_dot(vec_sub(cap_center, ray.origin), normal) / denom;
+    if (t < 0) // Intersection is behind the ray origin
+        return -1.0;
+    t_vec3 p = vec_add(ray.origin, vec_mul(ray.direction, t));
+    if (vec_length(vec_sub(p, cap_center)) > (cyl->diameter / 2) + 1e-6) // Point outside the cap's radius
+        return -1.0;
+
+    if (hit_info) {
+        hit_info->t = t;
+        hit_info->point = p;
+        hit_info->normal = (denom > 0) ? normal : vec_mul(normal, -1);
+        hit_info->object = obj;
+    }
+    return t;
 }
 
 // Check and update cylinder caps
