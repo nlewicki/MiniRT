@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:06 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/27 13:35:07 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:54:15 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static void	add_cylinder_to_scene(t_scene *scene, t_cylinder cylinder)
 	t_cylinder	*new_cylinders;
 
 	new_cylinders = ft_realloc(scene->cylinders,
+			sizeof(t_cylinder) * scene->cylinder_count,
 			sizeof(t_cylinder) * (scene->cylinder_count + 1));
 	if (!new_cylinders)
 		exit_error("Memory allocation failed for cylinders");

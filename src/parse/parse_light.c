@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:28:11 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/12 13:28:57 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:54:47 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@ static void	add_light_to_scene(t_scene *scene, t_light light)
 {
 	t_light	*new_lights;
 
-	new_lights = ft_realloc(scene->lights, sizeof(t_light) * (scene->light_count
-				+ 1));
+	new_lights = ft_realloc(scene->lights,
+			sizeof(t_light) * scene->light_count,
+			sizeof(t_light) * (scene->light_count + 1));
 	if (!new_lights)
 		exit_error("Memory allocation failed for lights");
 	scene->lights = new_lights;
