@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:01:17 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/22 12:15:27 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 13:43:29 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,11 @@ t_color	parse_color(char *str, int *error)
 		*error = 1;
 		return ((t_color){0, 0, 0, 0});
 	}
-	color.r = ft_atoi(rgb[0]);
-	color.g = ft_atoi(rgb[1]);
-	color.b = ft_atoi(rgb[2]);
+	color.r = (int)parse_double(rgb[0], 0, 255, error);
+	color.g = (int)parse_double(rgb[1], 0, 255, error);
+	color.b = (int)parse_double(rgb[2], 0, 255, error);
 	color.a = 255;
-	if (color.r < 0 || color.r > 255 || color.g < 0 || color.g > 255
-		|| color.b < 0 || color.b > 255)
+	if (*error)
 	{
 		ft_free_split(rgb);
 		*error = 1;

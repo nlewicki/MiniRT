@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_camera.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/26 12:48:49 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/05/27 13:44:51 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,7 @@ void	parse_camera(char **tokens, t_scene *scene)
 		scene->camera.orientation = zero_vec(scene->camera.position, &error);
 	else
 		scene->camera.orientation = parse_orientation(tokens[2], &error);
-	scene->camera.fov = ft_atoi(tokens[3]);
-	if (scene->camera.fov < 0 || scene->camera.fov > 180)
-		error = 1;
+	scene->camera.fov = (int)parse_double(tokens[3], 0, 180, &error);
 	if (error)
 		exit_error("Invalid camera values");
 	scene->camera.is_set = 1;
