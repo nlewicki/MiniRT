@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/27 15:13:51 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/27 15:17:41 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,20 @@ double	calculate_light_factors(t_light_context ctx, t_light light)
 	t_vec3	light_vec;
 	t_vec3	light_dir;
 	double	distance;
-	double	attenuation;
 	double	shadow;
-	double	diffuse;
+	double	diff_att[2];
 
 	light_vec = vec_sub(light.position, ctx.hit.point);
 	distance = vec_length(light_vec);
 	light_dir = vec_normalize(light_vec);
-	attenuation = 1.0 / (1.0 + 0.05 * distance + 0.005 * distance * distance);
+	diff_att[1] = 1.0 / (1.0 + 0.05 * distance + 0.005 * distance * distance);
 	shadow = compute_shadow_factor(ctx.mini, ctx.hit.point, light,
 			ctx.skip_object);
 	shadow = pow(shadow, 0.7);
 	if (shadow <= 0.0)
 		return (-1.0);
-	diffuse = fmax(0.0, vec_dot(ctx.hit.normal, light_dir));
-	return (diffuse * light.brightness * shadow * attenuation);
+	diff_att[0] = fmax(0.0, vec_dot(ctx.hit.normal, light_dir));
+	return (diff_att[0] * light.brightness * shadow * diff_att[1]);
 }
 
 // Add light contribution with proper color mixing

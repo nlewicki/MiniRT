@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_rt_file.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:05:20 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/27 13:51:44 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 15:18:15 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,3 @@ int	parse_rt_file(char *filename, t_scene *scene)
 	close(fd);
 	return (0);
 }
-
