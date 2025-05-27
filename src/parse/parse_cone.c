@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 11:57:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/22 13:01:39 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 13:35:43 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	parse_cone(char **tokens, t_scene *scene)
 	double	angle_degrees;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3]
-		|| !tokens[4] || !tokens[5])
+		|| !tokens[4] || !tokens[5] || tokens[6])
 		exit_error("Invalid cone format");
 	parse_param(tokens, &cone, &angle_degrees);
 	add_cone_to_scene(scene, cone);

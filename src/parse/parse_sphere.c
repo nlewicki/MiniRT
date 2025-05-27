@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:31 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/22 13:00:23 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 13:35:18 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	parse_sphere(char **tokens, t_scene *scene)
 {
 	t_sphere	sphere;
 
-	if (!tokens[1] || !tokens[2] || !tokens[3])
+	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		exit_error("Invalid sphere format");
 	parse_param(tokens, &sphere);
 	add_sphere_to_scene(scene, sphere);

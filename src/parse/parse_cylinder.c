@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:06 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/22 13:01:00 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 13:35:07 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	parse_cylinder(char **tokens, t_scene *scene)
 	t_cylinder	cylinder;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3]
-		|| !tokens[4] || !tokens[5])
+		|| !tokens[4] || !tokens[5] || tokens[6])
 		exit_error("Invalid cylinder format");
 	parse_param(tokens, &cylinder);
 	add_cylinder_to_scene(scene, cylinder);

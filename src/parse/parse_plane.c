@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/22 12:59:31 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 13:36:21 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ void	parse_plane(char **tokens, t_scene *scene)
 {
 	t_plane	plane;
 
-	if (!tokens[1] || !tokens[2] || !tokens[3])
+	if (!tokens[1] || !tokens[2] || !tokens[3] ||
+		(tokens[4] && tokens[5]))
 		exit_error("Invalid plane format");
 	parse_param(tokens, &plane);
 	add_plane_to_scene(scene, plane);
