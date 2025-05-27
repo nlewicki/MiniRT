@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:05:20 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/16 12:04:22 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 13:51:44 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,20 @@ static void	read_and_parse_lines(int fd, t_scene *scene)
 	}
 }
 
+static void	check_filename(char *filename)
+{
+	int	len;
+
+	len = ft_strlen(filename);
+	if (len < 3 || ft_strcmp(filename + len - 3, ".rt") != 0)
+		exit_error("File must have .rt extension");
+}
+
 int	parse_rt_file(char *filename, t_scene *scene)
 {
 	int		fd;
 
+	check_filename(filename);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		exit_error("Failed to open file");
@@ -76,3 +86,4 @@ int	parse_rt_file(char *filename, t_scene *scene)
 	close(fd);
 	return (0);
 }
+
