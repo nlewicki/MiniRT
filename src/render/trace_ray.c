@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   trace_ray.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:24:54 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/26 10:31:54 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/05/27 15:04:01 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,22 +111,22 @@ t_color	trace_ray_skip_object(t_miniRT *mini, t_ray ray, int depth,
 	return (color_scale(mini->scene.ambient.color, mini->scene.ambient.ratio));
 }
 
-double	calculate_light_factors(t_light_context ctx, t_light light)
-{
-	t_vec3	light_dir;
-	double	shadow;
-	double	diffuse;
-	double	dist;
-	double	falloff;
+//double	calculate_light_factors(t_light_context ctx, t_light light)
+//{
+//	t_vec3	light_dir;
+//	double	shadow;
+//	double	diffuse;
+//	double	dist;
+//	double	falloff;
 
-	light_dir = vec_normalize(vec_sub(light.position, ctx.hit.point));
-	shadow = compute_shadow_factor(ctx.mini, ctx.hit.point, light,
-			ctx.skip_object);
-	shadow = pow(shadow, 2);
-	if (shadow <= 0.0)
-		return (-1.0);
-	dist = vec_length(vec_sub(light.position, ctx.hit.point));
-	falloff = 2.0 / (1.0 + 0.1 * dist * dist);
-	diffuse = fmax(0.0, vec_skal(ctx.hit.normal, light_dir));
-	return (diffuse * light.brightness * shadow * falloff);
-}
+//	light_dir = vec_normalize(vec_sub(light.position, ctx.hit.point));
+//	shadow = compute_shadow_factor(ctx.mini, ctx.hit.point, light,
+//			ctx.skip_object);
+//	shadow = pow(shadow, 2);
+//	if (shadow <= 0.0)
+//		return (-1.0);
+//	dist = vec_length(vec_sub(light.position, ctx.hit.point));
+//	falloff = 2.0 / (1.0 + 0.1 * dist * dist);
+//	diffuse = fmax(0.0, vec_skal(ctx.hit.normal, light_dir));
+//	return (diffuse * light.brightness * shadow * falloff);
+//}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:53:02 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/26 15:17:06 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/05/27 15:01:59 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,8 +242,8 @@ typedef struct s_plane_intersection
 {
 	double		denom;
 	t_vec3		hit_point;
-	t_vec3		right;
 	t_vec3		forward;
+	t_vec3		right;
 	double		x;
 	double		z;
 }	t_plane_intersection;

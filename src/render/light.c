@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leokubler <leokubler@student.42.fr>        +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/26 10:16:25 by leokubler        ###   ########.fr       */
+/*   Updated: 2025/05/27 15:03:34 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,84 @@ double	compute_shadow_factor(t_miniRT *mini, t_vec3 point,
 	return (shadow_ratio);
 }
 
+static t_color	compute_ambient_only(t_miniRT *mini, t_hit hit)
+{
+	t_color	ambient_contrib;
+
+	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
+		return ((t_color){10, 10, 10, 255});
+	ambient_contrib.r = (hit.color.r * mini->scene.ambient.color.r / 255.0) 
+		* mini->scene.ambient.ratio;
+	ambient_contrib.g = (hit.color.g * mini->scene.ambient.color.g / 255.0) 
+		* mini->scene.ambient.ratio;
+	ambient_contrib.b = (hit.color.b * mini->scene.ambient.color.b / 255.0) 
+		* mini->scene.ambient.ratio;
+	ambient_contrib.a = hit.color.a;
+	return (color_clamp(ambient_contrib));
+}
+
+// Get ambient contribution for mixed lighting
+static t_color	get_ambient_contribution(t_miniRT *mini, t_hit hit)
+{
+	t_color	ambient;
+
+	if (!mini->scene.ambient.is_set || mini->scene.ambient.ratio <= 0.0)
+		return ((t_color){0, 0, 0, 255});
+	ambient.r = (hit.color.r * mini->scene.ambient.color.r / 255.0) 
+		* mini->scene.ambient.ratio;
+	ambient.g = (hit.color.g * mini->scene.ambient.color.g / 255.0) 
+		* mini->scene.ambient.ratio;
+	ambient.b = (hit.color.b * mini->scene.ambient.color.b / 255.0) 
+		* mini->scene.ambient.ratio;
+	ambient.a = hit.color.a;
+	return (ambient);
+}
+
+// Calculate light factors with distance attenuation
+double	calculate_light_factors(t_light_context ctx, t_light light)
+{
+	t_vec3	light_vec;
+	t_vec3	light_dir;
+	double	distance;
+	double	attenuation;
+	double	shadow;
+	double	diffuse;
+
+	light_vec = vec_sub(light.position, ctx.hit.point);
+	distance = vec_length(light_vec);
+	light_dir = vec_normalize(light_vec);
+	attenuation = 1.0 / (1.0 + 0.05 * distance + 0.005 * distance * distance);
+	shadow = compute_shadow_factor(ctx.mini, ctx.hit.point, light, 
+			ctx.skip_object);
+	shadow = pow(shadow, 0.7);
+	if (shadow <= 0.0)
+		return (-1.0);
+	diffuse = fmax(0.0, vec_dot(ctx.hit.normal, light_dir));
+	return (diffuse * light.brightness * shadow * attenuation);
+}
+
+// Add light contribution with proper color mixing
 static t_color	add_light_contribution(t_light_context ctx, t_light light)
 {
 	double	light_factor;
 	t_color	light_contrib;
-	t_color	tint;
+	t_color	mixed_color;
 
 	light_factor = calculate_light_factors(ctx, light);
 	if (light_factor < 0.0)
 		return (ctx.current_color);
-	light_contrib = color_scale(ctx.hit.color, light_factor);
+	light_contrib.r = ctx.hit.color.r * light_factor;
+	light_contrib.g = ctx.hit.color.g * light_factor;
+	light_contrib.b = ctx.hit.color.b * light_factor;
+	light_contrib.a = ctx.hit.color.a;
 	if (light.color.r > 0 || light.color.g > 0 || light.color.b > 0)
-	{
-		tint = color_scale(light.color, light_factor * 0.2);
-		light_contrib = color_add(light_contrib, tint);
-	}
-	return (color_add(ctx.current_color, light_contrib));
+		mixed_color = color_mix(light_contrib, light.color, 0.1);
+	else
+		mixed_color = light_contrib;
+	return (color_add(ctx.current_color, mixed_color));
 }
 
+// Compute lighting from all lights
 static t_color	compute_all_lights(t_miniRT *mini, t_hit hit,
 	t_object *skip_object, t_color ambient_color)
 {
@@ -69,30 +129,14 @@ static t_color	compute_all_lights(t_miniRT *mini, t_hit hit,
 	return (color_clamp(ctx.current_color));
 }
 
-static t_color	compute_default_lighting(t_miniRT *mini, t_hit hit)
-{
-	t_vec3	default_light_dir;
-	double	diffuse;
-	t_color	light_contrib;
-	t_color	final_color;
-
-	default_light_dir = (t_vec3){0, -1, 0};
-	diffuse = fmax(0.0, vec_skal(hit.normal, vec_neg(default_light_dir)));
-	light_contrib = color_scale(hit.color, diffuse * 0.7);
-	final_color = color_add(color_scale(mini->scene.ambient.color,
-				mini->scene.ambient.ratio), light_contrib);
-	return (color_clamp(final_color));
-}
-
-//function to skip an object during shadow calculations
+// Main lighting function with improved logic
 t_color	compute_lighting_skip_object(t_miniRT *mini, t_hit hit,
 	t_object *skip_object)
 {
-	t_color	final_color;
+	t_color	ambient_color;
 
-	final_color = color_scale(mini->scene.ambient.color,
-			mini->scene.ambient.ratio);
 	if (mini->scene.light_count == 0)
-		return (compute_default_lighting(mini, hit));
-	return (compute_all_lights(mini, hit, skip_object, final_color));
+		return (compute_ambient_only(mini, hit));
+	ambient_color = get_ambient_contribution(mini, hit);
+	return (compute_all_lights(mini, hit, skip_object, ambient_color));
 }
