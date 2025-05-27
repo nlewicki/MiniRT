@@ -23,3 +23,9 @@ correctly???
 SCHLUSSSPRINT
 - norminette
 - print funktionen entfernen (duerfen aber benutzen)
+
+
+AMBIENTE LICHT DARF EIN SCHATTEN HABEN
+Nur spotlight sieht goofy aus
+
+cylinder caps gleiche farbe wie cylinder
