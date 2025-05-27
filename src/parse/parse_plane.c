@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:25:10 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/27 14:12:20 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:54:03 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static void	add_plane_to_scene(t_scene *scene, t_plane plane)
 	t_plane	*new_planes;
 
 	new_planes = ft_realloc(scene->planes,
+			sizeof(t_plane) * scene->plane_count,
 			sizeof(t_plane) * (scene->plane_count + 1));
 	if (!new_planes)
 		exit_error("Memory allocation failed for planes");

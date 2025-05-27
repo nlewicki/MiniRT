@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 11:57:00 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/27 13:35:43 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:54:22 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static void	add_cone_to_scene(t_scene *scene, t_cone cone)
 	t_cone	*new_cones;
 
 	new_cones = ft_realloc(scene->cones,
+			sizeof(t_cone) * scene->cone_count,
 			sizeof(t_cone) * (scene->cone_count + 1));
 	if (!new_cones)
 		exit_error("Memory allocation failed for cones");
