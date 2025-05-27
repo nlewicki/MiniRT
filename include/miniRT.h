@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/27 12:18:30 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 15:14:45 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,5 +137,6 @@ bool		is_point_visible(t_miniRT *mini, t_vec3 point, t_light light,
 void		calculate_viewport(t_camera cam, int x, int y, double *coords);
 void		calculate_camera_basis(t_camera cam, t_vec3 *basis);
 t_ray		generate_camera_ray(t_camera cam, int x, int y);
+t_color		compute_ambient_only(t_miniRT *mini, t_hit hit);
 
 #endif
