@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:40:34 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/27 15:17:41 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/27 16:53:20 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,25 +51,17 @@ double	calculate_light_factors(t_light_context ctx, t_light light)
 	return (diff_att[0] * light.brightness * shadow * diff_att[1]);
 }
 
-// Add light contribution with proper color mixing
+// Add light contribution with enhanced colored lighting
 static t_color	add_light_contribution(t_light_context ctx, t_light light)
 {
 	double	light_factor;
 	t_color	light_contrib;
-	t_color	mixed_color;
 
 	light_factor = calculate_light_factors(ctx, light);
 	if (light_factor < 0.0)
 		return (ctx.current_color);
-	light_contrib.r = ctx.hit.color.r * light_factor;
-	light_contrib.g = ctx.hit.color.g * light_factor;
-	light_contrib.b = ctx.hit.color.b * light_factor;
-	light_contrib.a = ctx.hit.color.a;
-	if (light.color.r > 0 || light.color.g > 0 || light.color.b > 0)
-		mixed_color = color_mix(light_contrib, light.color, 0.1);
-	else
-		mixed_color = light_contrib;
-	return (color_add(ctx.current_color, mixed_color));
+	light_contrib = calculate_colored_light(ctx.hit, light, light_factor);
+	return (color_add(ctx.current_color, light_contrib));
 }
 
 // Compute lighting from all lights

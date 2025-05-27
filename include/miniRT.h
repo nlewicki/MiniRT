@@ -6,7 +6,7 @@
 /*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:14:07 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/27 15:14:45 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/27 16:54:26 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,5 +138,6 @@ void		calculate_viewport(t_camera cam, int x, int y, double *coords);
 void		calculate_camera_basis(t_camera cam, t_vec3 *basis);
 t_ray		generate_camera_ray(t_camera cam, int x, int y);
 t_color		compute_ambient_only(t_miniRT *mini, t_hit hit);
-
+t_color		calculate_colored_light(t_hit hit, t_light light,
+				double light_factor);
 #endif
