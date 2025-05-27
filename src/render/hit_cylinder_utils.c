@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_cylinder_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nicolewicki <nicolewicki@student.42.fr>    +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:37:42 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/26 14:43:33 by nicolewicki      ###   ########.fr       */
+/*   Updated: 2025/05/27 15:29:56 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@ static void	set_cap_hit_info(t_cylinder_context *ctx, t_cap_hit *hit)
 	else
 		ctx->hit_info->normal = vec_mul(hit->normal, -1);
 	ctx->hit_info->object = ctx->obj;
+	if (ctx->cyl->checker)
+		ctx->hit_info->color = checkerboard_cylinder(ctx->cyl, hit->point);
+	else
+		ctx->hit_info->color = ctx->obj->color;
 }
 
 double	hit_cylinder_caps(t_cylinder_context *ctx, t_vec3 cap_center)
