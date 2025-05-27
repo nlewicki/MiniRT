@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_sphere.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:24:31 by nicolewicki       #+#    #+#             */
-/*   Updated: 2025/05/27 13:35:18 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:48:02 by lkubler          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	add_sphere_to_scene(t_scene *scene, t_sphere sphere)
 {
 	t_sphere	*new_sphere;
 
-	new_sphere = ft_realloc(scene->spheres,
+	new_sphere = realloc(scene->spheres,
 			sizeof(t_sphere) * (scene->sphere_count + 1));
 	if (!new_sphere)
 		exit_error("Memory allocation failed for spheres");
