@@ -51,7 +51,7 @@ MLX42_INCLUDES = -I $(REPO_DIR)/include
 
 FRAMEWORKS = -L$(shell brew --prefix glfw)/lib -lglfw -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
 
-all: $(NAME)
+all: submodules $(NAME)
 
 $(REPO_DIR):
 	@echo "Initializing MLX42 submodule"
