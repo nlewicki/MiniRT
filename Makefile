@@ -106,6 +106,9 @@ fclean: clean
 	@[ -d $(BUILD_DIR) ] && rm -rf $(BUILD_DIR) || true
 	@echo "\033[90mfclean\033[0m"
 
+bonus:
+	@$(MAKE) all
+
 re: fclean all
 
 submodules:

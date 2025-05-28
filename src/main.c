@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/23 12:40:45 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:42:42 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,84 +50,86 @@ void	leaks(void)
 	system("leaks -q miniRT");
 }
 
-void	print_objects(t_scene *scene)
-{
-	int			i;
-	t_object	*obj;
-	t_sphere	*sphere;
-	t_plane		*plane;
-	t_cylinder	*cylinder;
+// void	print_objects(t_scene *scene)
+// {
+// 	int			i;
+// 	t_object	*obj;
+// 	t_sphere	*sphere;
+// 	t_plane		*plane;
+// 	t_cylinder	*cylinder;
 
-	printf("Total objects: %d\n", scene->object_count);
-	for (i = 0; i < scene->object_count; i++)
-	{
-		obj = &scene->objects[i];
-		printf("Object #%d:\n", i + 1);
-		printf("  Type: ");
-		if (obj->type == SPHERE)
-		{
-			sphere = (t_sphere *)obj->data;
-			printf("Sphere\n");
-			printf("  Center: (%.2f, %.2f, %.2f)\n", sphere->center.x,
-				sphere->center.y, sphere->center.z);
-			printf("  Diameter: %.2f\n", sphere->diameter);
-			printf("  Color: (%d, %d, %d, %d)\n", sphere->color.r,
-				sphere->color.g, sphere->color.b, sphere->color.a);
-		}
-		else if (obj->type == PLANE)
-		{
-			plane = (t_plane *)obj->data;
-			printf("Plane\n");
-			printf("  Position: (%.2f, %.2f, %.2f)\n", plane->position.x,
-				plane->position.y, plane->position.z);
-			printf("  Orientation: (%.2f, %.2f, %.2f)\n", plane->orientation.x,
-				plane->orientation.y, plane->orientation.z);
-			printf("  Color: (%d, %d, %d, %d)\n", plane->color.r,
-				plane->color.g, plane->color.b, plane->color.a);
-			if (plane->limit_width > 0 && plane->limit_height > 0)
-				printf("  Limits: width=%.2f, height=%.2f\n", plane->limit_width, plane->limit_height);
-		}
-		else if (obj->type == CYLINDER)
-		{
-			cylinder = (t_cylinder *)obj->data;
-			printf("Cylinder\n");
-			printf("  Position: (%.2f, %.2f, %.2f)\n", cylinder->position.x,
-				cylinder->position.y, cylinder->position.z);
-			printf("  Orientation: (%.2f, %.2f, %.2f)\n",
-				cylinder->orientation.x, cylinder->orientation.y,
-				cylinder->orientation.z);
-			printf("  Diameter: %.2f\n", cylinder->diameter);
-			printf("  Height: %.2f\n", cylinder->height);
-			printf("  Color: (%d, %d, %d, %d)\n", cylinder->color.r,
-				cylinder->color.g, cylinder->color.b, cylinder->color.a);
-		}
-		else if (obj->type == CONE)
-		{
-			t_cone *cone = (t_cone *)obj->data;
-			printf("Cone\n");
-			printf("  Apex: (%.2f, %.2f, %.2f)\n", cone->apex.x,
-				cone->apex.y, cone->apex.z);
-			printf("  Direction: (%.2f, %.2f, %.2f)\n", cone->direction.x,
-				cone->direction.y, cone->direction.z);
-			printf("  Angle: %.2f\n", cone->angle);
-			printf("  Height: %.2f\n", cone->height);
-			printf("  Color: (%d, %d, %d, %d)\n", cone->color.r,
-				cone->color.g, cone->color.b, cone->color.a);
-		}
-		else
-		{
-			printf("Unknown\n");
-		}
-		printf("\n");
-	}
-}
+// 	printf("Total objects: %d\n", scene->object_count);
+// 	for (i = 0; i < scene->object_count; i++)
+// 	{
+// 		obj = &scene->objects[i];
+// 		printf("Object #%d:\n", i + 1);
+// 		printf("  Type: ");
+// 		if (obj->type == SPHERE)
+// 		{
+// 			sphere = (t_sphere *)obj->data;
+// 			printf("Sphere\n");
+// 			printf("  Center: (%.2f, %.2f, %.2f)\n", sphere->center.x,
+// 				sphere->center.y, sphere->center.z);
+// 			printf("  Diameter: %.2f\n", sphere->diameter);
+// 			printf("  Color: (%d, %d, %d, %d)\n", sphere->color.r,
+// 				sphere->color.g, sphere->color.b, sphere->color.a);
+// 		}
+// 		else if (obj->type == PLANE)
+// 		{
+// 			plane = (t_plane *)obj->data;
+// 			printf("Plane\n");
+// 			printf("  Position: (%.2f, %.2f, %.2f)\n", plane->position.x,
+// 				plane->position.y, plane->position.z);
+// 			printf("  Orientation: (%.2f, %.2f, %.2f)\n", plane->orientation.x,
+// 				plane->orientation.y, plane->orientation.z);
+// 			printf("  Color: (%d, %d, %d, %d)\n", plane->color.r,
+// 				plane->color.g, plane->color.b, plane->color.a);
+// 			if (plane->limit_width > 0 && plane->limit_height > 0)
+// 				printf("  Limits: width=%.2f, height=%.2f\n",
+//					plane->limit_width, plane->limit_height);
+// 		}
+// 		else if (obj->type == CYLINDER)
+// 		{
+// 			cylinder = (t_cylinder *)obj->data;
+// 			printf("Cylinder\n");
+// 			printf("  Position: (%.2f, %.2f, %.2f)\n", cylinder->position.x,
+// 				cylinder->position.y, cylinder->position.z);
+// 			printf("  Orientation: (%.2f, %.2f, %.2f)\n",
+// 				cylinder->orientation.x, cylinder->orientation.y,
+// 				cylinder->orientation.z);
+// 			printf("  Diameter: %.2f\n", cylinder->diameter);
+// 			printf("  Height: %.2f\n", cylinder->height);
+// 			printf("  Color: (%d, %d, %d, %d)\n", cylinder->color.r,
+// 				cylinder->color.g, cylinder->color.b, cylinder->color.a);
+// 		}
+// 		else if (obj->type == CONE)
+// 		{
+// 			t_cone *cone = (t_cone *)obj->data;
+// 			printf("Cone\n");
+// 			printf("  Apex: (%.2f, %.2f, %.2f)\n", cone->apex.x,
+// 				cone->apex.y, cone->apex.z);
+// 			printf("  Direction: (%.2f, %.2f, %.2f)\n", cone->direction.x,
+// 				cone->direction.y, cone->direction.z);
+// 			printf("  Angle: %.2f\n", cone->angle);
+// 			printf("  Height: %.2f\n", cone->height);
+// 			printf("  Color: (%d, %d, %d, %d)\n", cone->color.r,
+// 				cone->color.g, cone->color.b, cone->color.a);
+// 		}
+// 		else
+// 		{
+// 			printf("Unknown\n");
+// 		}
+// 		printf("\n");
+// 	}
+// }
+// print_objects(&mini.scene);
 
 int	main(int argc, char **argv)
 {
 	t_miniRT	mini;
 	int			return_value;
 
-	atexit(leaks);
+	// atexit(leaks);
 	return_value = 0;
 	if (argc != 2)
 		exit_error("Usage: ./miniRT <filename>\n");
@@ -137,7 +139,6 @@ int	main(int argc, char **argv)
 	init_scene(&mini.scene);
 	return_value = parse_rt_file(argv[1], &mini.scene);
 	convert_objects(&mini.scene);
-	print_objects(&mini.scene);
 	if (return_value)
 		return (return_value);
 	printf("----------------------\n");
