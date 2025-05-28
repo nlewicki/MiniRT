@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 12:01:17 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/27 13:43:29 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:58:33 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ double	parse_double(char *str, double min, double max, int *error)
 	double	value;
 
 	errno = 0;
-	value = strtod(str, &endptr);
+	value = ft_strtod(str, &endptr);
 	if (errno == ERANGE || *endptr != '\0' || value < min || value > max)
 	{
 		*error = 1;

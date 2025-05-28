@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_scene.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lkubler <lkubler@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:59:43 by lkubler           #+#    #+#             */
-/*   Updated: 2025/05/23 11:20:17 by lkubler          ###   ########.fr       */
+/*   Updated: 2025/05/28 11:56:09 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,3 @@ void	render_scene(mlx_image_t *img, t_miniRT *mini)
 		ctx.y += ctx.scale;
 	}
 }
-
-//static t_color apply_gamma(t_color c, double gamma)
-//{
-//	t_color result;
-
-//	result.r = pow(fmin(1.0, c.r / 255.0), 1.0 / gamma) * 255.0;
-//	result.g = pow(fmin(1.0, c.g / 255.0), 1.0 / gamma) * 255.0;
-//	result.b = pow(fmin(1.0, c.b / 255.0), 1.0 / gamma) * 255.0;
-//	result.a = c.a;
-//	return result;
-//}

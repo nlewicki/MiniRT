@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:29:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/05/28 11:42:42 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:52:41 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ int	init_mlx(t_miniRT *mini)
 	return (0);
 }
 
-void	leaks(void)
-{
-	system("leaks -q miniRT");
-}
+// void	leaks(void)
+// {
+// 	system("leaks -q miniRT");
+// }
 
 // void	print_objects(t_scene *scene)
 // {
@@ -124,12 +124,12 @@ void	leaks(void)
 // }
 // print_objects(&mini.scene);
 
+// atexit(leaks);
 int	main(int argc, char **argv)
 {
 	t_miniRT	mini;
 	int			return_value;
 
-	// atexit(leaks);
 	return_value = 0;
 	if (argc != 2)
 		exit_error("Usage: ./miniRT <filename>\n");
